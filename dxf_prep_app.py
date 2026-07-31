@@ -59,6 +59,8 @@ SETTINGS_PATH = Path(__file__).with_name("dxf_prep_settings.json")
 DEFAULT_SETTINGS = {
     "default_directory": r"C:\Users\auron\Documents\Classification root",
     "last_directory": "",
+    "invert_shift_scroll": False,
+    "selection_tolerance_px": 12,
 }
 
 
@@ -260,7 +262,7 @@ class DxfPrepApp(tk.Tk):
             try:
                 loaded = json.loads(SETTINGS_PATH.read_text())
                 if isinstance(loaded, dict):
-                    settings.update({key: str(value) for key, value in loaded.items()})
+                    settings.update({key: value for key, value in loaded.items() if key in DEFAULT_SETTINGS})
             except (OSError, json.JSONDecodeError):
                 pass
         return settings
@@ -278,6 +280,18 @@ class DxfPrepApp(tk.Tk):
     def remember_directory(self, path: Path) -> None:
         self.settings["last_directory"] = str(path)
         self.save_settings()
+
+    def setting_bool(self, key: str) -> bool:
+        value = self.settings.get(key, DEFAULT_SETTINGS[key])
+        if isinstance(value, str):
+            return value.lower() in {"1", "true", "yes", "on"}
+        return bool(value)
+
+    def selection_tolerance_px(self) -> float:
+        try:
+            return max(1.0, float(self.settings.get("selection_tolerance_px", DEFAULT_SETTINGS["selection_tolerance_px"])))
+        except (TypeError, ValueError):
+            return float(DEFAULT_SETTINGS["selection_tolerance_px"])
 
     def set_app_icon(self) -> None:
         icon_path = Path(__file__).with_name("dxf_prep_icon.ico")
@@ -399,6 +413,9 @@ class DxfPrepApp(tk.Tk):
     def _bind_canvas_events(self) -> None:
         self.canvas.bind("<Configure>", lambda _event: self.redraw())
         self.canvas.bind("<Button-1>", self.select_at)
+        self.canvas.bind("<Control-ButtonPress-1>", self.start_pan)
+        self.canvas.bind("<Control-B1-Motion>", self.pan)
+        self.canvas.bind("<Button-3>", self.deselect)
         self.canvas.bind("<ButtonPress-2>", self.start_pan)
         self.canvas.bind("<B2-Motion>", self.pan)
         self.canvas.bind("<MouseWheel>", self.zoom)
@@ -426,6 +443,8 @@ class DxfPrepApp(tk.Tk):
         window.grab_set()
 
         default_var = tk.StringVar(value=self.settings.get("default_directory", ""))
+        invert_var = tk.BooleanVar(value=self.setting_bool("invert_shift_scroll"))
+        tolerance_var = tk.StringVar(value=str(int(self.selection_tolerance_px())))
         frame = ttk.Frame(window, padding=14)
         frame.grid(row=0, column=0, sticky="nsew")
         frame.columnconfigure(1, weight=1)
@@ -442,19 +461,44 @@ class DxfPrepApp(tk.Tk):
             if folder:
                 default_var.set(folder)
 
+        ttk.Checkbutton(
+            frame,
+            text="Invert Shift + scroll horizontal direction",
+            variable=invert_var,
+        ).grid(row=2, column=0, columnspan=2, sticky="w", pady=(4, 8))
+
+        ttk.Label(frame, text="Selection Tolerance (pixels)").grid(row=3, column=0, sticky="w", pady=(0, 4))
+        ttk.Spinbox(
+            frame,
+            from_=1,
+            to=40,
+            textvariable=tolerance_var,
+            width=8,
+        ).grid(row=3, column=1, sticky="e", pady=(0, 4))
+
         def save() -> None:
             folder = default_var.get().strip()
             if folder and not Path(folder).exists():
                 messagebox.showerror("Folder not found", folder)
                 return
+            try:
+                tolerance = int(float(tolerance_var.get()))
+            except ValueError:
+                messagebox.showerror("Invalid tolerance", "Selection tolerance must be a number.")
+                return
+            if not 1 <= tolerance <= 40:
+                messagebox.showerror("Invalid tolerance", "Selection tolerance must be between 1 and 40 pixels.")
+                return
             self.settings["default_directory"] = folder
+            self.settings["invert_shift_scroll"] = bool(invert_var.get())
+            self.settings["selection_tolerance_px"] = tolerance
             if not self.settings.get("last_directory"):
                 self.settings["last_directory"] = folder
             self.save_settings()
             window.destroy()
 
-        ttk.Button(frame, text="Browse", command=browse).grid(row=2, column=0, sticky="w")
-        ttk.Button(frame, text="Save", command=save).grid(row=2, column=1, sticky="e")
+        ttk.Button(frame, text="Browse", command=browse).grid(row=4, column=0, sticky="w", pady=(8, 0))
+        ttk.Button(frame, text="Save", command=save).grid(row=4, column=1, sticky="e", pady=(8, 0))
 
     def open_file(self) -> None:
         filename = filedialog.askopenfilename(
@@ -733,6 +777,8 @@ class DxfPrepApp(tk.Tk):
     def select_at(self, event: tk.Event) -> None:
         if not self.analysis:
             return
+        if event.state & 0x0004:
+            return
         canvas_x = self.canvas.canvasx(event.x)
         canvas_y = self.canvas.canvasy(event.y)
         world = self.screen_to_world((canvas_x, canvas_y))
@@ -742,7 +788,7 @@ class DxfPrepApp(tk.Tk):
             if not self.layer_visibility[layer].get():
                 continue
             min_x, min_y, max_x, max_y = component["bbox"]
-            pad = max(0.08, 8 / max(self.scale, 1))
+            pad = max(0.08, self.selection_tolerance_px() / max(self.scale, 1))
             if min_x - pad <= world[0] <= max_x + pad and min_y - pad <= world[1] <= max_y + pad:
                 area = max((max_x - min_x) * (max_y - min_y), 0.0001)
                 candidates.append((area, index))
@@ -751,6 +797,11 @@ class DxfPrepApp(tk.Tk):
             self.selected_layer_var.set(self.component_layers[self.selected_component])
             self.update_selected_panel()
             self.redraw()
+
+    def deselect(self, _event: tk.Event | None = None) -> None:
+        self.selected_component = None
+        self.update_selected_panel()
+        self.redraw()
 
     def start_pan(self, event: tk.Event) -> None:
         self.canvas.scan_mark(event.x, event.y)
@@ -761,6 +812,9 @@ class DxfPrepApp(tk.Tk):
     def zoom(self, event: tk.Event) -> None:
         if not self.analysis:
             return
+        if event.state & 0x0001:
+            self.shift_scroll_horizontal(event)
+            return
         factor = 1.12 if event.delta > 0 else 1 / 1.12
         canvas_x = self.canvas.canvasx(event.x)
         canvas_y = self.canvas.canvasy(event.y)
@@ -770,6 +824,12 @@ class DxfPrepApp(tk.Tk):
         self.offset_x += canvas_x - after_screen[0]
         self.offset_y += canvas_y - after_screen[1]
         self.redraw()
+
+    def shift_scroll_horizontal(self, event: tk.Event) -> None:
+        direction = -1 if event.delta > 0 else 1
+        if self.setting_bool("invert_shift_scroll"):
+            direction *= -1
+        self.canvas.xview_scroll(direction * 5, "units")
 
     def update_scroll_region(self) -> None:
         bounds = self.canvas.bbox("all")

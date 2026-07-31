@@ -918,6 +918,14 @@ class DxfPrepApp(tk.Tk):
         if layout:
             parts.append(f"Nest: {layout['count']} sheet(s) {layout['label']}")
             parts.append(f"Groups: {len(self.content_groups())}")
+        cleanup = self.analysis.get("cleanup_summary", Counter())
+        cleanup_parts = []
+        if cleanup.get("duplicate_entities"):
+            cleanup_parts.append(f"{cleanup['duplicate_entities']} duplicates")
+        if cleanup.get("degenerate_lines"):
+            cleanup_parts.append(f"{cleanup['degenerate_lines']} zero-length lines")
+        if cleanup_parts:
+            parts.append("Cleaned: " + ", ".join(cleanup_parts))
         self.status_var.set("  |  ".join(parts))
 
     def update_selected_panel(self) -> None:

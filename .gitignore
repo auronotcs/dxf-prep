@@ -1,0 +1,19 @@
+# Ignore everything by default; this folder contains unrelated shop/boat files too.
+*
+
+# Track the DXF Prep app.
+!classify_dxf.py
+!dxf_prep_app.py
+!Run DXF Prep.bat
+!dxf_prep_icon.ico
+!dxf_prep_icon.png
+!README.md
+!LICENSE
+!.gitignore
+
+# Keep local settings, generated DXFs, caches, and snapshots out of source control.
+dxf_prep_settings.json
+*.dxf
+*.DXF
+__pycache__/
+Stable Snapshots/

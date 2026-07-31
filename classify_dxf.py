@@ -1,0 +1,500 @@
+from __future__ import annotations
+
+import argparse
+import copy
+import math
+from collections import Counter, defaultdict, deque
+from pathlib import Path
+
+
+TOLERANCE = 0.002
+DRILL_DIAMETER = 0.250
+DIAMETER_TOLERANCE = 0.006
+
+LAYER_INNER = "INNER_SHELF_CUT_070"
+LAYER_OUTER = "OUTER_PROFILE"
+LAYER_DRILL = "DRILL_250"
+LAYER_PROFILE_HOLES = "PROFILE_HOLES"
+LAYER_ID_MARKING = "ID_MARKING"
+LAYER_REVIEW = "REVIEW_UNKNOWN"
+LAYER_CLEANOUT = "CLEANOUT"
+LAYER_ACRYLIC = "ACRYLIC CUTOUT"
+
+LAYER_COLORS = {
+    LAYER_INNER: "3",
+    LAYER_OUTER: "7",
+    LAYER_DRILL: "1",
+    LAYER_PROFILE_HOLES: "5",
+    LAYER_ID_MARKING: "8",
+    LAYER_REVIEW: "2",
+    LAYER_CLEANOUT: "7",
+    LAYER_ACRYLIC: "11",
+}
+
+ACRYLIC_LAYER_COLORS = {
+    LAYER_DRILL: "1",
+    LAYER_CLEANOUT: "7",
+    LAYER_ACRYLIC: "11",
+}
+
+
+def read_pairs(path: Path) -> list[tuple[int, str, str]]:
+    lines = path.read_text(errors="ignore").splitlines()
+    pairs: list[tuple[int, str, str]] = []
+    for i in range(0, len(lines) - 1, 2):
+        try:
+            code = int(lines[i].strip())
+        except ValueError:
+            continue
+        pairs.append((code, lines[i], lines[i + 1]))
+    return pairs
+
+
+def parse_entities(pairs: list[tuple[int, str, str]]) -> list[dict]:
+    entities: list[dict] = []
+    current = None
+    in_entities = False
+    for code, _raw_code, raw_value in pairs:
+        value = raw_value.strip()
+        if code == 2 and value == "ENTITIES":
+            in_entities = True
+            continue
+        if in_entities and code == 0 and value == "ENDSEC":
+            if current:
+                entities.append(current)
+            break
+        if not in_entities:
+            continue
+        if code == 0:
+            if current:
+                entities.append(current)
+            current = {"type": value, "groups": []}
+        elif current:
+            current["groups"].append((code, value))
+    return entities
+
+
+def group_value(entity: dict, code: int, default: str = "") -> str:
+    for item_code, value in entity["groups"]:
+        if item_code == code:
+            return value
+    return default
+
+
+def group_float(entity: dict, code: int, default: float = 0.0) -> float:
+    value = group_value(entity, code)
+    return float(value) if value else default
+
+
+def point_key(point: tuple[float, float]) -> tuple[int, int]:
+    return (round(point[0] / TOLERANCE), round(point[1] / TOLERANCE))
+
+
+def arc_endpoint(entity: dict, angle_code: int) -> tuple[float, float]:
+    cx = group_float(entity, 10)
+    cy = group_float(entity, 20)
+    radius = group_float(entity, 40)
+    angle = math.radians(group_float(entity, angle_code))
+    return (cx + radius * math.cos(angle), cy + radius * math.sin(angle))
+
+
+def entity_color(entity: dict) -> str:
+    return group_value(entity, 62, "0")
+
+
+def build_segments(entities: list[dict]) -> list[dict]:
+    segments: list[dict] = []
+    active_polyline = None
+    for index, entity in enumerate(entities):
+        kind = entity["type"]
+        if kind == "LINE":
+            segments.append(
+                {
+                    "entity": index,
+                    "type": "LINE",
+                    "color": entity_color(entity),
+                    "p1": (group_float(entity, 10), group_float(entity, 20)),
+                    "p2": (group_float(entity, 11), group_float(entity, 21)),
+                }
+            )
+        elif kind == "ARC":
+            segments.append(
+                {
+                    "entity": index,
+                    "type": "ARC",
+                    "color": entity_color(entity),
+                    "p1": arc_endpoint(entity, 50),
+                    "p2": arc_endpoint(entity, 51),
+                    "center": (group_float(entity, 10), group_float(entity, 20)),
+                    "radius": group_float(entity, 40),
+                    "start_angle": group_float(entity, 50),
+                    "end_angle": group_float(entity, 51),
+                }
+            )
+        elif kind == "POLYLINE":
+            active_polyline = {
+                "entity": index,
+                "color": entity_color(entity),
+                "closed": bool(int(group_value(entity, 70, "0")) & 1),
+                "points": [],
+            }
+        elif kind == "VERTEX" and active_polyline is not None:
+            active_polyline["points"].append((group_float(entity, 10), group_float(entity, 20)))
+        elif kind == "SEQEND" and active_polyline is not None:
+            points = active_polyline["points"]
+            pairs = list(zip(points, points[1:]))
+            if active_polyline["closed"] and len(points) > 2 and point_key(points[0]) != point_key(points[-1]):
+                pairs.append((points[-1], points[0]))
+            for p1, p2 in pairs:
+                if point_key(p1) == point_key(p2):
+                    continue
+                segments.append(
+                    {
+                        "entity": active_polyline["entity"],
+                        "type": "POLYLINE_SEG",
+                        "color": active_polyline["color"],
+                        "p1": p1,
+                        "p2": p2,
+                    }
+                )
+            active_polyline = None
+    return segments
+
+
+def connected_components(segments: list[dict]) -> list[dict]:
+    adjacency: dict[tuple[int, int], list[tuple[tuple[int, int], int]]] = defaultdict(list)
+    for index, segment in enumerate(segments):
+        a = point_key(segment["p1"])
+        b = point_key(segment["p2"])
+        adjacency[a].append((b, index))
+        adjacency[b].append((a, index))
+
+    components = []
+    seen: set[tuple[int, int]] = set()
+    for start in adjacency:
+        if start in seen:
+            continue
+        queue = deque([start])
+        seen.add(start)
+        nodes = []
+        segment_indexes: set[int] = set()
+        while queue:
+            node = queue.popleft()
+            nodes.append(node)
+            for neighbor, segment_index in adjacency[node]:
+                segment_indexes.add(segment_index)
+                if neighbor not in seen:
+                    seen.add(neighbor)
+                    queue.append(neighbor)
+
+        points = [
+            point
+            for segment_index in segment_indexes
+            for point in (segments[segment_index]["p1"], segments[segment_index]["p2"])
+        ]
+        xs = [point[0] for point in points]
+        ys = [point[1] for point in points]
+        degrees = [len(adjacency[node]) for node in nodes]
+        colors = Counter(segments[segment_index]["color"] for segment_index in segment_indexes)
+        components.append(
+            {
+                "segment_indexes": segment_indexes,
+                "entity_indexes": {segments[i]["entity"] for i in segment_indexes},
+                "closed": all(degree == 2 for degree in degrees),
+                "open_nodes": sum(1 for degree in degrees if degree != 2),
+                "bbox": (min(xs), min(ys), max(xs), max(ys)),
+                "color": colors.most_common(1)[0][0],
+            }
+        )
+    return components
+
+
+def classify_component(component: dict) -> str:
+    min_x, min_y, max_x, max_y = component["bbox"]
+    width = max_x - min_x
+    height = max_y - min_y
+    diameter = (width + height) / 2
+
+    if not component["closed"]:
+        if component["color"] == "0" and max(width, height) <= 1.0:
+            return LAYER_ID_MARKING
+        if component["open_nodes"] <= 2 and max(width, height) > 1.0:
+            if component["color"] == "3":
+                return LAYER_INNER
+            if component["color"] == "7":
+                return LAYER_OUTER
+        return LAYER_REVIEW
+    if abs(width - height) <= DIAMETER_TOLERANCE and diameter < 0.5:
+        if abs(diameter - DRILL_DIAMETER) <= DIAMETER_TOLERANCE:
+            return LAYER_DRILL
+        return LAYER_PROFILE_HOLES
+    if component["color"] == "7":
+        return LAYER_OUTER
+    if component["color"] == "3":
+        return LAYER_INNER
+    return LAYER_REVIEW
+
+
+def replace_layer(entity: dict, layer: str) -> None:
+    groups = entity["groups"]
+    for index, (code, _value) in enumerate(groups):
+        if code == 8:
+            groups[index] = (code, layer)
+            return
+    groups.insert(0, (8, layer))
+
+
+def write_entities_to_layers(entities: list[dict], layers_by_entity: dict[int, str]) -> None:
+    current_polyline_layer = LAYER_REVIEW
+    for index, entity in enumerate(entities):
+        kind = entity["type"]
+        layer = layers_by_entity.get(index, LAYER_REVIEW)
+        if kind == "POLYLINE":
+            current_polyline_layer = layer
+        elif kind in {"VERTEX", "SEQEND"}:
+            layer = current_polyline_layer
+        replace_layer(entity, layer)
+
+
+def render_entity(entity: dict) -> list[str]:
+    lines = ["  0", entity["type"]]
+    for code, value in entity["groups"]:
+        lines.extend([f"{code:3d}", value])
+    return lines
+
+
+def layer_record(name: str, color: str) -> list[str]:
+    return [
+        "  0",
+        "LAYER",
+        "  2",
+        name,
+        " 70",
+        "0",
+        " 62",
+        color,
+        "  6",
+        "CONTINUOUS",
+    ]
+
+
+def write_dxf(
+    original_pairs: list[tuple[int, str, str]],
+    entities: list[dict],
+    output: Path,
+    layer_colors: dict[str, str] | None = None,
+) -> None:
+    layer_colors = layer_colors or LAYER_COLORS
+    out: list[str] = []
+    in_entities = False
+    in_layer_table = False
+    inserted_layers = False
+    entity_written = False
+    i = 0
+    while i < len(original_pairs):
+        code, raw_code, raw_value = original_pairs[i]
+        value = raw_value.strip()
+
+        if code == 0 and value == "TABLE":
+            next_pair = original_pairs[i + 1] if i + 1 < len(original_pairs) else None
+            in_layer_table = bool(next_pair and next_pair[0] == 2 and next_pair[2].strip() == "LAYER")
+
+        if in_layer_table and code == 70:
+            raw_value = str(int(value) + len(layer_colors))
+
+        if in_layer_table and code == 0 and value == "ENDTAB" and not inserted_layers:
+            for layer_name, color in layer_colors.items():
+                out.extend(layer_record(layer_name, color))
+            inserted_layers = True
+            in_layer_table = False
+
+        if code == 2 and value == "ENTITIES":
+            out.extend([raw_code, raw_value])
+            in_entities = True
+            i += 1
+            continue
+
+        if in_entities and code == 0 and value == "ENDSEC":
+            if not entity_written:
+                for entity in entities:
+                    out.extend(render_entity(entity))
+                entity_written = True
+            out.extend([raw_code, raw_value])
+            in_entities = False
+            i += 1
+            continue
+
+        if in_entities:
+            i += 1
+            continue
+
+        out.extend([raw_code, raw_value])
+        i += 1
+
+    output.write_text("\n".join(out) + "\n")
+
+
+def analyze_dxf(input_path: Path) -> dict:
+    pairs = read_pairs(input_path)
+    entities = parse_entities(pairs)
+    segments = build_segments(entities)
+    components = connected_components(segments)
+
+    layers_by_entity: dict[int, str] = {}
+    summary = Counter()
+    for component in components:
+        layer = classify_component(component)
+        component["layer"] = layer
+        summary[layer] += 1
+        for entity_index in component["entity_indexes"]:
+            layers_by_entity[entity_index] = layer
+
+    return {
+        "pairs": pairs,
+        "entities": entities,
+        "segments": segments,
+        "components": components,
+        "layers_by_entity": layers_by_entity,
+        "summary": summary,
+    }
+
+
+def export_classified_dxf(analysis: dict, output: Path) -> None:
+    entities = copy.deepcopy(analysis["entities"])
+    layers_by_entity: dict[int, str] = {}
+    for component in analysis["components"]:
+        layer = component.get("layer", classify_component(component))
+        for entity_index in component["entity_indexes"]:
+            layers_by_entity[entity_index] = layer
+    write_entities_to_layers(entities, layers_by_entity)
+    write_dxf(analysis["pairs"], entities, output)
+
+
+def filter_entities_for_layer_map(entities: list[dict], layer_by_root: dict[int, str]) -> list[dict]:
+    filtered: list[dict] = []
+    include_polyline = False
+    polyline_layer = LAYER_REVIEW
+    for index, entity in enumerate(entities):
+        kind = entity["type"]
+        if kind == "POLYLINE":
+            include_polyline = index in layer_by_root
+            if include_polyline:
+                polyline_layer = layer_by_root[index]
+                replace_layer(entity, polyline_layer)
+                filtered.append(entity)
+        elif kind in {"VERTEX", "SEQEND"}:
+            if include_polyline:
+                replace_layer(entity, polyline_layer)
+                filtered.append(entity)
+            if kind == "SEQEND":
+                include_polyline = False
+        elif index in layer_by_root:
+            replace_layer(entity, layer_by_root[index])
+            filtered.append(entity)
+    return filtered
+
+
+def acrylic_feature_role(component: dict) -> str | None:
+    return acrylic_feature_role_with_context(component, [])
+
+
+def bbox_contains(
+    outer: tuple[float, float, float, float],
+    inner: tuple[float, float, float, float],
+    tolerance: float = 0.05,
+) -> bool:
+    return (
+        outer[0] - tolerance <= inner[0]
+        and outer[1] - tolerance <= inner[1]
+        and outer[2] + tolerance >= inner[2]
+        and outer[3] + tolerance >= inner[3]
+    )
+
+
+def acrylic_feature_role_with_context(
+    component: dict,
+    outside_bounds: list[tuple[float, float, float, float]],
+) -> str | None:
+    layer = component.get("layer", classify_component(component))
+    min_x, min_y, max_x, max_y = component["bbox"]
+    size = max(max_x - min_x, max_y - min_y)
+    if layer == LAYER_DRILL:
+        return "drill"
+    if component["color"] == "1" and size > 1.0:
+        return "outside"
+    if layer == LAYER_OUTER:
+        if any(bbox_contains(outside, component["bbox"]) for outside in outside_bounds):
+            return "inside"
+        return "outside"
+    if layer == LAYER_PROFILE_HOLES:
+        return "outside"
+    return None
+
+
+def copy_entities_to_layer(entities: list[dict], root_indexes: set[int], layer: str) -> list[dict]:
+    copied = copy.deepcopy(entities)
+    return filter_entities_for_layer_map(copied, {index: layer for index in root_indexes})
+
+
+def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
+    drill_roots: set[int] = set()
+    inside_roots: set[int] = set()
+    outside_roots: set[int] = set()
+    cleanout_outline_roots: set[int] = set()
+    outside_bounds = [
+        component["bbox"]
+        for component in analysis["components"]
+        if component.get("color") == "1"
+        and max(component["bbox"][2] - component["bbox"][0], component["bbox"][3] - component["bbox"][1]) > 1.0
+    ]
+    roles_by_component = []
+    for component in analysis["components"]:
+        role = acrylic_feature_role_with_context(component, outside_bounds)
+        roles_by_component.append((component, role))
+        if not role:
+            continue
+        if role == "drill":
+            drill_roots.update(component["entity_indexes"])
+        elif role == "inside":
+            inside_roots.update(component["entity_indexes"])
+        elif role == "outside":
+            outside_roots.update(component["entity_indexes"])
+
+    inside_bounds = [component["bbox"] for component, role in roles_by_component if role == "inside"]
+    for component, role in roles_by_component:
+        if role != "outside":
+            continue
+        has_cleanout_inside = any(bbox_contains(component["bbox"], inside) for inside in inside_bounds)
+        if component.get("color") == "1" or has_cleanout_inside:
+            cleanout_outline_roots.update(component["entity_indexes"])
+
+    acrylic_entities = []
+    acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
+    acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], inside_roots | cleanout_outline_roots, LAYER_CLEANOUT))
+    acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], outside_roots, LAYER_ACRYLIC))
+    write_dxf(analysis["pairs"], acrylic_entities, output, ACRYLIC_LAYER_COLORS)
+    return len(drill_roots | inside_roots | outside_roots)
+
+
+def process_dxf(input_path: Path, output: Path | None = None) -> tuple[Path, Counter]:
+    output_path = output or input_path.with_name(input_path.stem + "_classified.dxf")
+    analysis = analyze_dxf(input_path)
+    export_classified_dxf(analysis, output_path)
+    return output_path, Counter(component["layer"] for component in analysis["components"])
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Split source DXF geometry into CAM-ready layers.")
+    parser.add_argument("input", type=Path)
+    parser.add_argument("-o", "--output", type=Path)
+    args = parser.parse_args()
+
+    output, summary = process_dxf(args.input, args.output)
+
+    print(f"Wrote: {output}")
+    for layer in [LAYER_DRILL, LAYER_PROFILE_HOLES, LAYER_INNER, LAYER_OUTER, LAYER_ID_MARKING, LAYER_REVIEW]:
+        print(f"{layer}: {summary[layer]} components")
+
+
+if __name__ == "__main__":
+    main()

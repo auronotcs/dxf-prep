@@ -239,6 +239,7 @@ class DxfPrepApp(tk.Tk):
         self.analysis: dict | None = None
         self.component_layers: list[str] = []
         self.selected_component: int | None = None
+        self.selected_components: set[int] = set()
         self.scale = 1.0
         self.offset_x = 0.0
         self.offset_y = 0.0
@@ -514,6 +515,7 @@ class DxfPrepApp(tk.Tk):
             self.analysis = dxf.analyze_dxf(self.input_path)
             self.component_layers = [component["layer"] for component in self.analysis["components"]]
             self.selected_component = None
+            self.selected_components.clear()
             self.file_var.set(self.input_path.name)
             self.zoom_to_fit()
             self.build_sheet_buttons()
@@ -682,12 +684,12 @@ class DxfPrepApp(tk.Tk):
             if not self.layer_visibility[layer].get():
                 continue
             color = DISPLAY_COLORS.get(layer, "#212529")
-            width = 3 if index == self.selected_component else 1
+            width = 3 if index in self.selected_components else 1
             for segment_index in component["segment_indexes"]:
                 self.draw_segment(segments[segment_index], color, width)
 
-        if self.selected_component is not None:
-            self.draw_selection_box(self.analysis["components"][self.selected_component]["bbox"])
+        for selected_index in self.selected_components:
+            self.draw_selection_box(self.analysis["components"][selected_index]["bbox"])
         self.draw_group_boxes()
         self.update_scroll_region()
 
@@ -793,13 +795,24 @@ class DxfPrepApp(tk.Tk):
                 area = max((max_x - min_x) * (max_y - min_y), 0.0001)
                 candidates.append((area, index))
         if candidates:
-            self.selected_component = min(candidates)[1]
-            self.selected_layer_var.set(self.component_layers[self.selected_component])
+            selected = min(candidates)[1]
+            if event.state & 0x0001:
+                if selected in self.selected_components:
+                    self.selected_components.remove(selected)
+                else:
+                    self.selected_components.add(selected)
+                self.selected_component = selected if selected in self.selected_components else (
+                    min(self.selected_components) if self.selected_components else None
+                )
+            else:
+                self.selected_components = {selected}
+                self.selected_component = selected
             self.update_selected_panel()
             self.redraw()
 
     def deselect(self, _event: tk.Event | None = None) -> None:
         self.selected_component = None
+        self.selected_components.clear()
         self.update_selected_panel()
         self.redraw()
 
@@ -843,10 +856,13 @@ class DxfPrepApp(tk.Tk):
         self.canvas.configure(scrollregion=(left, top, right, bottom))
 
     def reassign_selected(self) -> None:
-        if self.selected_component is None:
+        if not self.selected_components:
             return
-        self.component_layers[self.selected_component] = self.reassign_var.get()
-        self.selected_layer_var.set(self.component_layers[self.selected_component])
+        target_layer = self.reassign_var.get()
+        for index in self.selected_components:
+            self.component_layers[index] = target_layer
+        if self.selected_component is not None:
+            self.selected_layer_var.set(self.component_layers[self.selected_component])
         self.build_sheet_buttons()
         self.update_status()
         self.update_selected_panel()
@@ -878,6 +894,7 @@ class DxfPrepApp(tk.Tk):
             height = max_y - min_y
             color_name = DXF_COLOR_NAMES.get(component["color"], component["color"])
             text = (
+                f"Selected: {len(self.selected_components)}\n"
                 f"Layer: {self.component_layers[self.selected_component]}\n"
                 f"Closed: {component['closed']}\n"
                 f"DXF color: {component['color']} ({color_name})\n"

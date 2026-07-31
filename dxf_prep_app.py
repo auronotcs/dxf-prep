@@ -169,6 +169,17 @@ def boxes_are_close(
     return x_gap <= x_gap_limit and y_gap <= y_gap_limit
 
 
+def box_center_inside(
+    box: tuple[float, float, float, float],
+    bounds: tuple[float, float, float, float],
+) -> bool:
+    min_x, min_y, max_x, max_y = box
+    bound_min_x, bound_min_y, bound_max_x, bound_max_y = bounds
+    center_x = (min_x + max_x) / 2
+    center_y = (min_y + max_y) / 2
+    return bound_min_x <= center_x <= bound_max_x and bound_min_y <= center_y <= bound_max_y
+
+
 def round_up_to_increment(value: float, increment: float) -> float:
     return max(increment, math.ceil(value / increment) * increment)
 
@@ -427,14 +438,37 @@ class DxfPrepApp(tk.Tk):
         if not self.analysis:
             return
         for index, group in enumerate(self.content_groups(), start=1):
-            button = ttk.Button(
-                self.sheet_button_frame,
-                text=f"Sheet {index}",
-                command=lambda group_index=index - 1: self.zoom_to_sheet(group_index),
-            )
+            if self.group_has_review_unknown(group):
+                button = tk.Button(
+                    self.sheet_button_frame,
+                    text=f"Sheet {index}",
+                    command=lambda group_index=index - 1: self.zoom_to_sheet(group_index),
+                    background=DISPLAY_COLORS[dxf.LAYER_REVIEW],
+                    activebackground="#fab005",
+                    foreground="#212529",
+                    relief=tk.RAISED,
+                    bd=1,
+                    padx=6,
+                    pady=2,
+                )
+            else:
+                button = ttk.Button(
+                    self.sheet_button_frame,
+                    text=f"Sheet {index}",
+                    command=lambda group_index=index - 1: self.zoom_to_sheet(group_index),
+                )
             button.grid(row=(index - 1) // 2, column=(index - 1) % 2, sticky="ew", padx=2, pady=2)
         self.sheet_button_frame.columnconfigure(0, weight=1)
         self.sheet_button_frame.columnconfigure(1, weight=1)
+
+    def group_has_review_unknown(self, group: dict) -> bool:
+        if not self.analysis:
+            return False
+        sheet_bounds = group["sheet_bounds"]
+        for index, component in enumerate(self.analysis["components"]):
+            if self.component_layers[index] == dxf.LAYER_REVIEW and box_center_inside(component["bbox"], sheet_bounds):
+                return True
+        return False
 
     def open_settings(self) -> None:
         window = tk.Toplevel(self)

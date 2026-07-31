@@ -87,7 +87,7 @@ def group_float(entity: dict, code: int, default: float = 0.0) -> float:
 
 
 def point_key(point: tuple[float, float]) -> tuple[int, int]:
-    return (round(point[0] / TOLERANCE), round(point[1] / TOLERANCE))
+    return (math.floor(point[0] / TOLERANCE + 0.5), math.floor(point[1] / TOLERANCE + 0.5))
 
 
 def arc_endpoint(entity: dict, angle_code: int) -> tuple[float, float]:
@@ -105,10 +105,12 @@ def entity_color(entity: dict) -> str:
 def entity_geometry_signature(entity: dict) -> tuple | None:
     kind = entity["type"]
     if kind == "LINE":
-        p1 = point_key((group_float(entity, 10), group_float(entity, 20)))
-        p2 = point_key((group_float(entity, 11), group_float(entity, 21)))
-        if p1 == p2:
+        start = (group_float(entity, 10), group_float(entity, 20))
+        end = (group_float(entity, 11), group_float(entity, 21))
+        if math.hypot(start[0] - end[0], start[1] - end[1]) <= TOLERANCE:
             return None
+        p1 = point_key(start)
+        p2 = point_key(end)
         return (kind, min(p1, p2), max(p1, p2))
     if kind == "ARC":
         return (
@@ -148,7 +150,7 @@ def build_segments(entities: list[dict]) -> list[dict]:
         if kind == "LINE":
             p1 = (group_float(entity, 10), group_float(entity, 20))
             p2 = (group_float(entity, 11), group_float(entity, 21))
-            if point_key(p1) == point_key(p2):
+            if math.hypot(p1[0] - p2[0], p1[1] - p2[1]) <= TOLERANCE:
                 continue
             segments.append(
                 {
@@ -203,16 +205,45 @@ def build_segments(entities: list[dict]) -> list[dict]:
     return segments
 
 
+def endpoint_node_map(segments: list[dict]) -> dict[tuple[int, int, int], int]:
+    nodes: list[tuple[float, float]] = []
+    grid: dict[tuple[int, int], list[int]] = defaultdict(list)
+    node_by_endpoint: dict[tuple[int, int, int], int] = {}
+
+    for segment_index, segment in enumerate(segments):
+        for endpoint_index, point in enumerate((segment["p1"], segment["p2"])):
+            cell = (math.floor(point[0] / TOLERANCE), math.floor(point[1] / TOLERANCE))
+            node_id = None
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for candidate_id in grid.get((cell[0] + dx, cell[1] + dy), []):
+                        candidate = nodes[candidate_id]
+                        if math.hypot(point[0] - candidate[0], point[1] - candidate[1]) <= TOLERANCE:
+                            node_id = candidate_id
+                            break
+                    if node_id is not None:
+                        break
+                if node_id is not None:
+                    break
+            if node_id is None:
+                node_id = len(nodes)
+                nodes.append(point)
+                grid[cell].append(node_id)
+            node_by_endpoint[(segment_index, endpoint_index, 0)] = node_id
+    return node_by_endpoint
+
+
 def connected_components(segments: list[dict]) -> list[dict]:
-    adjacency: dict[tuple[int, int], list[tuple[tuple[int, int], int]]] = defaultdict(list)
+    endpoint_nodes = endpoint_node_map(segments)
+    adjacency: dict[int, list[tuple[int, int]]] = defaultdict(list)
     for index, segment in enumerate(segments):
-        a = point_key(segment["p1"])
-        b = point_key(segment["p2"])
+        a = endpoint_nodes[(index, 0, 0)]
+        b = endpoint_nodes[(index, 1, 0)]
         adjacency[a].append((b, index))
         adjacency[b].append((a, index))
 
     components = []
-    seen: set[tuple[int, int]] = set()
+    seen: set[int] = set()
     for start in adjacency:
         if start in seen:
             continue

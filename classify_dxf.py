@@ -10,6 +10,8 @@ from pathlib import Path
 TOLERANCE = 0.002
 DRILL_DIAMETER = 0.250
 DIAMETER_TOLERANCE = 0.006
+FLATTEN_CHORD_TOLERANCE = 0.005
+FLATTEN_MAX_ANGLE_DEGREES = 8.0
 
 LAYER_INNER = "INNER_SHELF_CUT_070"
 LAYER_OUTER = "OUTER_PROFILE"
@@ -251,7 +253,7 @@ def write_entities_to_layers(entities: list[dict], layers_by_entity: dict[int, s
     current_polyline_layer = LAYER_REVIEW
     for index, entity in enumerate(entities):
         kind = entity["type"]
-        layer = layers_by_entity.get(index, LAYER_REVIEW)
+        layer = layers_by_entity.get(index, group_value(entity, 8, LAYER_REVIEW))
         if kind == "POLYLINE":
             current_polyline_layer = layer
         elif kind in {"VERTEX", "SEQEND"}:
@@ -264,6 +266,142 @@ def render_entity(entity: dict) -> list[str]:
     for code, value in entity["groups"]:
         lines.extend([f"{code:3d}", value])
     return lines
+
+
+def line_entity(layer: str, color: str, p1: tuple[float, float], p2: tuple[float, float]) -> dict:
+    return {
+        "type": "LINE",
+        "groups": [
+            (8, layer),
+            (62, color),
+            (10, f"{p1[0]:.6f}"),
+            (20, f"{p1[1]:.6f}"),
+            (30, "0.0"),
+            (11, f"{p2[0]:.6f}"),
+            (21, f"{p2[1]:.6f}"),
+            (31, "0.0"),
+        ],
+    }
+
+
+def sample_segment(segment: dict, reverse: bool = False) -> list[tuple[float, float]]:
+    if segment["type"] != "ARC":
+        points = [segment["p1"], segment["p2"]]
+        return list(reversed(points)) if reverse else points
+
+    cx, cy = segment["center"]
+    radius = segment["radius"]
+    start = segment["start_angle"]
+    end = segment["end_angle"]
+    sweep = end - start
+    if sweep < 0:
+        sweep += 360
+
+    max_angle = math.radians(FLATTEN_MAX_ANGLE_DEGREES)
+    if radius > 0:
+        chord_angle = 2 * math.acos(max(-1.0, min(1.0, 1 - FLATTEN_CHORD_TOLERANCE / radius)))
+        max_angle = min(max_angle, chord_angle) if chord_angle > 0 else max_angle
+    steps = max(1, math.ceil(math.radians(sweep) / max_angle))
+    points = []
+    for step in range(steps + 1):
+        angle = math.radians(start + sweep * step / steps)
+        points.append((cx + radius * math.cos(angle), cy + radius * math.sin(angle)))
+    return list(reversed(points)) if reverse else points
+
+
+def ordered_component_points(component: dict, segments: list[dict]) -> list[tuple[float, float]] | None:
+    segment_indexes = set(component["segment_indexes"])
+    if not segment_indexes:
+        return None
+
+    adjacency: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for segment_index in segment_indexes:
+        segment = segments[segment_index]
+        adjacency[point_key(segment["p1"])].append(segment_index)
+        adjacency[point_key(segment["p2"])].append(segment_index)
+
+    if any(len(indexes) != 2 for indexes in adjacency.values()):
+        return None
+
+    start_segment_index = min(segment_indexes)
+    start_segment = segments[start_segment_index]
+    current_key = point_key(start_segment["p1"])
+    unused = set(segment_indexes)
+    points: list[tuple[float, float]] = []
+
+    while unused:
+        next_segment_index = None
+        for candidate in adjacency[current_key]:
+            if candidate in unused:
+                next_segment_index = candidate
+                break
+        if next_segment_index is None:
+            return None
+
+        segment = segments[next_segment_index]
+        reverse = point_key(segment["p2"]) == current_key
+        sampled = sample_segment(segment, reverse=reverse)
+        if points and point_key(points[-1]) == point_key(sampled[0]):
+            points.extend(sampled[1:])
+        else:
+            points.extend(sampled)
+        unused.remove(next_segment_index)
+        current_key = point_key(sampled[-1])
+
+    if len(points) > 1 and point_key(points[0]) == point_key(points[-1]):
+        points.pop()
+    return points if len(points) > 2 else None
+
+
+def CAM software_sensitive_arc_profile(component: dict, segments: list[dict]) -> bool:
+    if component.get("layer") != LAYER_OUTER or not component.get("closed"):
+        return False
+    min_x, min_y, max_x, max_y = component["bbox"]
+    if max(max_x - min_x, max_y - min_y) > 12.0:
+        return False
+    component_segments = [segments[index] for index in component["segment_indexes"]]
+    arc_count = sum(1 for segment in component_segments if segment["type"] == "ARC")
+    return arc_count >= 8
+
+
+def flatten_CAM software_sensitive_profiles(analysis: dict, entities: list[dict]) -> list[dict]:
+    segments = analysis["segments"]
+    flattened_entities: list[dict] = []
+    flattened_roots: set[int] = set()
+
+    for component in analysis["components"]:
+        if not CAM software_sensitive_arc_profile(component, segments):
+            continue
+        points = ordered_component_points(component, segments)
+        if not points:
+            continue
+        layer = component.get("layer", LAYER_REVIEW)
+        color = LAYER_COLORS.get(layer, "7")
+        flattened_roots.update(component["entity_indexes"])
+        for start, end in zip(points, points[1:] + points[:1]):
+            if point_key(start) != point_key(end):
+                flattened_entities.append(line_entity(layer, color, start, end))
+
+    if not flattened_entities:
+        return entities
+
+    filtered_entities: list[dict] = []
+    skipping_polyline = False
+    for index, entity in enumerate(entities):
+        kind = entity["type"]
+        if kind == "POLYLINE":
+            skipping_polyline = index in flattened_roots
+            if not skipping_polyline:
+                filtered_entities.append(entity)
+        elif kind in {"VERTEX", "SEQEND"}:
+            if not skipping_polyline:
+                filtered_entities.append(entity)
+            if kind == "SEQEND":
+                skipping_polyline = False
+        elif index not in flattened_roots:
+            filtered_entities.append(entity)
+
+    return filtered_entities + flattened_entities
 
 
 def layer_record(name: str, color: str) -> list[str]:
@@ -364,13 +502,14 @@ def analyze_dxf(input_path: Path) -> dict:
 
 
 def export_classified_dxf(analysis: dict, output: Path) -> None:
-    entities = copy.deepcopy(analysis["entities"])
     layers_by_entity: dict[int, str] = {}
     for component in analysis["components"]:
         layer = component.get("layer", classify_component(component))
         for entity_index in component["entity_indexes"]:
             layers_by_entity[entity_index] = layer
+    entities = copy.deepcopy(analysis["entities"])
     write_entities_to_layers(entities, layers_by_entity)
+    entities = flatten_CAM software_sensitive_profiles(analysis, entities)
     write_dxf(analysis["pairs"], entities, output)
 
 

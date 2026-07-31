@@ -251,6 +251,7 @@ class DxfPrepApp(tk.Tk):
         self.component_layers: list[str] = []
         self.selected_component: int | None = None
         self.selected_components: set[int] = set()
+        self.undo_stack: list[list[tuple[int, str, str]]] = []
         self.scale = 1.0
         self.offset_x = 0.0
         self.offset_y = 0.0
@@ -431,6 +432,8 @@ class DxfPrepApp(tk.Tk):
         self.canvas.bind("<ButtonPress-2>", self.start_pan)
         self.canvas.bind("<B2-Motion>", self.pan)
         self.canvas.bind("<MouseWheel>", self.zoom)
+        self.bind_all("<Control-z>", self.undo_last_layer_change)
+        self.bind_all("<Control-Z>", self.undo_last_layer_change)
 
     def build_sheet_buttons(self) -> None:
         for child in self.sheet_button_frame.winfo_children():
@@ -550,6 +553,7 @@ class DxfPrepApp(tk.Tk):
             self.component_layers = [component["layer"] for component in self.analysis["components"]]
             self.selected_component = None
             self.selected_components.clear()
+            self.undo_stack.clear()
             self.file_var.set(self.input_path.name)
             self.zoom_to_fit()
             self.build_sheet_buttons()
@@ -933,7 +937,17 @@ class DxfPrepApp(tk.Tk):
         if not self.selected_components:
             return
         target_layer = self.reassign_var.get()
-        for index in self.selected_components:
+        changes = []
+        for index in sorted(self.selected_components):
+            old_layer = self.component_layers[index]
+            if old_layer == target_layer:
+                continue
+            changes.append((index, old_layer, target_layer))
+        if not changes:
+            return
+        self.undo_stack.append(changes)
+        self.undo_stack = self.undo_stack[-100:]
+        for index, _old_layer, _new_layer in changes:
             self.component_layers[index] = target_layer
         if self.selected_component is not None:
             self.selected_layer_var.set(self.component_layers[self.selected_component])
@@ -941,6 +955,29 @@ class DxfPrepApp(tk.Tk):
         self.update_status()
         self.update_selected_panel()
         self.redraw()
+
+    def undo_last_layer_change(self, _event: tk.Event | None = None) -> str:
+        if not self.undo_stack:
+            return "break"
+        changes = self.undo_stack.pop()
+        restored_indexes = []
+        for index, old_layer, _new_layer in changes:
+            if 0 <= index < len(self.component_layers):
+                self.component_layers[index] = old_layer
+                restored_indexes.append(index)
+        if restored_indexes:
+            self.selected_components = set(restored_indexes)
+            self.selected_component = restored_indexes[0]
+        else:
+            self.selected_component = None
+            self.selected_components.clear()
+        if self.selected_component is not None:
+            self.selected_layer_var.set(self.component_layers[self.selected_component])
+        self.build_sheet_buttons()
+        self.update_status()
+        self.update_selected_panel()
+        self.redraw()
+        return "break"
 
     def update_status(self) -> None:
         if not self.analysis:

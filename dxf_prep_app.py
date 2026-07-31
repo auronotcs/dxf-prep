@@ -246,6 +246,7 @@ class DxfPrepApp(tk.Tk):
             layer: tk.BooleanVar(value=True) for layer in LAYER_ORDER
         }
         self.reassign_var = tk.StringVar(value=dxf.LAYER_REVIEW)
+        self.selected_layer_var = tk.StringVar(value="")
         self.material_var = tk.StringVar(value="Auto")
         self.status_var = tk.StringVar(value="Choose a DXF to begin.")
         self.file_var = tk.StringVar(value="No file loaded")
@@ -347,19 +348,28 @@ class DxfPrepApp(tk.Tk):
         self.selected_text.grid(row=0, column=0, sticky="ew")
         self.selected_text.configure(state=tk.DISABLED)
 
+        ttk.Label(selected_panel, text="Selected Layer").grid(row=1, column=0, sticky="w", pady=(12, 4))
+        ttk.Combobox(
+            selected_panel,
+            textvariable=self.selected_layer_var,
+            values=LAYER_ORDER,
+            state="readonly",
+        ).grid(row=2, column=0, sticky="ew")
+
+        ttk.Label(selected_panel, text="Move To Layer").grid(row=3, column=0, sticky="w", pady=(12, 4))
         ttk.Combobox(
             selected_panel,
             textvariable=self.reassign_var,
             values=LAYER_ORDER,
             state="readonly",
-        ).grid(row=1, column=0, sticky="ew", pady=(12, 6))
+        ).grid(row=4, column=0, sticky="ew", pady=(0, 6))
         ttk.Button(selected_panel, text="Move Selected To Layer", command=self.reassign_selected).grid(
-            row=2, column=0, sticky="ew"
+            row=5, column=0, sticky="ew"
         )
-        ttk.Button(selected_panel, text="Zoom To Fit", command=self.zoom_to_fit).grid(row=3, column=0, sticky="ew", pady=(16, 0))
-        ttk.Label(selected_panel, text="Zoom To Sheet").grid(row=4, column=0, sticky="w", pady=(12, 4))
+        ttk.Button(selected_panel, text="Zoom To Fit", command=self.zoom_to_fit).grid(row=6, column=0, sticky="ew", pady=(16, 0))
+        ttk.Label(selected_panel, text="Zoom To Sheet").grid(row=7, column=0, sticky="w", pady=(12, 4))
         self.sheet_button_frame = ttk.Frame(selected_panel)
-        self.sheet_button_frame.grid(row=5, column=0, sticky="ew")
+        self.sheet_button_frame.grid(row=8, column=0, sticky="ew")
         self.sheet_button_frame.columnconfigure(0, weight=1)
         self.sheet_button_frame.columnconfigure(1, weight=1)
 
@@ -738,7 +748,7 @@ class DxfPrepApp(tk.Tk):
                 candidates.append((area, index))
         if candidates:
             self.selected_component = min(candidates)[1]
-            self.reassign_var.set(self.component_layers[self.selected_component])
+            self.selected_layer_var.set(self.component_layers[self.selected_component])
             self.update_selected_panel()
             self.redraw()
 
@@ -776,6 +786,7 @@ class DxfPrepApp(tk.Tk):
         if self.selected_component is None:
             return
         self.component_layers[self.selected_component] = self.reassign_var.get()
+        self.selected_layer_var.set(self.component_layers[self.selected_component])
         self.build_sheet_buttons()
         self.update_status()
         self.update_selected_panel()
@@ -797,9 +808,11 @@ class DxfPrepApp(tk.Tk):
         self.selected_text.configure(state=tk.NORMAL)
         self.selected_text.delete("1.0", tk.END)
         if self.selected_component is None or not self.analysis:
+            self.selected_layer_var.set("")
             self.selected_text.insert(tk.END, "Click a contour or marking in the preview.")
         else:
             component = self.analysis["components"][self.selected_component]
+            self.selected_layer_var.set(self.component_layers[self.selected_component])
             min_x, min_y, max_x, max_y = component["bbox"]
             width = max_x - min_x
             height = max_y - min_y

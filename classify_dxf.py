@@ -196,12 +196,14 @@ def connected_components(segments: list[dict]) -> list[dict]:
         ys = [point[1] for point in points]
         degrees = [len(adjacency[node]) for node in nodes]
         colors = Counter(segments[segment_index]["color"] for segment_index in segment_indexes)
+        bad_degrees = [degree for degree in degrees if degree != 2]
         components.append(
             {
                 "segment_indexes": segment_indexes,
                 "entity_indexes": {segments[i]["entity"] for i in segment_indexes},
                 "closed": all(degree == 2 for degree in degrees),
-                "open_nodes": sum(1 for degree in degrees if degree != 2),
+                "open_nodes": len(bad_degrees),
+                "branch_nodes": sum(1 for degree in bad_degrees if degree > 2),
                 "bbox": (min(xs), min(ys), max(xs), max(ys)),
                 "color": colors.most_common(1)[0][0],
             }
@@ -218,7 +220,8 @@ def classify_component(component: dict) -> str:
     if not component["closed"]:
         if component["color"] == "0" and max(width, height) <= 1.0:
             return LAYER_ID_MARKING
-        if component["open_nodes"] <= 2 and max(width, height) > 1.0:
+        small_branched_contour = component.get("branch_nodes", 0) > 0 and max(width, height) < 8.0
+        if component["open_nodes"] <= 2 and not small_branched_contour and max(width, height) > 1.0:
             if component["color"] == "3":
                 return LAYER_INNER
             if component["color"] == "7":

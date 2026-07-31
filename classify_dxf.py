@@ -238,34 +238,6 @@ def classify_component(component: dict) -> str:
     return LAYER_REVIEW
 
 
-def demote_outer_profiles_with_branched_inner_reviews(components: list[dict]) -> None:
-    branched_inner_reviews = []
-    for component in components:
-        min_x, min_y, max_x, max_y = component["bbox"]
-        if (
-            component.get("layer") == LAYER_REVIEW
-            and component.get("color") == "3"
-            and component.get("branch_nodes", 0) > 0
-            and max(max_x - min_x, max_y - min_y) < 10.0
-        ):
-            branched_inner_reviews.append(component)
-
-    if not branched_inner_reviews:
-        return
-
-    for component in components:
-        min_x, min_y, max_x, max_y = component["bbox"]
-        if (
-            component.get("layer") != LAYER_OUTER
-            or component.get("color") != "7"
-            or not component.get("closed")
-            or max(max_x - min_x, max_y - min_y) >= 10.0
-        ):
-            continue
-        if any(bbox_contains(component["bbox"], inner["bbox"], tolerance=0.15) for inner in branched_inner_reviews):
-            component["layer"] = LAYER_REVIEW
-
-
 def replace_layer(entity: dict, layer: str) -> None:
     groups = entity["groups"]
     for index, (code, _value) in enumerate(groups):
@@ -375,7 +347,6 @@ def analyze_dxf(input_path: Path) -> dict:
     summary = Counter()
     for component in components:
         component["layer"] = classify_component(component)
-    demote_outer_profiles_with_branched_inner_reviews(components)
     for component in components:
         layer = component["layer"]
         summary[layer] += 1

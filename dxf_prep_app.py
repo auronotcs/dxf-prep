@@ -704,6 +704,42 @@ class DxfPrepApp(tk.Tk):
         if len(screen_points) >= 4:
             self.canvas.create_line(*screen_points, fill=color, width=width, smooth=False)
 
+    @staticmethod
+    def point_to_segment_distance(
+        point: tuple[float, float],
+        start: tuple[float, float],
+        end: tuple[float, float],
+    ) -> float:
+        px, py = point
+        x1, y1 = start
+        x2, y2 = end
+        dx = x2 - x1
+        dy = y2 - y1
+        length_squared = dx * dx + dy * dy
+        if length_squared == 0:
+            return math.hypot(px - x1, py - y1)
+        t = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / length_squared))
+        nearest_x = x1 + t * dx
+        nearest_y = y1 + t * dy
+        return math.hypot(px - nearest_x, py - nearest_y)
+
+    def distance_to_segment(self, world: tuple[float, float], segment: dict) -> float:
+        if segment["type"] == "ARC":
+            points = self.arc_points(segment)
+        else:
+            points = [segment["p1"], segment["p2"]]
+        return min(
+            self.point_to_segment_distance(world, start, end)
+            for start, end in zip(points, points[1:])
+        )
+
+    def distance_to_component(self, world: tuple[float, float], component: dict) -> float:
+        segments = self.analysis["segments"]
+        return min(
+            self.distance_to_segment(world, segments[segment_index])
+            for segment_index in component["segment_indexes"]
+        )
+
     def arc_points(self, segment: dict) -> list[tuple[float, float]]:
         cx, cy = segment["center"]
         radius = segment["radius"]
@@ -785,17 +821,21 @@ class DxfPrepApp(tk.Tk):
         canvas_y = self.canvas.canvasy(event.y)
         world = self.screen_to_world((canvas_x, canvas_y))
         candidates = []
+        pad = max(0.08, self.selection_tolerance_px() / max(self.scale, 1))
         for index, component in enumerate(self.analysis["components"]):
             layer = self.component_layers[index]
             if not self.layer_visibility[layer].get():
                 continue
             min_x, min_y, max_x, max_y = component["bbox"]
-            pad = max(0.08, self.selection_tolerance_px() / max(self.scale, 1))
             if min_x - pad <= world[0] <= max_x + pad and min_y - pad <= world[1] <= max_y + pad:
+                distance = self.distance_to_component(world, component)
+                if distance > pad:
+                    continue
                 area = max((max_x - min_x) * (max_y - min_y), 0.0001)
-                candidates.append((area, index))
+                review_priority = 0 if layer == dxf.LAYER_REVIEW else 1
+                candidates.append((review_priority, distance, area, index))
         if candidates:
-            selected = min(candidates)[1]
+            selected = min(candidates)[3]
             if event.state & 0x0001:
                 if selected in self.selected_components:
                     self.selected_components.remove(selected)

@@ -323,13 +323,14 @@ class DxfPrepApp(tk.Tk):
 
         toolbar = ttk.Frame(root)
         toolbar.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        toolbar.columnconfigure(7, weight=1)
+        toolbar.columnconfigure(8, weight=1)
 
         ttk.Button(toolbar, text="Open DXF", command=self.open_file).grid(row=0, column=0, padx=(0, 8))
-        ttk.Button(toolbar, text="Export Aluminum DXF", command=self.export_file).grid(row=0, column=1, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Acrylic DXF", command=self.export_acrylic_file).grid(row=0, column=2, padx=(0, 12))
-        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=3, padx=(0, 12))
-        ttk.Label(toolbar, text="View").grid(row=0, column=4, padx=(0, 6), sticky="e")
+        ttk.Button(toolbar, text="Open Latest DXF", command=self.open_latest_file).grid(row=0, column=1, padx=(0, 12))
+        ttk.Button(toolbar, text="Export Aluminum DXF", command=self.export_file).grid(row=0, column=2, padx=(0, 12))
+        ttk.Button(toolbar, text="Export Acrylic DXF", command=self.export_acrylic_file).grid(row=0, column=3, padx=(0, 12))
+        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=4, padx=(0, 12))
+        ttk.Label(toolbar, text="View").grid(row=0, column=5, padx=(0, 6), sticky="e")
         material_combo = ttk.Combobox(
             toolbar,
             textvariable=self.material_var,
@@ -337,10 +338,10 @@ class DxfPrepApp(tk.Tk):
             state="readonly",
             width=10,
         )
-        material_combo.grid(row=0, column=5, padx=(0, 8))
+        material_combo.grid(row=0, column=6, padx=(0, 8))
         material_combo.bind("<<ComboboxSelected>>", self.change_material_view)
-        ttk.Button(toolbar, text="Fit", command=self.zoom_to_fit).grid(row=0, column=6, padx=(0, 12))
-        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=7, sticky="w")
+        ttk.Button(toolbar, text="Fit", command=self.zoom_to_fit).grid(row=0, column=7, padx=(0, 12))
+        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=8, sticky="w")
 
         body = ttk.PanedWindow(root, orient=tk.HORIZONTAL)
         body.grid(row=1, column=0, sticky="nsew")
@@ -546,8 +547,44 @@ class DxfPrepApp(tk.Tk):
         )
         if not filename:
             return
+        self.load_dxf(Path(filename))
+
+    def open_latest_file(self) -> None:
+        folder = self.preferred_directory()
+        latest = self.find_latest_dxf(folder)
+        if not latest:
+            messagebox.showinfo("No DXF found", f"No source DXF files were found in:\n{folder}")
+            return
+        self.load_dxf(latest)
+
+    def find_latest_dxf(self, folder: Path) -> Path | None:
+        excluded_suffixes = (
+            "_classified.dxf",
+            "_acrylic_cutout.dxf",
+            "_acrylic_cutout_test.dxf",
+            "_app_test.dxf",
+        )
+        candidates = []
         try:
-            self.input_path = Path(filename)
+            files = folder.rglob("*.dxf")
+            for path in files:
+                name = path.name.lower()
+                if any(name.endswith(suffix) for suffix in excluded_suffixes):
+                    continue
+                try:
+                    candidates.append((path.stat().st_mtime, path))
+                except OSError:
+                    continue
+        except OSError as exc:
+            messagebox.showerror("Could not search for DXF", str(exc))
+            return None
+        if not candidates:
+            return None
+        return max(candidates, key=lambda item: item[0])[1]
+
+    def load_dxf(self, path: Path) -> None:
+        try:
+            self.input_path = path
             self.remember_directory(self.input_path.parent)
             self.analysis = dxf.analyze_dxf(self.input_path)
             self.component_layers = [component["layer"] for component in self.analysis["components"]]

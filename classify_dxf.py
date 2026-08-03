@@ -491,6 +491,40 @@ def bbox_contains(
     )
 
 
+def bbox_margins(
+    outer: tuple[float, float, float, float],
+    inner: tuple[float, float, float, float],
+) -> tuple[float, float, float, float]:
+    return (
+        inner[0] - outer[0],
+        inner[1] - outer[1],
+        outer[2] - inner[2],
+        outer[3] - inner[3],
+    )
+
+
+def is_consistent_inset(
+    outer: tuple[float, float, float, float],
+    inner: tuple[float, float, float, float],
+    minimum_inset: float = 0.05,
+    inset_tolerance: float = 0.08,
+) -> bool:
+    if not bbox_contains(outer, inner):
+        return False
+    margins = bbox_margins(outer, inner)
+    if any(margin < minimum_inset for margin in margins):
+        return False
+    average = sum(margins) / len(margins)
+    return all(abs(margin - average) <= inset_tolerance for margin in margins)
+
+
+def has_consistent_inset_container(
+    component: dict,
+    outside_bounds: list[tuple[float, float, float, float]],
+) -> bool:
+    return any(is_consistent_inset(outside, component["bbox"]) for outside in outside_bounds)
+
+
 def acrylic_feature_role_with_context(
     component: dict,
     outside_bounds: list[tuple[float, float, float, float]],
@@ -502,9 +536,13 @@ def acrylic_feature_role_with_context(
         return "drill"
     if component["color"] == "1" and size > 1.0:
         return "outside"
+    if component.get("closed") and has_consistent_inset_container(component, outside_bounds):
+        return "inside"
+    if component["color"] == "5" and component.get("closed") and any(
+        bbox_contains(outside, component["bbox"]) for outside in outside_bounds
+    ):
+        return "inside"
     if layer == LAYER_OUTER:
-        if any(bbox_contains(outside, component["bbox"]) for outside in outside_bounds):
-            return "inside"
         return "outside"
     if layer == LAYER_PROFILE_HOLES:
         return "outside"

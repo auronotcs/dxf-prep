@@ -10,6 +10,7 @@ from pathlib import Path
 TOLERANCE = 0.002
 DRILL_DIAMETER = 0.250
 DIAMETER_TOLERANCE = 0.006
+SHORT_SEAM_LINE_MAX = 0.012
 
 LAYER_INNER = "INNER_SHELF_CUT_070"
 LAYER_OUTER = "OUTER_PROFILE"
@@ -554,6 +555,92 @@ def copy_entities_to_layer(entities: list[dict], root_indexes: set[int], layer: 
     return filter_entities_for_layer_map(copied, {index: layer for index in root_indexes})
 
 
+def line_points(entity: dict) -> tuple[tuple[float, float], tuple[float, float]]:
+    return (
+        (group_float(entity, 10), group_float(entity, 20)),
+        (group_float(entity, 11), group_float(entity, 21)),
+    )
+
+
+def set_line_points(entity: dict, p1: tuple[float, float], p2: tuple[float, float]) -> None:
+    replacements = {
+        10: f"{p1[0]:.6f}",
+        20: f"{p1[1]:.6f}",
+        11: f"{p2[0]:.6f}",
+        21: f"{p2[1]:.6f}",
+    }
+    for index, (code, value) in enumerate(entity["groups"]):
+        if code in replacements:
+            entity["groups"][index] = (code, replacements[code])
+
+
+def point_distance(a: tuple[float, float], b: tuple[float, float]) -> float:
+    return math.hypot(a[0] - b[0], a[1] - b[1])
+
+
+def line_length(entity: dict) -> float:
+    p1, p2 = line_points(entity)
+    return point_distance(p1, p2)
+
+
+def connected_collinear_short_lines(first: dict, second: dict) -> tuple[tuple[float, float], tuple[float, float]] | None:
+    first_points = line_points(first)
+    second_points = line_points(second)
+    connections = []
+    for first_index, first_point in enumerate(first_points):
+        for second_index, second_point in enumerate(second_points):
+            if point_distance(first_point, second_point) <= TOLERANCE:
+                connections.append((first_index, second_index))
+    if not connections:
+        return None
+
+    first_length = line_length(first)
+    second_length = line_length(second)
+    if first_length > SHORT_SEAM_LINE_MAX or second_length > SHORT_SEAM_LINE_MAX:
+        return None
+
+    first_vector = (first_points[1][0] - first_points[0][0], first_points[1][1] - first_points[0][1])
+    second_vector = (second_points[1][0] - second_points[0][0], second_points[1][1] - second_points[0][1])
+    cross = abs(first_vector[0] * second_vector[1] - first_vector[1] * second_vector[0])
+    if cross > 0.00001:
+        return None
+
+    first_shared, second_shared = connections[0]
+    start = first_points[1 - first_shared]
+    end = second_points[1 - second_shared]
+    if point_distance(start, end) > SHORT_SEAM_LINE_MAX * 2:
+        return None
+    return start, end
+
+
+def collapse_short_seam_lines(entities: list[dict]) -> list[dict]:
+    remove_indexes: set[int] = set()
+    components = connected_components(build_segments(entities))
+    for component in components:
+        line_indexes = [
+            index
+            for index in sorted(component["entity_indexes"])
+            if index < len(entities)
+            and entities[index]["type"] == "LINE"
+            and line_length(entities[index]) <= SHORT_SEAM_LINE_MAX
+        ]
+        for i, first_index in enumerate(line_indexes):
+            if first_index in remove_indexes:
+                continue
+            for second_index in line_indexes[i + 1 :]:
+                if second_index in remove_indexes:
+                    continue
+                merged = connected_collinear_short_lines(entities[first_index], entities[second_index])
+                if not merged:
+                    continue
+                set_line_points(entities[first_index], merged[0], merged[1])
+                remove_indexes.add(second_index)
+                break
+    if not remove_indexes:
+        return entities
+    return [entity for index, entity in enumerate(entities) if index not in remove_indexes]
+
+
 def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     drill_roots: set[int] = set()
     inside_roots: set[int] = set()
@@ -590,6 +677,7 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], inside_roots | cleanout_outline_roots, LAYER_CLEANOUT))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], outside_roots, LAYER_ACRYLIC))
+    acrylic_entities = collapse_short_seam_lines(acrylic_entities)
     write_dxf(analysis["pairs"], acrylic_entities, output, ACRYLIC_LAYER_COLORS)
     return len(drill_roots | inside_roots | outside_roots)
 

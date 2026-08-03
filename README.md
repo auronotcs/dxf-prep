@@ -40,3 +40,7 @@ If that runtime is not present, the launcher falls back to the Windows `py` laun
 ## Notes
 
 This tool is intentionally tuned for a specific sign fabrication workflow. It is useful as a starting point for similar CAM/design-software DXF preprocessing, but geometry classification rules may need adjustment for different export settings or shop conventions.
+
+## Future Checks
+
+- Commit `9d2cf3a` added acrylic-export seam cleanup by collapsing connected, collinear, very short line pairs. If aluminum exports show similar CAM software join/clean errors, consider applying the same cleanup to aluminum export as well.

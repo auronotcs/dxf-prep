@@ -497,12 +497,16 @@ def acrylic_feature_role_with_context(
 ) -> str | None:
     layer = component.get("layer", classify_component(component))
     min_x, min_y, max_x, max_y = component["bbox"]
-    size = max(max_x - min_x, max_y - min_y)
+    width = max_x - min_x
+    height = max_y - min_y
+    size = max(width, height)
     if layer == LAYER_DRILL:
         return "drill"
     if component["color"] == "1" and size > 1.0:
         return "outside"
     if layer == LAYER_OUTER:
+        if len(component["entity_indexes"]) == 1 and size <= 6.0 and max(width, height) / max(min(width, height), 0.001) >= 1.8:
+            return "outside"
         if any(bbox_contains(outside, component["bbox"]) for outside in outside_bounds):
             return "inside"
         return "outside"

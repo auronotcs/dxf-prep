@@ -10,6 +10,11 @@ from pathlib import Path
 import classify_dxf as dxf
 
 
+if getattr(sys, "frozen", False):
+    bundle_lib = Path(getattr(sys, "_MEIPASS", "")) / "Lib"
+    if bundle_lib.exists():
+        sys.path.insert(0, str(bundle_lib))
+
 RUNTIME_TCL = Path(r"C:\Users\auron\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\tcl")
 if RUNTIME_TCL.exists():
     os.environ.setdefault("TCL_LIBRARY", str(RUNTIME_TCL / "tcl8.6"))

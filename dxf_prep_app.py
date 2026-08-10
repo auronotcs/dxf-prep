@@ -3,10 +3,9 @@ from __future__ import annotations
 import json
 import math
 import os
-import tkinter as tk
+import sys
 from collections import Counter
 from pathlib import Path
-from tkinter import filedialog, messagebox, ttk
 
 import classify_dxf as dxf
 
@@ -15,6 +14,9 @@ RUNTIME_TCL = Path(r"C:\Users\auron\.cache\codex-runtimes\codex-primary-runtime\
 if RUNTIME_TCL.exists():
     os.environ.setdefault("TCL_LIBRARY", str(RUNTIME_TCL / "tcl8.6"))
     os.environ.setdefault("TK_LIBRARY", str(RUNTIME_TCL / "tk8.6"))
+
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
 
 
 LAYER_ORDER = [
@@ -55,7 +57,21 @@ MATERIAL_SIZES = {
     "60 x 120": (120.0, 60.0),
 }
 
-SETTINGS_PATH = Path(__file__).with_name("dxf_prep_settings.json")
+
+def app_directory() -> Path:
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent
+    return Path(__file__).parent
+
+
+def bundled_resource_path(name: str) -> Path:
+    bundle_dir = getattr(sys, "_MEIPASS", None)
+    if bundle_dir:
+        return Path(bundle_dir) / name
+    return Path(__file__).with_name(name)
+
+
+SETTINGS_PATH = app_directory() / "dxf_prep_settings.json"
 DEFAULT_SETTINGS = {
     "default_directory": r"C:\Users\auron\Documents\Classification root",
     "last_directory": "",
@@ -307,7 +323,7 @@ class DxfPrepApp(tk.Tk):
             return float(DEFAULT_SETTINGS["selection_tolerance_px"])
 
     def set_app_icon(self) -> None:
-        icon_path = Path(__file__).with_name("dxf_prep_icon.ico")
+        icon_path = bundled_resource_path("dxf_prep_icon.ico")
         if not icon_path.exists():
             return
         try:

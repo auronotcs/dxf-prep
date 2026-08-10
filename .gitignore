@@ -10,6 +10,7 @@
 !README.md
 !LICENSE
 !.gitignore
+!Build DXF Prep EXE.bat
 
 # Keep local settings, generated DXFs, caches, and snapshots out of source control.
 dxf_prep_settings.json

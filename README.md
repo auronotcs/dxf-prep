@@ -16,6 +16,7 @@ DXF Prep is a small Windows desktop utility for preparing design-software-export
   - `DRILL_250`
   - `CLEANOUT`
   - `ACRYLIC CUTOUT`
+  - `ID_MARKING`
 - Preserves polyline, line, and arc geometry from source DXF exports.
 - Shows a color-coded preview with detected sheet/group boxes.
 - Provides per-sheet zoom buttons.

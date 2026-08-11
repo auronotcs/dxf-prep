@@ -36,6 +36,7 @@ ACRYLIC_LAYER_COLORS = {
     LAYER_DRILL: "1",
     LAYER_CLEANOUT: "7",
     LAYER_ACRYLIC: "11",
+    LAYER_ID_MARKING: "8",
 }
 
 
@@ -646,6 +647,7 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     inside_roots: set[int] = set()
     outside_roots: set[int] = set()
     cleanout_outline_roots: set[int] = set()
+    id_marking_roots: set[int] = set()
     outside_bounds = [
         component["bbox"]
         for component in analysis["components"]
@@ -654,6 +656,10 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     ]
     roles_by_component = []
     for component in analysis["components"]:
+        layer = component.get("layer", classify_component(component))
+        if layer == LAYER_ID_MARKING:
+            id_marking_roots.update(component["entity_indexes"])
+            continue
         role = acrylic_feature_role_with_context(component, outside_bounds)
         roles_by_component.append((component, role))
         if not role:
@@ -677,9 +683,10 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], inside_roots | cleanout_outline_roots, LAYER_CLEANOUT))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], outside_roots, LAYER_ACRYLIC))
+    acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     acrylic_entities = collapse_short_seam_lines(acrylic_entities)
     write_dxf(analysis["pairs"], acrylic_entities, output, ACRYLIC_LAYER_COLORS)
-    return len(drill_roots | inside_roots | outside_roots)
+    return len(drill_roots | inside_roots | outside_roots | id_marking_roots)
 
 
 def process_dxf(input_path: Path, output: Path | None = None) -> tuple[Path, Counter]:

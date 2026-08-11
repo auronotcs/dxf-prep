@@ -20,6 +20,7 @@ LAYER_ID_MARKING = "ID_MARKING"
 LAYER_REVIEW = "REVIEW_UNKNOWN"
 LAYER_CLEANOUT = "CLEANOUT"
 LAYER_ACRYLIC = "ACRYLIC CUTOUT"
+LAYER_POLY_BACK = "POLY BACK CUTOUT"
 
 LAYER_COLORS = {
     LAYER_INNER: "3",
@@ -30,12 +31,19 @@ LAYER_COLORS = {
     LAYER_REVIEW: "2",
     LAYER_CLEANOUT: "7",
     LAYER_ACRYLIC: "11",
+    LAYER_POLY_BACK: "7",
 }
 
 ACRYLIC_LAYER_COLORS = {
     LAYER_DRILL: "1",
     LAYER_CLEANOUT: "7",
     LAYER_ACRYLIC: "11",
+    LAYER_ID_MARKING: "8",
+}
+
+POLY_BACK_LAYER_COLORS = {
+    LAYER_DRILL: "1",
+    LAYER_POLY_BACK: "7",
     LAYER_ID_MARKING: "8",
 }
 
@@ -640,6 +648,67 @@ def collapse_short_seam_lines(entities: list[dict]) -> list[dict]:
     if not remove_indexes:
         return entities
     return [entity for index, entity in enumerate(entities) if index not in remove_indexes]
+
+
+def component_arc_diameter(component: dict, segments: list[dict]) -> float | None:
+    radii = [
+        segments[index].get("radius", 0.0)
+        for index in component["segment_indexes"]
+        if index < len(segments) and segments[index]["type"] == "ARC"
+    ]
+    if not radii:
+        return None
+    return 2 * max(radii)
+
+
+def is_poly_back_drill(component: dict, segments: list[dict]) -> bool:
+    if not component.get("closed"):
+        return False
+    arc_diameter = component_arc_diameter(component, segments)
+    if arc_diameter is not None:
+        return abs(arc_diameter - DRILL_DIAMETER) <= DIAMETER_TOLERANCE
+
+    min_x, min_y, max_x, max_y = component["bbox"]
+    width = max_x - min_x
+    height = max_y - min_y
+    diameter = (width + height) / 2
+    return abs(width - height) <= DIAMETER_TOLERANCE and abs(diameter - DRILL_DIAMETER) <= DIAMETER_TOLERANCE
+
+
+def is_poly_back_exterior(component: dict) -> bool:
+    if not component.get("closed"):
+        return False
+    min_x, min_y, max_x, max_y = component["bbox"]
+    size = max(max_x - min_x, max_y - min_y)
+    layer = component.get("layer", classify_component(component))
+    return layer in {LAYER_OUTER, LAYER_PROFILE_HOLES} or (component.get("color") == "1" and size > 0.5)
+
+
+def export_poly_back_dxf(analysis: dict, output: Path) -> int:
+    drill_roots: set[int] = set()
+    exterior_roots: set[int] = set()
+    id_marking_roots: set[int] = set()
+    feature_count = 0
+
+    for component in analysis["components"]:
+        layer = component.get("layer", classify_component(component))
+        if layer == LAYER_ID_MARKING:
+            id_marking_roots.update(component["entity_indexes"])
+            feature_count += 1
+        elif is_poly_back_drill(component, analysis["segments"]):
+            drill_roots.update(component["entity_indexes"])
+            feature_count += 1
+        elif is_poly_back_exterior(component):
+            exterior_roots.update(component["entity_indexes"])
+            feature_count += 1
+
+    poly_back_entities = []
+    poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
+    poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], exterior_roots, LAYER_POLY_BACK))
+    poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
+    poly_back_entities = collapse_short_seam_lines(poly_back_entities)
+    write_dxf(analysis["pairs"], poly_back_entities, output, POLY_BACK_LAYER_COLORS)
+    return feature_count
 
 
 def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:

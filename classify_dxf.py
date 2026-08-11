@@ -661,6 +661,34 @@ def component_arc_diameter(component: dict, segments: list[dict]) -> float | Non
     return 2 * max(radii)
 
 
+def component_drill_circle(component: dict, segments: list[dict], layer: str) -> dict:
+    arc_segments = [
+        segments[index]
+        for index in component["segment_indexes"]
+        if index < len(segments) and segments[index]["type"] == "ARC"
+    ]
+    if arc_segments:
+        center_x = sum(segment["center"][0] for segment in arc_segments) / len(arc_segments)
+        center_y = sum(segment["center"][1] for segment in arc_segments) / len(arc_segments)
+        radius = sum(segment["radius"] for segment in arc_segments) / len(arc_segments)
+    else:
+        min_x, min_y, max_x, max_y = component["bbox"]
+        center_x = (min_x + max_x) / 2
+        center_y = (min_y + max_y) / 2
+        radius = ((max_x - min_x) + (max_y - min_y)) / 4
+    return {
+        "type": "CIRCLE",
+        "groups": [
+            (8, layer),
+            (62, LAYER_COLORS[layer]),
+            (10, f"{center_x:.6f}"),
+            (20, f"{center_y:.6f}"),
+            (30, "0.0"),
+            (40, f"{radius:.6f}"),
+        ],
+    }
+
+
 def is_poly_back_drill(component: dict, segments: list[dict]) -> bool:
     if not component.get("closed"):
         return False
@@ -685,7 +713,7 @@ def is_poly_back_exterior(component: dict) -> bool:
 
 
 def export_poly_back_dxf(analysis: dict, output: Path) -> int:
-    drill_roots: set[int] = set()
+    drill_circles: list[dict] = []
     exterior_roots: set[int] = set()
     id_marking_roots: set[int] = set()
     feature_count = 0
@@ -696,14 +724,14 @@ def export_poly_back_dxf(analysis: dict, output: Path) -> int:
             id_marking_roots.update(component["entity_indexes"])
             feature_count += 1
         elif is_poly_back_drill(component, analysis["segments"]):
-            drill_roots.update(component["entity_indexes"])
+            drill_circles.append(component_drill_circle(component, analysis["segments"], LAYER_DRILL))
             feature_count += 1
         elif is_poly_back_exterior(component):
             exterior_roots.update(component["entity_indexes"])
             feature_count += 1
 
     poly_back_entities = []
-    poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
+    poly_back_entities.extend(drill_circles)
     poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], exterior_roots, LAYER_POLY_BACK))
     poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     poly_back_entities = collapse_short_seam_lines(poly_back_entities)

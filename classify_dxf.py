@@ -661,7 +661,7 @@ def component_arc_diameter(component: dict, segments: list[dict]) -> float | Non
     return 2 * max(radii)
 
 
-def component_drill_circle(component: dict, segments: list[dict], layer: str) -> dict:
+def component_drill_circle(component: dict, segments: list[dict], layer: str, color: str | None = None) -> dict:
     arc_segments = [
         segments[index]
         for index in component["segment_indexes"]
@@ -680,7 +680,7 @@ def component_drill_circle(component: dict, segments: list[dict], layer: str) ->
         "type": "CIRCLE",
         "groups": [
             (8, layer),
-            (62, LAYER_COLORS[layer]),
+            (62, color or LAYER_COLORS.get(layer, "7")),
             (10, f"{center_x:.6f}"),
             (20, f"{center_y:.6f}"),
             (30, "0.0"),
@@ -710,6 +710,61 @@ def is_poly_back_exterior(component: dict) -> bool:
     size = max(max_x - min_x, max_y - min_y)
     layer = component.get("layer", classify_component(component))
     return layer in {LAYER_OUTER, LAYER_PROFILE_HOLES} or (component.get("color") == "1" and size > 0.5)
+
+
+def polyline_child_indexes(entities: list[dict], root_indexes: set[int]) -> set[int]:
+    indexes: set[int] = set()
+    include_polyline = False
+    for index, entity in enumerate(entities):
+        if entity["type"] == "POLYLINE":
+            include_polyline = index in root_indexes
+        if index in root_indexes or include_polyline:
+            indexes.add(index)
+        if entity["type"] == "SEQEND":
+            include_polyline = False
+    return indexes
+
+
+def export_cleaned_dxf(analysis: dict, output: Path) -> Counter:
+    entities = copy.deepcopy(analysis["entities"])
+    layers_by_entity: dict[int, str] = {}
+    replacements_by_entity: dict[int, dict] = {}
+    skip_indexes: set[int] = set()
+    cleanup = Counter(analysis.get("cleanup_summary", Counter()))
+
+    for component in analysis["components"]:
+        layer = component.get("layer", classify_component(component))
+        rebuild_drill = is_poly_back_drill(component, analysis["segments"])
+        if rebuild_drill:
+            layer = LAYER_DRILL
+        for entity_index in component["entity_indexes"]:
+            layers_by_entity[entity_index] = layer
+        if not rebuild_drill:
+            continue
+        root_indexes = set(component["entity_indexes"])
+        root_and_children = polyline_child_indexes(entities, root_indexes)
+        first_index = min(root_and_children)
+        replacements_by_entity[first_index] = component_drill_circle(
+            component,
+            analysis["segments"],
+            layer,
+            LAYER_COLORS.get(layer, component.get("color", "7")),
+        )
+        skip_indexes.update(root_and_children)
+        cleanup["drill_circles_rebuilt"] += 1
+
+    write_entities_to_layers(entities, layers_by_entity)
+
+    cleaned_entities = []
+    for index, entity in enumerate(entities):
+        if index in replacements_by_entity:
+            cleaned_entities.append(replacements_by_entity[index])
+        if index in skip_indexes:
+            continue
+        cleaned_entities.append(entity)
+    cleaned_entities = collapse_short_seam_lines(cleaned_entities)
+    write_dxf(analysis["pairs"], cleaned_entities, output)
+    return cleanup
 
 
 def export_poly_back_dxf(analysis: dict, output: Path) -> int:

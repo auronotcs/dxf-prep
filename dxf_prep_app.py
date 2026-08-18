@@ -344,15 +344,16 @@ class DxfPrepApp(tk.Tk):
 
         toolbar = ttk.Frame(root)
         toolbar.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        toolbar.columnconfigure(9, weight=1)
+        toolbar.columnconfigure(10, weight=1)
 
         ttk.Button(toolbar, text="Open DXF", command=self.open_file).grid(row=0, column=0, padx=(0, 8))
         ttk.Button(toolbar, text="Open Latest DXF", command=self.open_latest_file).grid(row=0, column=1, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Aluminum DXF", command=self.export_file).grid(row=0, column=2, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Acrylic DXF", command=self.export_acrylic_file).grid(row=0, column=3, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Poly Backs", command=self.export_poly_back_file).grid(row=0, column=4, padx=(0, 12))
-        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=5, padx=(0, 12))
-        ttk.Label(toolbar, text="View").grid(row=0, column=6, padx=(0, 6), sticky="e")
+        ttk.Button(toolbar, text="Clean Export DXF", command=self.export_cleaned_file).grid(row=0, column=2, padx=(0, 12))
+        ttk.Button(toolbar, text="Export Aluminum DXF", command=self.export_file).grid(row=0, column=3, padx=(0, 12))
+        ttk.Button(toolbar, text="Export Acrylic DXF", command=self.export_acrylic_file).grid(row=0, column=4, padx=(0, 12))
+        ttk.Button(toolbar, text="Export Poly Backs", command=self.export_poly_back_file).grid(row=0, column=5, padx=(0, 12))
+        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=6, padx=(0, 12))
+        ttk.Label(toolbar, text="View").grid(row=0, column=7, padx=(0, 6), sticky="e")
         material_combo = ttk.Combobox(
             toolbar,
             textvariable=self.material_var,
@@ -360,10 +361,10 @@ class DxfPrepApp(tk.Tk):
             state="readonly",
             width=10,
         )
-        material_combo.grid(row=0, column=7, padx=(0, 8))
+        material_combo.grid(row=0, column=8, padx=(0, 8))
         material_combo.bind("<<ComboboxSelected>>", self.change_material_view)
-        ttk.Button(toolbar, text="Fit", command=self.zoom_to_fit).grid(row=0, column=8, padx=(0, 12))
-        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=9, sticky="w")
+        ttk.Button(toolbar, text="Fit", command=self.zoom_to_fit).grid(row=0, column=9, padx=(0, 12))
+        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=10, sticky="w")
 
         body = ttk.PanedWindow(root, orient=tk.HORIZONTAL)
         body.grid(row=1, column=0, sticky="nsew")
@@ -669,6 +670,36 @@ class DxfPrepApp(tk.Tk):
             messagebox.showinfo("Export complete", f"Saved {count} outside contours:\n{filename}")
         except Exception as exc:
             messagebox.showerror("Could not export acrylic DXF", str(exc))
+
+    def export_cleaned_file(self) -> None:
+        if not self.analysis or not self.input_path:
+            messagebox.showinfo("No DXF loaded", "Open a DXF before exporting.")
+            return
+        default_name = self.input_path.stem + "_cleaned.dxf"
+        filename = filedialog.asksaveasfilename(
+            title="Save Cleaned DXF",
+            filetypes=[("DXF files", "*.dxf")],
+            defaultextension=".dxf",
+            initialdir=str(self.preferred_directory()),
+            initialfile=default_name,
+        )
+        if not filename:
+            return
+        self.remember_directory(Path(filename).parent)
+        self.sync_component_layers()
+        try:
+            cleanup = dxf.export_cleaned_dxf(self.analysis, Path(filename))
+            cleanup_parts = []
+            if cleanup.get("degenerate_lines"):
+                cleanup_parts.append(f"{cleanup['degenerate_lines']} zero-length lines")
+            if cleanup.get("duplicate_entities"):
+                cleanup_parts.append(f"{cleanup['duplicate_entities']} duplicates")
+            if cleanup.get("drill_circles_rebuilt"):
+                cleanup_parts.append(f"{cleanup['drill_circles_rebuilt']} drill circles rebuilt")
+            details = ", ".join(cleanup_parts) if cleanup_parts else "no cleanup changes needed"
+            messagebox.showinfo("Export complete", f"Saved cleaned DXF ({details}):\n{filename}")
+        except Exception as exc:
+            messagebox.showerror("Could not export cleaned DXF", str(exc))
 
     def export_poly_back_file(self) -> None:
         if not self.analysis or not self.input_path:

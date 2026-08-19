@@ -251,6 +251,31 @@ def build_segments(entities: list[dict]) -> list[dict]:
                     }
                 )
             active_polyline = None
+        elif kind == "LWPOLYLINE":
+            points = []
+            pending_x = None
+            for code, value in entity["groups"]:
+                if code == 10:
+                    pending_x = float(value)
+                elif code == 20 and pending_x is not None:
+                    points.append((pending_x, float(value)))
+                    pending_x = None
+            closed = bool(int(group_value(entity, 70, "0")) & 1)
+            pairs = list(zip(points, points[1:]))
+            if closed and len(points) > 2 and point_key(points[0]) != point_key(points[-1]):
+                pairs.append((points[-1], points[0]))
+            for p1, p2 in pairs:
+                if point_key(p1) == point_key(p2):
+                    continue
+                segments.append(
+                    {
+                        "entity": index,
+                        "type": "LWPOLYLINE_SEG",
+                        "color": entity_color(entity),
+                        "p1": p1,
+                        "p2": p2,
+                    }
+                )
     return segments
 
 

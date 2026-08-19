@@ -22,7 +22,7 @@ DXF Prep is a small Windows desktop utility for preparing design-software-export
   - `POLY BACK CUTOUT`
   - `ID_MARKING`
 - Exports a cleaned DXF that preserves drawing contents while removing duplicate/degenerate geometry and rebuilding 0.250 drill holes as true circles.
-- Preserves polyline, line, arc, and circle geometry from source DXF exports.
+- Preserves polyline, lightweight polyline, line, arc, and circle geometry from source DXF exports.
 - Shows a color-coded preview with detected sheet/group boxes.
 - Provides per-sheet zoom buttons.
 - Remembers the default and last-used DXF folder through local settings.

@@ -130,6 +130,15 @@ def entity_geometry_signature(entity: dict) -> tuple | None:
             round(group_float(entity, 50) / TOLERANCE),
             round(group_float(entity, 51) / TOLERANCE),
         )
+    if kind == "CIRCLE":
+        radius = group_float(entity, 40)
+        if radius <= TOLERANCE:
+            return None
+        return (
+            kind,
+            point_key((group_float(entity, 10), group_float(entity, 20))),
+            round(radius / TOLERANCE),
+        )
     return None
 
 
@@ -142,6 +151,9 @@ def clean_entities(entities: list[dict]) -> tuple[list[dict], Counter]:
         signature = entity_geometry_signature(entity)
         if kind == "LINE" and signature is None:
             removed["degenerate_lines"] += 1
+            continue
+        if kind == "CIRCLE" and signature is None:
+            removed["degenerate_circles"] += 1
             continue
         if signature is not None:
             if signature in seen:
@@ -185,6 +197,33 @@ def build_segments(entities: list[dict]) -> list[dict]:
                     "end_angle": group_float(entity, 51),
                 }
             )
+        elif kind == "CIRCLE":
+            cx = group_float(entity, 10)
+            cy = group_float(entity, 20)
+            radius = group_float(entity, 40)
+            if radius <= TOLERANCE:
+                continue
+            p_right = (cx + radius, cy)
+            p_left = (cx - radius, cy)
+            bbox = (cx - radius, cy - radius, cx + radius, cy + radius)
+            for p1, p2, start_angle, end_angle in (
+                (p_right, p_left, 0.0, 180.0),
+                (p_left, p_right, 180.0, 360.0),
+            ):
+                segments.append(
+                    {
+                        "entity": index,
+                        "type": "CIRCLE_SEG",
+                        "color": entity_color(entity),
+                        "p1": p1,
+                        "p2": p2,
+                        "center": (cx, cy),
+                        "radius": radius,
+                        "start_angle": start_angle,
+                        "end_angle": end_angle,
+                        "bbox": bbox,
+                    }
+                )
         elif kind == "POLYLINE":
             active_polyline = {
                 "entity": index,
@@ -275,8 +314,12 @@ def connected_components(segments: list[dict]) -> list[dict]:
             for segment_index in segment_indexes
             for point in (segments[segment_index]["p1"], segments[segment_index]["p2"])
         ]
+        boxes = [segments[segment_index]["bbox"] for segment_index in segment_indexes if "bbox" in segments[segment_index]]
         xs = [point[0] for point in points]
         ys = [point[1] for point in points]
+        if boxes:
+            xs.extend([value for box in boxes for value in (box[0], box[2])])
+            ys.extend([value for box in boxes for value in (box[1], box[3])])
         degrees = [len(adjacency[node]) for node in nodes]
         colors = Counter(segments[segment_index]["color"] for segment_index in segment_indexes)
         bad_degrees = [degree for degree in degrees if degree != 2]

@@ -775,9 +775,16 @@ def is_poly_back_exterior(component: dict) -> bool:
     if not component.get("closed"):
         return False
     min_x, min_y, max_x, max_y = component["bbox"]
-    size = max(max_x - min_x, max_y - min_y)
+    width = max_x - min_x
+    height = max_y - min_y
+    size = max(width, height)
+    area = width * height
     layer = component.get("layer", classify_component(component))
-    return layer in {LAYER_OUTER, LAYER_PROFILE_HOLES} or (component.get("color") == "1" and size > 0.5)
+    if layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
+        return True
+    if component.get("color") == "1" and size > 0.5:
+        return True
+    return layer == LAYER_REVIEW and size > 1.0 and area > 1.0
 
 
 def polyline_child_indexes(entities: list[dict], root_indexes: set[int]) -> set[int]:

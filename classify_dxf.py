@@ -772,19 +772,44 @@ def is_poly_back_drill(component: dict, segments: list[dict]) -> bool:
 
 
 def is_poly_back_exterior(component: dict) -> bool:
-    if not component.get("closed"):
-        return False
     min_x, min_y, max_x, max_y = component["bbox"]
     width = max_x - min_x
     height = max_y - min_y
     size = max(width, height)
     area = width * height
     layer = component.get("layer", classify_component(component))
+    if not component.get("closed"):
+        return component.get("open_nodes") == 2 and component.get("color") == "1" and size > 1.0 and area > 1.0
     if layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
         return True
     if component.get("color") == "1" and size > 0.5:
         return True
     return layer == LAYER_REVIEW and size > 1.0 and area > 1.0
+
+
+def component_open_points(component: dict, segments: list[dict]) -> list[tuple[float, float]]:
+    endpoints_by_key: dict[tuple[int, int], list[tuple[float, float]]] = defaultdict(list)
+    for segment_index in component["segment_indexes"]:
+        segment = segments[segment_index]
+        endpoints_by_key[point_key(segment["p1"])].append(segment["p1"])
+        endpoints_by_key[point_key(segment["p2"])].append(segment["p2"])
+    return [points[0] for points in endpoints_by_key.values() if len(points) == 1]
+
+
+def connector_line(p1: tuple[float, float], p2: tuple[float, float], layer: str) -> dict:
+    return {
+        "type": "LINE",
+        "groups": [
+            (8, layer),
+            (62, LAYER_COLORS.get(layer, "7")),
+            (10, f"{p1[0]:.6f}"),
+            (20, f"{p1[1]:.6f}"),
+            (30, "0.0"),
+            (11, f"{p2[0]:.6f}"),
+            (21, f"{p2[1]:.6f}"),
+            (31, "0.0"),
+        ],
+    }
 
 
 def polyline_child_indexes(entities: list[dict], root_indexes: set[int]) -> set[int]:
@@ -844,6 +869,7 @@ def export_cleaned_dxf(analysis: dict, output: Path) -> Counter:
 
 def export_poly_back_dxf(analysis: dict, output: Path) -> int:
     drill_circles: list[dict] = []
+    exterior_connectors: list[dict] = []
     exterior_roots: set[int] = set()
     id_marking_roots: set[int] = set()
     feature_count = 0
@@ -858,11 +884,16 @@ def export_poly_back_dxf(analysis: dict, output: Path) -> int:
             feature_count += 1
         elif is_poly_back_exterior(component):
             exterior_roots.update(component["entity_indexes"])
+            if not component.get("closed"):
+                open_points = component_open_points(component, analysis["segments"])
+                if len(open_points) == 2 and point_distance(open_points[0], open_points[1]) <= 0.05:
+                    exterior_connectors.append(connector_line(open_points[0], open_points[1], LAYER_POLY_BACK))
             feature_count += 1
 
     poly_back_entities = []
     poly_back_entities.extend(drill_circles)
     poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], exterior_roots, LAYER_POLY_BACK))
+    poly_back_entities.extend(exterior_connectors)
     poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     poly_back_entities = collapse_short_seam_lines(poly_back_entities)
     write_dxf(analysis["pairs"], poly_back_entities, output, POLY_BACK_LAYER_COLORS)

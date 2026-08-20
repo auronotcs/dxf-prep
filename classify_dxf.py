@@ -812,6 +812,37 @@ def connector_line(p1: tuple[float, float], p2: tuple[float, float], layer: str)
     }
 
 
+def append_small_gap_connectors(
+    entities: list[dict],
+    layers: list[str],
+    max_gap: float = 0.05,
+) -> list[dict]:
+    additions: list[dict] = []
+    for layer in layers:
+        layer_entities = [entity for entity in entities if group_value(entity, 8, "") == layer]
+        layer_segments = build_segments(layer_entities)
+        open_points: list[tuple[float, float]] = []
+        for component in connected_components(layer_segments):
+            if component.get("closed"):
+                continue
+            open_points.extend(component_open_points(component, layer_segments))
+
+        used: set[int] = set()
+        pairs = []
+        for first_index, first in enumerate(open_points):
+            for second_index in range(first_index + 1, len(open_points)):
+                second = open_points[second_index]
+                distance = point_distance(first, second)
+                if distance <= max_gap:
+                    pairs.append((distance, first_index, second_index))
+        for _distance, first_index, second_index in sorted(pairs):
+            if first_index in used or second_index in used:
+                continue
+            additions.append(connector_line(open_points[first_index], open_points[second_index], layer))
+            used.update({first_index, second_index})
+    return entities + additions
+
+
 def polyline_child_indexes(entities: list[dict], root_indexes: set[int]) -> set[int]:
     indexes: set[int] = set()
     include_polyline = False
@@ -896,6 +927,7 @@ def export_poly_back_dxf(analysis: dict, output: Path) -> int:
     poly_back_entities.extend(exterior_connectors)
     poly_back_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     poly_back_entities = collapse_short_seam_lines(poly_back_entities)
+    poly_back_entities = append_small_gap_connectors(poly_back_entities, [LAYER_POLY_BACK])
     write_dxf(analysis["pairs"], poly_back_entities, output, POLY_BACK_LAYER_COLORS)
     return feature_count
 
@@ -906,6 +938,8 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     outside_roots: set[int] = set()
     cleanout_outline_roots: set[int] = set()
     id_marking_roots: set[int] = set()
+    acrylic_connectors: list[dict] = []
+    cleanout_connectors: list[dict] = []
     outside_bounds = [
         component["bbox"]
         for component in analysis["components"]
@@ -928,6 +962,10 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
             inside_roots.update(component["entity_indexes"])
         elif role == "outside":
             outside_roots.update(component["entity_indexes"])
+            if not component.get("closed"):
+                open_points = component_open_points(component, analysis["segments"])
+                if len(open_points) == 2 and point_distance(open_points[0], open_points[1]) <= 0.05:
+                    acrylic_connectors.append(connector_line(open_points[0], open_points[1], LAYER_ACRYLIC))
 
     inside_bounds = [component["bbox"] for component, role in roles_by_component if role == "inside"]
     for component, role in roles_by_component:
@@ -936,13 +974,20 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
         has_cleanout_inside = any(bbox_contains(component["bbox"], inside) for inside in inside_bounds)
         if component.get("color") == "1" or has_cleanout_inside:
             cleanout_outline_roots.update(component["entity_indexes"])
+            if not component.get("closed"):
+                open_points = component_open_points(component, analysis["segments"])
+                if len(open_points) == 2 and point_distance(open_points[0], open_points[1]) <= 0.05:
+                    cleanout_connectors.append(connector_line(open_points[0], open_points[1], LAYER_CLEANOUT))
 
     acrylic_entities = []
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], inside_roots | cleanout_outline_roots, LAYER_CLEANOUT))
+    acrylic_entities.extend(cleanout_connectors)
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], outside_roots, LAYER_ACRYLIC))
+    acrylic_entities.extend(acrylic_connectors)
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     acrylic_entities = collapse_short_seam_lines(acrylic_entities)
+    acrylic_entities = append_small_gap_connectors(acrylic_entities, [LAYER_CLEANOUT, LAYER_ACRYLIC])
     write_dxf(analysis["pairs"], acrylic_entities, output, ACRYLIC_LAYER_COLORS)
     return len(drill_roots | inside_roots | outside_roots | id_marking_roots)
 

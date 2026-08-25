@@ -96,6 +96,54 @@ def group_float(entity: dict, code: int, default: float = 0.0) -> float:
     return float(value) if value else default
 
 
+def translate_entity(entity: dict, dx: float, dy: float) -> None:
+    """Translate the coordinate groups used by the supported DXF geometry."""
+    kind = entity["type"]
+    x_codes: set[int] = set()
+    y_codes: set[int] = set()
+    if kind == "LINE":
+        x_codes = {10, 11}
+        y_codes = {20, 21}
+    elif kind in {"ARC", "CIRCLE", "VERTEX", "LWPOLYLINE", "POINT", "TEXT", "MTEXT", "INSERT"}:
+        x_codes = {10}
+        y_codes = {20}
+
+    translated = []
+    for code, value in entity["groups"]:
+        try:
+            if code in x_codes:
+                value = f"{float(value) + dx:.6f}"
+            elif code in y_codes:
+                value = f"{float(value) + dy:.6f}"
+        except ValueError:
+            pass
+        translated.append((code, value))
+    entity["groups"] = translated
+
+
+def translate_analysis(analysis: dict, dx: float, dy: float) -> None:
+    """Move an analyzed drawing without disturbing its component classifications."""
+    for entity in analysis["entities"]:
+        translate_entity(entity, dx, dy)
+
+    for segment in analysis["segments"]:
+        segment["p1"] = (segment["p1"][0] + dx, segment["p1"][1] + dy)
+        segment["p2"] = (segment["p2"][0] + dx, segment["p2"][1] + dy)
+        if "center" in segment:
+            segment["center"] = (segment["center"][0] + dx, segment["center"][1] + dy)
+        if "bbox" in segment:
+            min_x, min_y, max_x, max_y = segment["bbox"]
+            segment["bbox"] = (min_x + dx, min_y + dy, max_x + dx, max_y + dy)
+
+    for component in analysis["components"]:
+        min_x, min_y, max_x, max_y = component["bbox"]
+        component["bbox"] = (min_x + dx, min_y + dy, max_x + dx, max_y + dy)
+        if "outline_points" in component:
+            component["outline_points"] = [
+                (point[0] + dx, point[1] + dy) for point in component["outline_points"]
+            ]
+
+
 def point_key(point: tuple[float, float]) -> tuple[int, int]:
     return (math.floor(point[0] / TOLERANCE + 0.5), math.floor(point[1] / TOLERANCE + 0.5))
 
@@ -106,6 +154,31 @@ def arc_endpoint(entity: dict, angle_code: int) -> tuple[float, float]:
     radius = group_float(entity, 40)
     angle = math.radians(group_float(entity, angle_code))
     return (cx + radius * math.cos(angle), cy + radius * math.sin(angle))
+
+
+def arc_bbox(entity: dict) -> tuple[float, float, float, float]:
+    cx = group_float(entity, 10)
+    cy = group_float(entity, 20)
+    radius = group_float(entity, 40)
+    start = group_float(entity, 50) % 360
+    end = group_float(entity, 51) % 360
+    sweep = (end - start) % 360
+
+    def angle_is_on_arc(angle: float) -> bool:
+        return (angle - start) % 360 <= sweep + 1e-9
+
+    angles = [start, end]
+    angles.extend(angle for angle in (0.0, 90.0, 180.0, 270.0) if angle_is_on_arc(angle))
+    points = [
+        (cx + radius * math.cos(math.radians(angle)), cy + radius * math.sin(math.radians(angle)))
+        for angle in angles
+    ]
+    return (
+        min(point[0] for point in points),
+        min(point[1] for point in points),
+        max(point[0] for point in points),
+        max(point[1] for point in points),
+    )
 
 
 def entity_color(entity: dict) -> str:
@@ -195,6 +268,7 @@ def build_segments(entities: list[dict]) -> list[dict]:
                     "radius": group_float(entity, 40),
                     "start_angle": group_float(entity, 50),
                     "end_angle": group_float(entity, 51),
+                    "bbox": arc_bbox(entity),
                 }
             )
         elif kind == "CIRCLE":
@@ -362,6 +436,314 @@ def connected_components(segments: list[dict]) -> list[dict]:
     return components
 
 
+def sampled_segment_points(segment: dict, reverse: bool = False) -> list[tuple[float, float]]:
+    if "center" not in segment or "start_angle" not in segment:
+        points = [segment["p1"], segment["p2"]]
+        return list(reversed(points)) if reverse else points
+    cx, cy = segment["center"]
+    radius = segment["radius"]
+    start = segment["start_angle"]
+    end = segment["end_angle"]
+    sweep = end - start
+    if sweep < 0:
+        sweep += 360
+    steps = max(4, min(72, int(abs(sweep) / 6) + 1))
+    points = [
+        (
+            cx + radius * math.cos(math.radians(start + sweep * step / steps)),
+            cy + radius * math.sin(math.radians(start + sweep * step / steps)),
+        )
+        for step in range(steps + 1)
+    ]
+    return list(reversed(points)) if reverse else points
+
+
+def component_outline_points(component: dict, segments: list[dict]) -> list[tuple[float, float]]:
+    cached = component.get("outline_points")
+    if cached:
+        return cached
+    indexes = set(component["segment_indexes"])
+    by_endpoint: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for index in indexes:
+        by_endpoint[point_key(segments[index]["p1"])].append(index)
+        by_endpoint[point_key(segments[index]["p2"])].append(index)
+    if not indexes:
+        return []
+    current_index = min(indexes)
+    current_key = point_key(segments[current_index]["p1"])
+    unused = set(indexes)
+    points: list[tuple[float, float]] = []
+    while unused:
+        candidates = [index for index in by_endpoint.get(current_key, []) if index in unused]
+        if not candidates:
+            break
+        current_index = min(candidates)
+        segment = segments[current_index]
+        reverse = point_key(segment["p2"]) == current_key
+        segment_points = sampled_segment_points(segment, reverse)
+        points.extend(segment_points if not points else segment_points[1:])
+        current_key = point_key(segment_points[-1])
+        unused.remove(current_index)
+    component["outline_points"] = points
+    return points
+
+
+def point_in_polygon(point: tuple[float, float], polygon: list[tuple[float, float]]) -> bool:
+    if len(polygon) < 3:
+        return False
+    x, y = point
+    inside = False
+    previous = polygon[-1]
+    for current in polygon:
+        x1, y1 = previous
+        x2, y2 = current
+        if (y1 > y) != (y2 > y):
+            crossing_x = (x2 - x1) * (y - y1) / (y2 - y1) + x1
+            if x < crossing_x:
+                inside = not inside
+        previous = current
+    return inside
+
+
+def component_contains(outer: dict, inner: dict, segments: list[dict]) -> bool:
+    if not has_strict_container(inner, [outer["bbox"]]):
+        return False
+    if offset_pair_score(outer, inner, segments) is not None:
+        return True
+    outer_points = component_outline_points(outer, segments)
+    inner_points = component_outline_points(inner, segments)
+    if not outer_points or not inner_points:
+        return False
+    sample_step = max(1, len(inner_points) // 12)
+    samples = inner_points[::sample_step]
+    return sum(point_in_polygon(point, outer_points) for point in samples) >= max(1, len(samples) - 1)
+
+
+def point_to_polyline_distance(point: tuple[float, float], points: list[tuple[float, float]]) -> float:
+    if len(points) < 2:
+        return math.inf
+    px, py = point
+    best = math.inf
+    for start, end in zip(points, points[1:] + points[:1]):
+        x1, y1 = start
+        x2, y2 = end
+        dx = x2 - x1
+        dy = y2 - y1
+        length_squared = dx * dx + dy * dy
+        if length_squared == 0:
+            distance = math.hypot(px - x1, py - y1)
+        else:
+            amount = max(0.0, min(1.0, ((px - x1) * dx + (py - y1) * dy) / length_squared))
+            distance = math.hypot(px - (x1 + amount * dx), py - (y1 + amount * dy))
+        best = min(best, distance)
+    return best
+
+
+def parallel_contour_score(first: dict, second: dict, segments: list[dict]) -> float | None:
+    first_points = component_outline_points(first, segments)
+    second_points = component_outline_points(second, segments)
+    if len(first_points) < 3 or len(second_points) < 3:
+        return None
+    first_step = max(1, len(first_points) // 72)
+    second_step = max(1, len(second_points) // 72)
+    distances = [point_to_polyline_distance(point, second_points) for point in first_points[::first_step]]
+    distances.extend(point_to_polyline_distance(point, first_points) for point in second_points[::second_step])
+    distances = sorted(distance for distance in distances if math.isfinite(distance))
+    if not distances:
+        return None
+    median = distances[len(distances) // 2]
+    sixty_percent = distances[min(len(distances) - 1, math.floor(len(distances) * 0.6))]
+    if median < 0.015 or median > 0.2 or sixty_percent > 0.35:
+        return None
+    return median + sixty_percent
+
+
+def bbox_overlap_ratio(first: tuple[float, float, float, float], second: tuple[float, float, float, float]) -> float:
+    overlap_width = max(0.0, min(first[2], second[2]) - max(first[0], second[0]))
+    overlap_height = max(0.0, min(first[3], second[3]) - max(first[1], second[1]))
+    overlap = overlap_width * overlap_height
+    first_area = max((first[2] - first[0]) * (first[3] - first[1]), TOLERANCE)
+    second_area = max((second[2] - second[0]) * (second[3] - second[1]), TOLERANCE)
+    return overlap / min(first_area, second_area)
+
+
+def is_material_frame(component: dict) -> bool:
+    min_x, min_y, max_x, max_y = component["bbox"]
+    width = max_x - min_x
+    height = max_y - min_y
+    dimensions = sorted((width, height))
+    return len(component["segment_indexes"]) <= 8 and any(
+        abs(dimensions[0] - short) <= 0.1 and abs(dimensions[1] - long) <= 0.1
+        for short, long in ((48.0, 96.0), (48.0, 120.0), (60.0, 120.0))
+    )
+
+
+def offset_pair_score(outer: dict, inner: dict, segments: list[dict] | None = None) -> float | None:
+    margins = bbox_margins(outer["bbox"], inner["bbox"])
+    average = sum(margins) / len(margins)
+    spread = max(margins) - min(margins)
+    if min(margins) >= 0.015 and average <= 0.75 and spread <= max(0.12, average * 0.45):
+        return average + spread
+    if segments is None:
+        return None
+
+    outer_points = component_outline_points(outer, segments)
+    inner_points = component_outline_points(inner, segments)
+    if len(outer_points) < 3 or len(inner_points) < 3:
+        return None
+    outer_step = max(1, len(outer_points) // 36)
+    inner_step = max(1, len(inner_points) // 36)
+    distances = [point_to_polyline_distance(point, inner_points) for point in outer_points[::outer_step]]
+    distances.extend(point_to_polyline_distance(point, outer_points) for point in inner_points[::inner_step])
+    distances = sorted(distance for distance in distances if math.isfinite(distance))
+    if not distances:
+        return None
+    median = distances[len(distances) // 2]
+    upper = distances[min(len(distances) - 1, math.floor(len(distances) * 0.9))]
+    lower = distances[math.floor(len(distances) * 0.1)]
+    if median < 0.015 or median > 0.8 or upper > 1.05 or upper - lower > 0.4:
+        return None
+    return median + (upper - lower)
+
+
+def partial_offset_pair_score(outer: dict, inner: dict) -> float | None:
+    """Recognize one section of an inset when adjacent shapes share an exterior."""
+    margins = bbox_margins(outer["bbox"], inner["bbox"])
+    inset_margins = [margin for margin in margins if 0.015 <= margin <= 0.75]
+    if len(inset_margins) < 3:
+        return None
+    average = sum(inset_margins) / len(inset_margins)
+    spread = max(inset_margins) - min(inset_margins)
+    if spread > max(0.12, average * 0.45):
+        return None
+    return average + spread
+
+
+def classify_components_topologically(components: list[dict], segments: list[dict]) -> None:
+    structural_indexes = []
+    for index, component in enumerate(components):
+        component.pop("paired_with", None)
+        min_x, min_y, max_x, max_y = component["bbox"]
+        width = max_x - min_x
+        height = max_y - min_y
+        diameter = (width + height) / 2
+        if not component["closed"]:
+            component["layer"] = LAYER_ID_MARKING if max(width, height) <= 1.0 else LAYER_REVIEW
+            continue
+        if abs(width - height) <= DIAMETER_TOLERANCE and diameter < 0.5:
+            component["layer"] = (
+                LAYER_DRILL if abs(diameter - DRILL_DIAMETER) <= DIAMETER_TOLERANCE else LAYER_PROFILE_HOLES
+            )
+            continue
+        structural_indexes.append(index)
+
+    parents: dict[int, int] = {}
+    for inner_index in structural_indexes:
+        inner = components[inner_index]
+        containers = []
+        for outer_index in structural_indexes:
+            if outer_index == inner_index:
+                continue
+            outer = components[outer_index]
+            if is_material_frame(outer):
+                continue
+            if component_contains(outer, inner, segments):
+                min_x, min_y, max_x, max_y = outer["bbox"]
+                containers.append(((max_x - min_x) * (max_y - min_y), outer_index))
+        if containers:
+            parents[inner_index] = min(containers)[1]
+
+    forced_pairs: set[frozenset[int]] = set()
+    root_indexes = [index for index in structural_indexes if index not in parents and not is_material_frame(components[index])]
+    root_candidates = []
+    for position, first_index in enumerate(root_indexes):
+        first = components[first_index]
+        for second_index in root_indexes[position + 1 :]:
+            second = components[second_index]
+            if bbox_overlap_ratio(first["bbox"], second["bbox"]) < 0.8:
+                continue
+            score = parallel_contour_score(first, second, segments)
+            if score is not None:
+                root_candidates.append((score, first_index, second_index))
+    claimed_roots: set[int] = set()
+    for _score, first_index, second_index in sorted(root_candidates):
+        if first_index in claimed_roots or second_index in claimed_roots:
+            continue
+        first = components[first_index]
+        second = components[second_index]
+        first_area = (first["bbox"][2] - first["bbox"][0]) * (first["bbox"][3] - first["bbox"][1])
+        second_area = (second["bbox"][2] - second["bbox"][0]) * (second["bbox"][3] - second["bbox"][1])
+        parent_index, child_index = (first_index, second_index) if first_area >= second_area else (second_index, first_index)
+        parents[child_index] = parent_index
+        forced_pairs.add(frozenset((parent_index, child_index)))
+        claimed_roots.update((parent_index, child_index))
+
+    children: dict[int, list[int]] = defaultdict(list)
+    for child_index, parent_index in parents.items():
+        children[parent_index].append(child_index)
+
+    visited: set[int] = set()
+
+    def classify_boundary(index: int, boundary_depth: int) -> None:
+        if index in visited:
+            return
+        visited.add(index)
+        component = components[index]
+        child_indexes = children.get(index, [])
+        pair_candidates = []
+        for child_index in child_indexes:
+            score = offset_pair_score(component, components[child_index], segments)
+            if frozenset((index, child_index)) in forced_pairs:
+                score = 0.0
+            if score is not None:
+                pair_candidates.append((score, child_index))
+        pair_indexes = [min(pair_candidates)[1]] if pair_candidates else []
+        if not pair_indexes and boundary_depth % 2 == 1 and len(child_indexes) == 1:
+            child_index = child_indexes[0]
+            margins = bbox_margins(component["bbox"], components[child_index]["bbox"])
+            if min(margins) >= 0.015 and sum(margins) / len(margins) <= 1.75:
+                pair_indexes = [child_index]
+
+        if not pair_indexes and len(child_indexes) >= 2:
+            split_candidates = [
+                child_index
+                for child_index in child_indexes
+                if partial_offset_pair_score(component, components[child_index]) is not None
+            ]
+            if len(split_candidates) >= 2:
+                pair_indexes = split_candidates
+
+        if pair_indexes:
+            component["paired_with"] = pair_indexes[0] if len(pair_indexes) == 1 else tuple(pair_indexes)
+            pair_indexes_set = set(pair_indexes)
+            for pair_index in pair_indexes:
+                pair = components[pair_index]
+                pair["paired_with"] = index
+                pair["layer"] = LAYER_INNER if boundary_depth % 2 == 0 else LAYER_OUTER
+                visited.add(pair_index)
+            if boundary_depth % 2 == 0:
+                component["layer"] = LAYER_OUTER
+            else:
+                component["layer"] = LAYER_INNER
+            for pair_index in pair_indexes:
+                for grandchild_index in children.get(pair_index, []):
+                    classify_boundary(grandchild_index, boundary_depth + 1)
+            for child_index in child_indexes:
+                if child_index not in pair_indexes_set:
+                    classify_boundary(child_index, boundary_depth + 1)
+        else:
+            component["layer"] = LAYER_OUTER if boundary_depth % 2 == 0 else LAYER_PROFILE_HOLES
+            for child_index in child_indexes:
+                classify_boundary(child_index, boundary_depth + 1)
+
+    roots = [index for index in structural_indexes if index not in parents]
+    for root_index in roots:
+        classify_boundary(root_index, 0)
+    for index in structural_indexes:
+        if index not in visited:
+            components[index]["layer"] = LAYER_REVIEW
+
+
 def classify_component(component: dict) -> str:
     min_x, min_y, max_x, max_y = component["bbox"]
     width = max_x - min_x
@@ -369,23 +751,13 @@ def classify_component(component: dict) -> str:
     diameter = (width + height) / 2
 
     if not component["closed"]:
-        if component["color"] == "0" and max(width, height) <= 1.0:
+        if max(width, height) <= 1.0:
             return LAYER_ID_MARKING
-        small_branched_contour = component.get("branch_nodes", 0) > 0 and max(width, height) < 8.0
-        if component["open_nodes"] <= 2 and not small_branched_contour and max(width, height) > 1.0:
-            if component["color"] == "3":
-                return LAYER_INNER
-            if component["color"] == "7":
-                return LAYER_OUTER
         return LAYER_REVIEW
     if abs(width - height) <= DIAMETER_TOLERANCE and diameter < 0.5:
         if abs(diameter - DRILL_DIAMETER) <= DIAMETER_TOLERANCE:
             return LAYER_DRILL
         return LAYER_PROFILE_HOLES
-    if component["color"] == "7":
-        return LAYER_OUTER
-    if component["color"] == "3":
-        return LAYER_INNER
     return LAYER_REVIEW
 
 
@@ -497,8 +869,7 @@ def analyze_dxf(input_path: Path) -> dict:
 
     layers_by_entity: dict[int, str] = {}
     summary = Counter()
-    for component in components:
-        component["layer"] = classify_component(component)
+    classify_components_topologically(components, segments)
     for component in components:
         layer = component["layer"]
         summary[layer] += 1
@@ -603,26 +974,31 @@ def has_consistent_inset_container(
     return any(is_consistent_inset(outside, component["bbox"]) for outside in outside_bounds)
 
 
+def has_strict_container(
+    component: dict,
+    outside_bounds: list[tuple[float, float, float, float]],
+    minimum_margin: float = 0.01,
+) -> bool:
+    inner = component["bbox"]
+    for outer in outside_bounds:
+        if not bbox_contains(outer, inner):
+            continue
+        margins = bbox_margins(outer, inner)
+        if max(margins) >= minimum_margin and min(margins) >= -TOLERANCE:
+            return True
+    return False
+
+
 def acrylic_feature_role_with_context(
     component: dict,
     outside_bounds: list[tuple[float, float, float, float]],
 ) -> str | None:
     layer = component.get("layer", classify_component(component))
-    min_x, min_y, max_x, max_y = component["bbox"]
-    size = max(max_x - min_x, max_y - min_y)
     if layer == LAYER_DRILL:
         return "drill"
-    if component["color"] == "1" and size > 1.0:
-        return "outside"
-    if component.get("closed") and has_consistent_inset_container(component, outside_bounds):
+    if layer == LAYER_INNER:
         return "inside"
-    if component["color"] == "5" and component.get("closed") and any(
-        bbox_contains(outside, component["bbox"]) for outside in outside_bounds
-    ):
-        return "inside"
-    if layer == LAYER_OUTER:
-        return "outside"
-    if layer == LAYER_PROFILE_HOLES:
+    if layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
         return "outside"
     return None
 
@@ -779,10 +1155,8 @@ def is_poly_back_exterior(component: dict) -> bool:
     area = width * height
     layer = component.get("layer", classify_component(component))
     if not component.get("closed"):
-        return component.get("open_nodes") == 2 and component.get("color") == "1" and size > 1.0 and area > 1.0
+        return component.get("open_nodes") == 2 and size > 1.0 and area > 1.0
     if layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
-        return True
-    if component.get("color") == "1" and size > 0.5:
         return True
     return layer == LAYER_REVIEW and size > 1.0 and area > 1.0
 
@@ -938,53 +1312,23 @@ def export_acrylic_cutout_dxf(analysis: dict, output: Path) -> int:
     outside_roots: set[int] = set()
     cleanout_outline_roots: set[int] = set()
     id_marking_roots: set[int] = set()
-    acrylic_connectors: list[dict] = []
-    cleanout_connectors: list[dict] = []
-    outside_bounds = [
-        component["bbox"]
-        for component in analysis["components"]
-        if component.get("color") == "1"
-        and max(component["bbox"][2] - component["bbox"][0], component["bbox"][3] - component["bbox"][1]) > 1.0
-    ]
-    roles_by_component = []
     for component in analysis["components"]:
         layer = component.get("layer", classify_component(component))
         if layer == LAYER_ID_MARKING:
             id_marking_roots.update(component["entity_indexes"])
-            continue
-        role = acrylic_feature_role_with_context(component, outside_bounds)
-        roles_by_component.append((component, role))
-        if not role:
-            continue
-        if role == "drill":
+        elif layer == LAYER_DRILL:
             drill_roots.update(component["entity_indexes"])
-        elif role == "inside":
+        elif layer == LAYER_INNER:
             inside_roots.update(component["entity_indexes"])
-        elif role == "outside":
+        elif layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
             outside_roots.update(component["entity_indexes"])
-            if not component.get("closed"):
-                open_points = component_open_points(component, analysis["segments"])
-                if len(open_points) == 2 and point_distance(open_points[0], open_points[1]) <= 0.05:
-                    acrylic_connectors.append(connector_line(open_points[0], open_points[1], LAYER_ACRYLIC))
-
-    inside_bounds = [component["bbox"] for component, role in roles_by_component if role == "inside"]
-    for component, role in roles_by_component:
-        if role != "outside":
-            continue
-        has_cleanout_inside = any(bbox_contains(component["bbox"], inside) for inside in inside_bounds)
-        if component.get("color") == "1" or has_cleanout_inside:
+        if component.get("paired_with") is not None and layer in {LAYER_OUTER, LAYER_PROFILE_HOLES}:
             cleanout_outline_roots.update(component["entity_indexes"])
-            if not component.get("closed"):
-                open_points = component_open_points(component, analysis["segments"])
-                if len(open_points) == 2 and point_distance(open_points[0], open_points[1]) <= 0.05:
-                    cleanout_connectors.append(connector_line(open_points[0], open_points[1], LAYER_CLEANOUT))
 
     acrylic_entities = []
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], drill_roots, LAYER_DRILL))
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], inside_roots | cleanout_outline_roots, LAYER_CLEANOUT))
-    acrylic_entities.extend(cleanout_connectors)
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], outside_roots, LAYER_ACRYLIC))
-    acrylic_entities.extend(acrylic_connectors)
     acrylic_entities.extend(copy_entities_to_layer(analysis["entities"], id_marking_roots, LAYER_ID_MARKING))
     acrylic_entities = collapse_short_seam_lines(acrylic_entities)
     acrylic_entities = append_small_gap_connectors(acrylic_entities, [LAYER_CLEANOUT, LAYER_ACRYLIC])

@@ -4,6 +4,7 @@
 # Track the DXF Prep app.
 !classify_dxf.py
 !dxf_prep_app.py
+!test_classify_dxf.py
 !Run DXF Prep.bat
 !dxf_prep_icon.ico
 !dxf_prep_icon.png

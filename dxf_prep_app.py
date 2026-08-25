@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import math
 import os
+import shutil
 import sys
+import tempfile
 from collections import Counter
 from pathlib import Path
 
@@ -40,6 +42,21 @@ DISPLAY_COLORS = {
     dxf.LAYER_OUTER: "#343a40",
     dxf.LAYER_ID_MARKING: "#868e96",
     dxf.LAYER_REVIEW: "#f08c00",
+    dxf.LAYER_CLEANOUT: "#343a40",
+    dxf.LAYER_ACRYLIC: "#9c36b5",
+    dxf.LAYER_POLY_BACK: "#343a40",
+}
+
+GENERATED_LAYER_COLORS = {
+    dxf.LAYER_DRILL: "#d9480f",
+    dxf.LAYER_PROFILE_HOLES: "#1971c2",
+    dxf.LAYER_INNER: "#2b8a3e",
+    dxf.LAYER_OUTER: "#343a40",
+    dxf.LAYER_ID_MARKING: "#868e96",
+    dxf.LAYER_REVIEW: "#f08c00",
+    dxf.LAYER_CLEANOUT: "#343a40",
+    dxf.LAYER_ACRYLIC: "#9c36b5",
+    dxf.LAYER_POLY_BACK: "#343a40",
 }
 
 LABEL_FONT = ("Segoe UI", -12)
@@ -272,11 +289,24 @@ class DxfPrepApp(tk.Tk):
         self.component_layers: list[str] = []
         self.selected_component: int | None = None
         self.selected_components: set[int] = set()
-        self.undo_stack: list[list[tuple[int, str, str]]] = []
+        self.undo_stack: list[object] = []
         self.scale = 1.0
         self.offset_x = 0.0
         self.offset_y = 0.0
         self.annotation_widgets: list[tk.Widget] = []
+        self.generated_path: Path | None = None
+        self.generated_default_name = ""
+        self.generated_entities: list[dict] = []
+        self.generated_segments: list[dict] = []
+        self.generated_components: list[dict] = []
+        self.generated_layer_visibility: dict[str, bool] = {}
+        self.generated_selected_component: int | None = None
+        self.generated_layer_var = tk.StringVar(value="All Layers")
+        self.generated_selected_var = tk.StringVar(value="Click a generated contour to inspect its layer.")
+        self.generated_scale = 1.0
+        self.generated_offset_x = 0.0
+        self.generated_offset_y = 0.0
+        self.generated_temp = tempfile.TemporaryDirectory(prefix="dxf_prep_review_")
         self.settings = self.load_settings()
         self.layer_visibility: dict[str, tk.BooleanVar] = {
             layer: tk.BooleanVar(value=True) for layer in LAYER_ORDER
@@ -340,20 +370,17 @@ class DxfPrepApp(tk.Tk):
         root = ttk.Frame(self, padding=12)
         root.pack(fill=tk.BOTH, expand=True)
         root.columnconfigure(0, weight=1)
-        root.rowconfigure(1, weight=1)
+        root.rowconfigure(2, weight=1)
 
         toolbar = ttk.Frame(root)
         toolbar.grid(row=0, column=0, sticky="ew", pady=(0, 10))
-        toolbar.columnconfigure(10, weight=1)
+        toolbar.columnconfigure(7, weight=1)
 
         ttk.Button(toolbar, text="Open DXF", command=self.open_file).grid(row=0, column=0, padx=(0, 8))
         ttk.Button(toolbar, text="Open Latest DXF", command=self.open_latest_file).grid(row=0, column=1, padx=(0, 12))
-        ttk.Button(toolbar, text="Clean Export DXF", command=self.export_cleaned_file).grid(row=0, column=2, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Aluminum DXF", command=self.export_file).grid(row=0, column=3, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Acrylic DXF", command=self.export_acrylic_file).grid(row=0, column=4, padx=(0, 12))
-        ttk.Button(toolbar, text="Export Poly Backs", command=self.export_poly_back_file).grid(row=0, column=5, padx=(0, 12))
-        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=6, padx=(0, 12))
-        ttk.Label(toolbar, text="View").grid(row=0, column=7, padx=(0, 6), sticky="e")
+        ttk.Button(toolbar, text="Auto Align to 0.5, 0.5", command=self.auto_align).grid(row=0, column=2, padx=(0, 12))
+        ttk.Button(toolbar, text="Settings", command=self.open_settings).grid(row=0, column=3, padx=(0, 12))
+        ttk.Label(toolbar, text="View").grid(row=0, column=4, padx=(0, 6), sticky="e")
         material_combo = ttk.Combobox(
             toolbar,
             textvariable=self.material_var,
@@ -361,13 +388,28 @@ class DxfPrepApp(tk.Tk):
             state="readonly",
             width=10,
         )
-        material_combo.grid(row=0, column=8, padx=(0, 8))
+        material_combo.grid(row=0, column=5, padx=(0, 8))
         material_combo.bind("<<ComboboxSelected>>", self.change_material_view)
-        ttk.Button(toolbar, text="Fit", command=self.zoom_to_fit).grid(row=0, column=9, padx=(0, 12))
-        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=10, sticky="w")
+        ttk.Button(toolbar, text="Fit", command=self.zoom_active_preview).grid(row=0, column=6, padx=(0, 12))
+        ttk.Label(toolbar, textvariable=self.file_var).grid(row=0, column=7, sticky="w")
+
+        actions = ttk.Frame(root)
+        actions.grid(row=1, column=0, sticky="ew", pady=(0, 10))
+        ttk.Label(actions, text="Generate").grid(row=0, column=0, padx=(0, 8))
+        ttk.Button(actions, text="Clean DXF", command=self.export_cleaned_file).grid(row=0, column=1, padx=(0, 8))
+        ttk.Button(actions, text="Aluminum Shelfed", command=self.export_file).grid(row=0, column=2, padx=(0, 8))
+        ttk.Button(actions, text="Acrylic Clean and Cut", command=self.export_acrylic_file).grid(row=0, column=3, padx=(0, 8))
+        ttk.Button(actions, text="Poly Backs", command=self.export_poly_back_file).grid(row=0, column=4, padx=(0, 16))
+        self.save_generated_button = ttk.Button(
+            actions,
+            text="Save Generated DXF",
+            command=self.save_generated_file,
+            state="disabled",
+        )
+        self.save_generated_button.grid(row=0, column=5)
 
         body = ttk.PanedWindow(root, orient=tk.HORIZONTAL)
-        body.grid(row=1, column=0, sticky="nsew")
+        body.grid(row=2, column=0, sticky="nsew")
 
         left = ttk.Frame(body, padding=(0, 0, 12, 0))
         left.columnconfigure(0, weight=1)
@@ -429,23 +471,76 @@ class DxfPrepApp(tk.Tk):
         right.columnconfigure(0, weight=1)
         body.add(right, weight=1)
 
+        self.preview_notebook = ttk.Notebook(right)
+        self.preview_notebook.grid(row=0, column=0, sticky="nsew")
+        source_tab = ttk.Frame(self.preview_notebook)
+        generated_tab = ttk.Frame(self.preview_notebook)
+        self.preview_notebook.add(source_tab, text="Classification Preview")
+        self.preview_notebook.add(generated_tab, text="Generated Preview")
+        self.preview_notebook.bind("<<NotebookTabChanged>>", self.preview_tab_changed)
+
+        source_tab.rowconfigure(0, weight=1)
+        source_tab.columnconfigure(0, weight=1)
+
         self.canvas = tk.Canvas(
-            right,
+            source_tab,
             background="#f8f9fa",
             highlightthickness=1,
             highlightbackground="#ced4da",
             xscrollincrement=20,
             yscrollincrement=20,
         )
-        x_scroll = ttk.Scrollbar(right, orient=tk.HORIZONTAL, command=self.canvas.xview)
-        y_scroll = ttk.Scrollbar(right, orient=tk.VERTICAL, command=self.canvas.yview)
+        x_scroll = ttk.Scrollbar(source_tab, orient=tk.HORIZONTAL, command=self.canvas.xview)
+        y_scroll = ttk.Scrollbar(source_tab, orient=tk.VERTICAL, command=self.canvas.yview)
         self.canvas.configure(xscrollcommand=x_scroll.set, yscrollcommand=y_scroll.set)
         self.canvas.grid(row=0, column=0, sticky="nsew")
         y_scroll.grid(row=0, column=1, sticky="ns")
         x_scroll.grid(row=1, column=0, sticky="ew")
 
+        self.generated_tab = generated_tab
+        generated_tab.rowconfigure(1, weight=1)
+        generated_tab.columnconfigure(0, weight=1)
+        generated_controls = ttk.Frame(generated_tab, padding=(8, 6))
+        generated_controls.grid(row=0, column=0, columnspan=2, sticky="ew")
+        generated_controls.columnconfigure(7, weight=1)
+        ttk.Label(generated_controls, text="Layer").grid(row=0, column=0, padx=(0, 6))
+        self.generated_layer_combo = ttk.Combobox(
+            generated_controls,
+            textvariable=self.generated_layer_var,
+            values=("All Layers",),
+            state="readonly",
+            width=24,
+        )
+        self.generated_layer_combo.grid(row=0, column=1, padx=(0, 6))
+        self.generated_layer_combo.bind("<<ComboboxSelected>>", self.generated_layer_changed)
+        self.generated_layer_swatch = tk.Canvas(generated_controls, width=18, height=14, highlightthickness=0)
+        self.generated_layer_swatch.grid(row=0, column=2, padx=(0, 10))
+        ttk.Button(generated_controls, text="Show Layer", command=self.show_generated_layer).grid(row=0, column=3, padx=(0, 6))
+        ttk.Button(generated_controls, text="Hide Layer", command=self.hide_generated_layer).grid(row=0, column=4, padx=(0, 6))
+        ttk.Button(generated_controls, text="View All Layers", command=self.show_all_generated_layers).grid(
+            row=0, column=5, padx=(0, 14)
+        )
+        ttk.Label(generated_controls, textvariable=self.generated_selected_var).grid(row=0, column=7, sticky="e")
+        self.generated_canvas = tk.Canvas(
+            generated_tab,
+            background="#f8f9fa",
+            highlightthickness=1,
+            highlightbackground="#ced4da",
+            xscrollincrement=20,
+            yscrollincrement=20,
+        )
+        generated_x_scroll = ttk.Scrollbar(generated_tab, orient=tk.HORIZONTAL, command=self.generated_canvas.xview)
+        generated_y_scroll = ttk.Scrollbar(generated_tab, orient=tk.VERTICAL, command=self.generated_canvas.yview)
+        self.generated_canvas.configure(
+            xscrollcommand=generated_x_scroll.set,
+            yscrollcommand=generated_y_scroll.set,
+        )
+        self.generated_canvas.grid(row=1, column=0, sticky="nsew")
+        generated_y_scroll.grid(row=1, column=1, sticky="ns")
+        generated_x_scroll.grid(row=2, column=0, sticky="ew")
+
         status = ttk.Label(root, textvariable=self.status_var, anchor="w")
-        status.grid(row=2, column=0, sticky="ew", pady=(8, 0))
+        status.grid(row=3, column=0, sticky="ew", pady=(8, 0))
 
     def _bind_canvas_events(self) -> None:
         self.canvas.bind("<Configure>", lambda _event: self.redraw())
@@ -456,8 +551,25 @@ class DxfPrepApp(tk.Tk):
         self.canvas.bind("<ButtonPress-2>", self.start_pan)
         self.canvas.bind("<B2-Motion>", self.pan)
         self.canvas.bind("<MouseWheel>", self.zoom)
+        self.generated_canvas.bind("<Configure>", self.generated_canvas_configured)
+        self.generated_canvas.bind("<Button-1>", self.select_generated_at)
+        self.generated_canvas.bind("<Button-3>", self.deselect_generated)
+        self.generated_canvas.bind("<Control-ButtonPress-1>", self.start_generated_pan)
+        self.generated_canvas.bind("<Control-B1-Motion>", self.pan_generated)
+        self.generated_canvas.bind("<ButtonPress-2>", self.start_generated_pan)
+        self.generated_canvas.bind("<B2-Motion>", self.pan_generated)
+        self.generated_canvas.bind("<MouseWheel>", self.zoom_generated)
         self.bind_all("<Control-z>", self.undo_last_layer_change)
         self.bind_all("<Control-Z>", self.undo_last_layer_change)
+
+    def preview_tab_changed(self, _event: tk.Event | None = None) -> None:
+        self.after_idle(self.zoom_active_preview)
+
+    def generated_canvas_configured(self, _event: tk.Event | None = None) -> None:
+        if self.generated_segments:
+            self.after_idle(self.zoom_generated_to_fit)
+        else:
+            self.redraw_generated()
 
     def build_sheet_buttons(self) -> None:
         for child in self.sheet_button_frame.winfo_children():
@@ -586,6 +698,10 @@ class DxfPrepApp(tk.Tk):
             "_acrylic_cutout.dxf",
             "_acrylic_cutout_test.dxf",
             "_app_test.dxf",
+            "_cleaned.dxf",
+            "_aluminum_shelfed.dxf",
+            "_acrylic_clean_and_cut.dxf",
+            "_poly_backs.dxf",
         )
         candidates = []
         try:
@@ -614,7 +730,9 @@ class DxfPrepApp(tk.Tk):
             self.selected_component = None
             self.selected_components.clear()
             self.undo_stack.clear()
+            self.clear_generated_preview()
             self.file_var.set(self.input_path.name)
+            self.preview_notebook.select(0)
             self.zoom_to_fit()
             self.build_sheet_buttons()
             self.update_status()
@@ -628,100 +746,170 @@ class DxfPrepApp(tk.Tk):
         self.update_status()
 
     def export_file(self) -> None:
-        if not self.analysis or not self.input_path:
-            messagebox.showinfo("No DXF loaded", "Open a DXF before exporting.")
-            return
-        default_name = self.input_path.stem + "_classified.dxf"
-        filename = filedialog.asksaveasfilename(
-            title="Save Classified DXF",
-            filetypes=[("DXF files", "*.dxf")],
-            defaultextension=".dxf",
-            initialdir=str(self.preferred_directory()),
-            initialfile=default_name,
-        )
-        if not filename:
-            return
-        self.remember_directory(Path(filename).parent)
-        self.sync_component_layers()
-        try:
-            dxf.export_classified_dxf(self.analysis, Path(filename))
-            messagebox.showinfo("Export complete", f"Saved:\n{filename}")
-        except Exception as exc:
-            messagebox.showerror("Could not export DXF", str(exc))
+        self.generate_output("aluminum")
 
     def export_acrylic_file(self) -> None:
-        if not self.analysis or not self.input_path:
-            messagebox.showinfo("No DXF loaded", "Open a DXF before exporting.")
-            return
-        default_name = self.input_path.stem + "_acrylic_cutout.dxf"
-        filename = filedialog.asksaveasfilename(
-            title="Save Acrylic Cutout DXF",
-            filetypes=[("DXF files", "*.dxf")],
-            defaultextension=".dxf",
-            initialdir=str(self.preferred_directory()),
-            initialfile=default_name,
-        )
-        if not filename:
-            return
-        self.remember_directory(Path(filename).parent)
-        self.sync_component_layers()
-        try:
-            count = dxf.export_acrylic_cutout_dxf(self.analysis, Path(filename))
-            messagebox.showinfo("Export complete", f"Saved {count} outside contours:\n{filename}")
-        except Exception as exc:
-            messagebox.showerror("Could not export acrylic DXF", str(exc))
+        self.generate_output("acrylic")
 
     def export_cleaned_file(self) -> None:
-        if not self.analysis or not self.input_path:
-            messagebox.showinfo("No DXF loaded", "Open a DXF before exporting.")
-            return
-        default_name = self.input_path.stem + "_cleaned.dxf"
-        filename = filedialog.asksaveasfilename(
-            title="Save Cleaned DXF",
-            filetypes=[("DXF files", "*.dxf")],
-            defaultextension=".dxf",
-            initialdir=str(self.preferred_directory()),
-            initialfile=default_name,
-        )
-        if not filename:
-            return
-        self.remember_directory(Path(filename).parent)
-        self.sync_component_layers()
-        try:
-            cleanup = dxf.export_cleaned_dxf(self.analysis, Path(filename))
-            cleanup_parts = []
-            if cleanup.get("degenerate_lines"):
-                cleanup_parts.append(f"{cleanup['degenerate_lines']} zero-length lines")
-            if cleanup.get("duplicate_entities"):
-                cleanup_parts.append(f"{cleanup['duplicate_entities']} duplicates")
-            if cleanup.get("drill_circles_rebuilt"):
-                cleanup_parts.append(f"{cleanup['drill_circles_rebuilt']} drill circles rebuilt")
-            details = ", ".join(cleanup_parts) if cleanup_parts else "no cleanup changes needed"
-            messagebox.showinfo("Export complete", f"Saved cleaned DXF ({details}):\n{filename}")
-        except Exception as exc:
-            messagebox.showerror("Could not export cleaned DXF", str(exc))
+        self.generate_output("clean")
 
     def export_poly_back_file(self) -> None:
+        self.generate_output("poly")
+
+    def generate_output(self, output_kind: str) -> None:
         if not self.analysis or not self.input_path:
-            messagebox.showinfo("No DXF loaded", "Open a DXF before exporting.")
+            messagebox.showinfo("No DXF loaded", "Open a DXF before generating output.")
             return
-        default_name = self.input_path.stem + "_poly_backs.dxf"
+        definitions = {
+            "clean": ("_cleaned.dxf", "Clean DXF", dxf.export_cleaned_dxf),
+            "aluminum": ("_aluminum_shelfed.dxf", "Aluminum Shelfed", dxf.export_classified_dxf),
+            "acrylic": (
+                "_acrylic_clean_and_cut.dxf",
+                "Acrylic Clean and Cut",
+                dxf.export_acrylic_cutout_dxf,
+            ),
+            "poly": ("_poly_backs.dxf", "Poly Backs", dxf.export_poly_back_dxf),
+        }
+        suffix, output_label, exporter = definitions[output_kind]
+        self.sync_component_layers()
+        self.generated_default_name = self.input_path.stem + suffix
+        temporary_path = Path(self.generated_temp.name) / self.generated_default_name
+        try:
+            exporter(self.analysis, temporary_path)
+            self.load_generated_preview(temporary_path, output_label)
+            self.preview_notebook.select(1)
+            self.status_var.set(f"Generated for review: {self.generated_default_name} - not saved yet")
+        except Exception as exc:
+            messagebox.showerror("Could not generate DXF", str(exc))
+
+    def save_generated_file(self) -> None:
+        if not self.generated_path or not self.generated_path.exists():
+            messagebox.showinfo("Nothing generated", "Generate and review a DXF before saving it.")
+            return
         filename = filedialog.asksaveasfilename(
-            title="Save Poly Backs DXF",
+            title="Save Generated DXF",
             filetypes=[("DXF files", "*.dxf")],
             defaultextension=".dxf",
             initialdir=str(self.preferred_directory()),
-            initialfile=default_name,
+            initialfile=self.generated_default_name,
         )
         if not filename:
             return
         self.remember_directory(Path(filename).parent)
-        self.sync_component_layers()
         try:
-            count = dxf.export_poly_back_dxf(self.analysis, Path(filename))
-            messagebox.showinfo("Export complete", f"Saved {count} poly back features:\n{filename}")
+            shutil.copyfile(self.generated_path, filename)
+            self.status_var.set(f"Saved: {filename}")
+            messagebox.showinfo("Export complete", f"Saved:\n{filename}")
         except Exception as exc:
-            messagebox.showerror("Could not export poly backs DXF", str(exc))
+            messagebox.showerror("Could not save generated DXF", str(exc))
+
+    def clear_generated_preview(self) -> None:
+        self.generated_path = None
+        self.generated_default_name = ""
+        self.generated_entities = []
+        self.generated_segments = []
+        self.generated_components = []
+        self.generated_layer_visibility = {}
+        self.generated_selected_component = None
+        self.generated_layer_var.set("All Layers")
+        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        if hasattr(self, "preview_notebook") and hasattr(self, "generated_tab"):
+            self.preview_notebook.tab(self.generated_tab, text="Generated Preview")
+        if hasattr(self, "generated_layer_combo"):
+            self.generated_layer_combo.configure(values=("All Layers",))
+            self.update_generated_layer_swatch()
+        if hasattr(self, "save_generated_button"):
+            self.save_generated_button.configure(state="disabled")
+        if hasattr(self, "generated_canvas"):
+            self.redraw_generated()
+
+    def load_generated_preview(self, path: Path, output_label: str) -> None:
+        pairs = dxf.read_pairs(path)
+        self.generated_entities = dxf.parse_entities(pairs)
+        self.generated_segments = dxf.build_segments(self.generated_entities)
+        self.build_generated_components()
+        self.generated_path = path
+        layers = list(self.generated_layer_visibility)
+        self.generated_layer_combo.configure(values=("All Layers", *layers))
+        self.generated_layer_var.set("All Layers")
+        self.generated_selected_component = None
+        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        self.preview_notebook.tab(self.generated_tab, text=f"Generated Preview - {output_label}")
+        self.update_generated_layer_swatch()
+        self.save_generated_button.configure(state="normal")
+        self.zoom_generated_to_fit()
+
+    def generated_segment_layer(self, segment: dict) -> str:
+        entity_index = segment.get("entity", -1)
+        if 0 <= entity_index < len(self.generated_entities):
+            return dxf.group_value(self.generated_entities[entity_index], 8, "Unnamed Layer")
+        return "Unnamed Layer"
+
+    def build_generated_components(self) -> None:
+        indexes_by_layer: dict[str, list[int]] = {}
+        for index, segment in enumerate(self.generated_segments):
+            indexes_by_layer.setdefault(self.generated_segment_layer(segment), []).append(index)
+
+        self.generated_components = []
+        self.generated_layer_visibility = {layer: True for layer in indexes_by_layer}
+        for layer, global_indexes in indexes_by_layer.items():
+            local_segments = [self.generated_segments[index] for index in global_indexes]
+            for component in dxf.connected_components(local_segments):
+                converted = component.copy()
+                converted["segment_indexes"] = {
+                    global_indexes[local_index] for local_index in component["segment_indexes"]
+                }
+                converted["layer"] = layer
+                self.generated_components.append(converted)
+
+    def update_generated_layer_swatch(self) -> None:
+        if not hasattr(self, "generated_layer_swatch"):
+            return
+        self.generated_layer_swatch.delete("all")
+        layer = self.generated_layer_var.get()
+        color = "#adb5bd" if layer == "All Layers" else GENERATED_LAYER_COLORS.get(layer, "#343a40")
+        self.generated_layer_swatch.create_rectangle(1, 1, 17, 13, fill=color, outline="")
+
+    def generated_layer_changed(self, _event: tk.Event | None = None) -> None:
+        selected = self.generated_layer_var.get()
+        if selected == "All Layers":
+            for layer in self.generated_layer_visibility:
+                self.generated_layer_visibility[layer] = True
+        else:
+            for layer in self.generated_layer_visibility:
+                self.generated_layer_visibility[layer] = layer == selected
+        self.generated_selected_component = None
+        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        self.update_generated_layer_swatch()
+        self.redraw_generated()
+
+    def show_generated_layer(self) -> None:
+        layer = self.generated_layer_var.get()
+        if layer == "All Layers":
+            self.show_all_generated_layers()
+            return
+        for candidate in self.generated_layer_visibility:
+            self.generated_layer_visibility[candidate] = candidate == layer
+        self.redraw_generated()
+
+    def hide_generated_layer(self) -> None:
+        layer = self.generated_layer_var.get()
+        if layer == "All Layers":
+            for candidate in self.generated_layer_visibility:
+                self.generated_layer_visibility[candidate] = False
+        elif layer in self.generated_layer_visibility:
+            self.generated_layer_visibility[layer] = False
+        self.generated_selected_component = None
+        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        self.redraw_generated()
+
+    def show_all_generated_layers(self) -> None:
+        for layer in self.generated_layer_visibility:
+            self.generated_layer_visibility[layer] = True
+        self.generated_layer_var.set("All Layers")
+        self.update_generated_layer_swatch()
+        self.redraw_generated()
 
     def sync_component_layers(self) -> None:
         if not self.analysis:
@@ -741,6 +929,31 @@ class DxfPrepApp(tk.Tk):
             max(box[2] for box in boxes),
             max(box[3] for box in boxes),
         )
+
+    def auto_align(self) -> None:
+        bounds = self.world_bounds()
+        if not self.analysis or not bounds:
+            messagebox.showinfo("No DXF loaded", "Open a DXF before aligning it.")
+            return
+        dx = 0.5 - bounds[0]
+        dy = 0.5 - bounds[1]
+        if abs(dx) < 0.000001 and abs(dy) < 0.000001:
+            self.status_var.set("Drawing is already aligned to X 0.5, Y 0.5.")
+            return
+        self.undo_stack.append({"type": "translate", "dx": dx, "dy": dy})
+        self.undo_stack = self.undo_stack[-100:]
+        dxf.translate_analysis(self.analysis, dx, dy)
+        self.clear_generated_preview()
+        self.build_sheet_buttons()
+        self.zoom_to_fit()
+        self.update_status()
+        self.status_var.set(f"Aligned drawing by X {dx:+.4f}, Y {dy:+.4f}; lower-left is now 0.5, 0.5.")
+
+    def zoom_active_preview(self) -> None:
+        if hasattr(self, "preview_notebook") and self.preview_notebook.index("current") == 1:
+            self.zoom_generated_to_fit()
+        else:
+            self.zoom_to_fit()
 
     def zoom_to_fit(self) -> None:
         bounds = self.fit_bounds()
@@ -844,7 +1057,7 @@ class DxfPrepApp(tk.Tk):
         self.update_scroll_region()
 
     def draw_segment(self, segment: dict, color: str, width: int) -> None:
-        if segment["type"] == "ARC":
+        if "center" in segment and "start_angle" in segment:
             points = self.arc_points(segment)
         else:
             points = [segment["p1"], segment["p2"]]
@@ -853,6 +1066,161 @@ class DxfPrepApp(tk.Tk):
             screen_points.extend(self.world_to_screen(point))
         if len(screen_points) >= 4:
             self.canvas.create_line(*screen_points, fill=color, width=width, smooth=False)
+
+    def generated_world_bounds(self) -> tuple[float, float, float, float] | None:
+        if not self.generated_segments:
+            return None
+        boxes = []
+        for segment in self.generated_segments:
+            if "bbox" in segment:
+                boxes.append(segment["bbox"])
+            else:
+                xs = (segment["p1"][0], segment["p2"][0])
+                ys = (segment["p1"][1], segment["p2"][1])
+                boxes.append((min(xs), min(ys), max(xs), max(ys)))
+        return merge_boxes(boxes)
+
+    def generated_world_to_screen(self, point: tuple[float, float]) -> tuple[float, float]:
+        x, y = point
+        return (
+            x * self.generated_scale + self.generated_offset_x,
+            -y * self.generated_scale + self.generated_offset_y,
+        )
+
+    def generated_screen_to_world(self, point: tuple[float, float]) -> tuple[float, float]:
+        x, y = point
+        return (
+            (x - self.generated_offset_x) / self.generated_scale,
+            -(y - self.generated_offset_y) / self.generated_scale,
+        )
+
+    def zoom_generated_to_fit(self) -> None:
+        bounds = self.generated_world_bounds()
+        if not bounds:
+            self.redraw_generated()
+            return
+        min_x, min_y, max_x, max_y = bounds
+        width = max(max_x - min_x, 1.0)
+        height = max(max_y - min_y, 1.0)
+        canvas_width = max(self.generated_canvas.winfo_width(), 100)
+        canvas_height = max(self.generated_canvas.winfo_height(), 100)
+        self.generated_scale = min((canvas_width - 60) / width, (canvas_height - 60) / height)
+        self.generated_offset_x = 30 - min_x * self.generated_scale
+        self.generated_offset_y = 30 + max_y * self.generated_scale
+        self.redraw_generated()
+        self.generated_canvas.xview_moveto(0)
+        self.generated_canvas.yview_moveto(0)
+
+    def redraw_generated(self) -> None:
+        self.generated_canvas.delete("all")
+        if not self.generated_segments:
+            self.generated_canvas.create_text(
+                24,
+                24,
+                anchor="nw",
+                text="Generate a DXF to inspect the exact output here.",
+                fill="#495057",
+            )
+            self.generated_canvas.configure(
+                scrollregion=(0, 0, max(self.generated_canvas.winfo_width(), 100), max(self.generated_canvas.winfo_height(), 100))
+            )
+            return
+        selected_segments: set[int] = set()
+        if self.generated_selected_component is not None:
+            selected_segments = self.generated_components[self.generated_selected_component]["segment_indexes"]
+        for segment_index, segment in enumerate(self.generated_segments):
+            layer = self.generated_segment_layer(segment)
+            if not self.generated_layer_visibility.get(layer, True):
+                continue
+            selected = segment_index in selected_segments
+            color = "#c92a2a" if selected else GENERATED_LAYER_COLORS.get(layer, "#343a40")
+            points = self.arc_points(segment) if "center" in segment and "start_angle" in segment else [segment["p1"], segment["p2"]]
+            screen_points = []
+            for point in points:
+                screen_points.extend(self.generated_world_to_screen(point))
+            if len(screen_points) >= 4:
+                self.generated_canvas.create_line(*screen_points, fill=color, width=3 if selected else 1, smooth=False)
+        if self.generated_selected_component is not None:
+            min_x, min_y, max_x, max_y = self.generated_components[self.generated_selected_component]["bbox"]
+            x1, y1 = self.generated_world_to_screen((min_x, max_y))
+            x2, y2 = self.generated_world_to_screen((max_x, min_y))
+            self.generated_canvas.create_rectangle(x1, y1, x2, y2, outline="#c92a2a", width=2, dash=(6, 4))
+        bounds = self.generated_canvas.bbox("all")
+        if bounds:
+            pad = 30
+            self.generated_canvas.configure(
+                scrollregion=(
+                    min(bounds[0] - pad, 0),
+                    min(bounds[1] - pad, 0),
+                    max(bounds[2] + pad, self.generated_canvas.winfo_width()),
+                    max(bounds[3] + pad, self.generated_canvas.winfo_height()),
+                )
+            )
+
+    def select_generated_at(self, event: tk.Event) -> None:
+        if not self.generated_components or event.state & 0x0004:
+            return
+        canvas_x = self.generated_canvas.canvasx(event.x)
+        canvas_y = self.generated_canvas.canvasy(event.y)
+        world = self.generated_screen_to_world((canvas_x, canvas_y))
+        pad = max(0.08, self.selection_tolerance_px() / max(self.generated_scale, 1))
+        candidates = []
+        for index, component in enumerate(self.generated_components):
+            layer = component["layer"]
+            if not self.generated_layer_visibility.get(layer, True):
+                continue
+            min_x, min_y, max_x, max_y = component["bbox"]
+            if not (min_x - pad <= world[0] <= max_x + pad and min_y - pad <= world[1] <= max_y + pad):
+                continue
+            distance = min(
+                self.distance_to_segment(world, self.generated_segments[segment_index])
+                for segment_index in component["segment_indexes"]
+            )
+            if distance <= pad:
+                area = max((max_x - min_x) * (max_y - min_y), 0.0001)
+                candidates.append((distance, area, index))
+        if not candidates:
+            return
+        self.generated_selected_component = min(candidates)[2]
+        component = self.generated_components[self.generated_selected_component]
+        min_x, min_y, max_x, max_y = component["bbox"]
+        self.generated_selected_var.set(
+            f"Layer: {component['layer']}  |  {max_x - min_x:.3f} x {max_y - min_y:.3f} in  |  "
+            f"{'Closed' if component['closed'] else 'Open'}"
+        )
+        self.generated_layer_var.set(component["layer"])
+        self.update_generated_layer_swatch()
+        self.redraw_generated()
+
+    def deselect_generated(self, _event: tk.Event | None = None) -> None:
+        self.generated_selected_component = None
+        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        self.redraw_generated()
+
+    def start_generated_pan(self, event: tk.Event) -> None:
+        self.generated_canvas.scan_mark(event.x, event.y)
+
+    def pan_generated(self, event: tk.Event) -> None:
+        self.generated_canvas.scan_dragto(event.x, event.y, gain=1)
+
+    def zoom_generated(self, event: tk.Event) -> None:
+        if not self.generated_segments:
+            return
+        if event.state & 0x0001:
+            direction = -1 if event.delta > 0 else 1
+            if self.setting_bool("invert_shift_scroll"):
+                direction *= -1
+            self.generated_canvas.xview_scroll(direction * 5, "units")
+            return
+        factor = 1.12 if event.delta > 0 else 1 / 1.12
+        canvas_x = self.generated_canvas.canvasx(event.x)
+        canvas_y = self.generated_canvas.canvasy(event.y)
+        before = self.generated_screen_to_world((canvas_x, canvas_y))
+        self.generated_scale *= factor
+        after_screen = self.generated_world_to_screen(before)
+        self.generated_offset_x += canvas_x - after_screen[0]
+        self.generated_offset_y += canvas_y - after_screen[1]
+        self.redraw_generated()
 
     @staticmethod
     def point_to_segment_distance(
@@ -1072,6 +1440,15 @@ class DxfPrepApp(tk.Tk):
         if not self.undo_stack:
             return "break"
         changes = self.undo_stack.pop()
+        if isinstance(changes, dict) and changes.get("type") == "translate":
+            if self.analysis:
+                dxf.translate_analysis(self.analysis, -changes["dx"], -changes["dy"])
+                self.clear_generated_preview()
+                self.build_sheet_buttons()
+                self.zoom_to_fit()
+                self.update_status()
+                self.status_var.set("Auto align undone.")
+            return "break"
         restored_indexes = []
         for index, old_layer, _new_layer in changes:
             if 0 <= index < len(self.component_layers):

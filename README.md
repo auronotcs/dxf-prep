@@ -1,6 +1,6 @@
 # DXF Prep
 
-DXF Prep is a small Windows desktop utility for preparing design-software-exported DXF files for CAM software sign fabrication workflows.
+DXF Prep is a small Windows desktop utility for preparing CAD-exported DXF files for sign-fabrication and CNC workflows.
 
 ## Current Features
 
@@ -67,8 +67,8 @@ The executable is written to `dist\DXF Prep.exe`.
 
 ## Notes
 
-This tool is intentionally tuned for a specific sign fabrication workflow. It is useful as a starting point for similar CAM/design-software DXF preprocessing, but geometry classification rules may need adjustment for different export settings or shop conventions.
+This tool is intentionally tuned for a specific sign-fabrication workflow. It is useful as a starting point for similar CAD/CAM DXF preprocessing, but geometry classification rules may need adjustment for different export settings or shop conventions.
 
 ## Future Checks
 
-- Commit `9d2cf3a` added acrylic-export seam cleanup by collapsing connected, collinear, very short line pairs. If aluminum exports show similar CAM software join/clean errors, consider applying the same cleanup to aluminum export as well.
+- Acrylic export includes seam cleanup that collapses connected, collinear, very short line pairs. If aluminum exports show similar join/clean errors, consider applying the same cleanup to aluminum export as well.

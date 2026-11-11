@@ -421,14 +421,14 @@ def connected_components(segments: list[dict]) -> list[dict]:
             ys.extend([value for box in boxes for value in (box[1], box[3])])
         degrees = [len(adjacency[node]) for node in nodes]
         colors = Counter(segments[segment_index]["color"] for segment_index in segment_indexes)
-        bad_degrees = [degree for degree in degrees if degree != 2]
+        odd_degrees = [degree for degree in degrees if degree % 2 != 0]
         components.append(
             {
                 "segment_indexes": segment_indexes,
                 "entity_indexes": {segments[i]["entity"] for i in segment_indexes},
-                "closed": all(degree == 2 for degree in degrees),
-                "open_nodes": len(bad_degrees),
-                "branch_nodes": sum(1 for degree in bad_degrees if degree > 2),
+                "closed": not odd_degrees,
+                "open_nodes": len(odd_degrees),
+                "branch_nodes": sum(1 for degree in degrees if degree > 2),
                 "bbox": (min(xs), min(ys), max(xs), max(ys)),
                 "color": colors.most_common(1)[0][0],
             }
@@ -619,6 +619,13 @@ def partial_offset_pair_score(outer: dict, inner: dict) -> float | None:
     return average + spread
 
 
+def is_split_offset_section(outer: dict, inner: dict) -> bool:
+    """Identify one of multiple inset sections sharing a single exterior."""
+    margins = bbox_margins(outer["bbox"], inner["bbox"])
+    inset_count = sum(0.015 <= margin <= 0.75 for margin in margins)
+    return inset_count == 3 and partial_offset_pair_score(outer, inner) is not None
+
+
 def classify_components_topologically(components: list[dict], segments: list[dict]) -> None:
     structural_indexes = []
     for index, component in enumerate(components):
@@ -698,6 +705,17 @@ def classify_components_topologically(components: list[dict], segments: list[dic
             if score is not None:
                 pair_candidates.append((score, child_index))
         pair_indexes = [min(pair_candidates)[1]] if pair_candidates else []
+        if pair_indexes and len(child_indexes) >= 2:
+            primary_index = pair_indexes[0]
+            if is_split_offset_section(component, components[primary_index]):
+                split_siblings = [
+                    child_index
+                    for child_index in child_indexes
+                    if child_index != primary_index
+                    and is_split_offset_section(component, components[child_index])
+                ]
+                if split_siblings:
+                    pair_indexes.extend(split_siblings)
         if not pair_indexes and boundary_depth % 2 == 1 and len(child_indexes) == 1:
             child_index = child_indexes[0]
             margins = bbox_margins(component["bbox"], components[child_index]["bbox"])
@@ -810,7 +828,8 @@ def write_dxf(
     output: Path,
     layer_colors: dict[str, str] | None = None,
 ) -> None:
-    layer_colors = layer_colors or LAYER_COLORS
+    if layer_colors is None:
+        layer_colors = LAYER_COLORS
     out: list[str] = []
     in_entities = False
     in_layer_table = False
@@ -892,6 +911,19 @@ def export_classified_dxf(analysis: dict, output: Path) -> None:
     layers_by_entity: dict[int, str] = {}
     for component in analysis["components"]:
         layer = component.get("layer", classify_component(component))
+        for entity_index in component["entity_indexes"]:
+            layers_by_entity[entity_index] = layer
+    entities = copy.deepcopy(analysis["entities"])
+    write_entities_to_layers(entities, layers_by_entity)
+    write_dxf(analysis["pairs"], entities, output)
+
+
+def export_plain_aluminum_dxf(analysis: dict, output: Path) -> None:
+    layers_by_entity: dict[int, str] = {}
+    for component in analysis["components"]:
+        layer = component["layer"] if "layer" in component else classify_component(component)
+        if layer == LAYER_PROFILE_HOLES:
+            layer = LAYER_OUTER
         for entity_index in component["entity_indexes"]:
             layers_by_entity[entity_index] = layer
     entities = copy.deepcopy(analysis["entities"])

@@ -1,0 +1,1693 @@
+{
+  "context": {
+    "context_token": "a74e9269f56948e28a2598afcad90252",
+    "units": "in",
+    "defaults": {
+      "length": 10.0,
+      "width": 6.0,
+      "height": 2.0,
+      "thickness": 0.125,
+      "clearance": 0.04,
+      "glue_tab": 1.25,
+      "dust_flap": 1.25,
+      "tuck_flap": 1.25,
+      "score_inset": 0.08,
+      "x": 1.0,
+      "y": 1.0,
+      "rotate": false
+    },
+    "plate": [
+      0.0,
+      0.0,
+      96.0,
+      48.0
+    ]
+  },
+  "normal": {
+    "token": "6b233d0f299b4f08ad15af9763c7307b",
+    "units": "in",
+    "options": {
+      "length": 10.0,
+      "width": 6.0,
+      "height": 2.0,
+      "thickness": 0.125,
+      "clearance": 0.04,
+      "glue_tab": 1.25,
+      "dust_flap": 1.25,
+      "tuck_flap": 1.25,
+      "score_inset": 0.08,
+      "x": 1.0,
+      "y": 1.0,
+      "rotate": false
+    },
+    "bounds": [
+      1.0,
+      1.0,
+      15.0,
+      18.085
+    ],
+    "labels": [
+      {
+        "text": "Base",
+        "x": 8.0,
+        "y": 6.0
+      },
+      {
+        "text": "Front",
+        "x": 8.0,
+        "y": 2.0
+      },
+      {
+        "text": "Back / hinge",
+        "x": 8.0,
+        "y": 10.0
+      },
+      {
+        "text": "Left wall",
+        "x": 2.0,
+        "y": 6.0
+      },
+      {
+        "text": "Right wall",
+        "x": 14.0,
+        "y": 6.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 2.375,
+        "y": 2.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 2.375,
+        "y": 10.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 13.625,
+        "y": 2.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 13.625,
+        "y": 10.0
+      },
+      {
+        "text": "Lid",
+        "x": 8.0,
+        "y": 13.9175
+      },
+      {
+        "text": "Dust flap",
+        "x": 2.54,
+        "y": 13.9175
+      },
+      {
+        "text": "Dust flap",
+        "x": 13.46,
+        "y": 13.9175
+      },
+      {
+        "text": "Tuck in",
+        "x": 8.0,
+        "y": 17.46
+      }
+    ],
+    "warnings": [],
+    "entities": [
+      {
+        "id": "entity_5acba49e4b8f43019a807ac200a39d10",
+        "layer": "BOX_CUT",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Mailer through-cut outline",
+          "box_role": "cut",
+          "box_parameters": {
+            "length": 10.0,
+            "width": 6.0,
+            "height": 2.0,
+            "thickness": 0.125,
+            "clearance": 0.04,
+            "glue_tab": 1.25,
+            "dust_flap": 1.25,
+            "tuck_flap": 1.25,
+            "score_inset": 0.08,
+            "x": 1.0,
+            "y": 1.0,
+            "rotate": false
+          },
+          "box_units": "in"
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 15.0,
+            "y": 3.0
+          },
+          {
+            "x": 15.0,
+            "y": 9.0
+          },
+          {
+            "x": 13.0,
+            "y": 9.0
+          },
+          {
+            "x": 13.0,
+            "y": 9.165
+          },
+          {
+            "x": 14.25,
+            "y": 9.4775
+          },
+          {
+            "x": 14.25,
+            "y": 10.5225
+          },
+          {
+            "x": 13.0,
+            "y": 10.835
+          },
+          {
+            "x": 13.0,
+            "y": 11.0
+          },
+          {
+            "x": 12.835,
+            "y": 11.0
+          },
+          {
+            "x": 12.835,
+            "y": 11.165
+          },
+          {
+            "x": 14.085,
+            "y": 11.54
+          },
+          {
+            "x": 14.085,
+            "y": 16.295
+          },
+          {
+            "x": 12.835,
+            "y": 16.67
+          },
+          {
+            "x": 12.835,
+            "y": 16.835
+          },
+          {
+            "x": 12.67,
+            "y": 16.835
+          },
+          {
+            "x": 12.295,
+            "y": 18.085
+          },
+          {
+            "x": 3.705,
+            "y": 18.085
+          },
+          {
+            "x": 3.33,
+            "y": 16.835
+          },
+          {
+            "x": 3.165,
+            "y": 16.835
+          },
+          {
+            "x": 3.165,
+            "y": 16.67
+          },
+          {
+            "x": 1.915,
+            "y": 16.295
+          },
+          {
+            "x": 1.915,
+            "y": 11.54
+          },
+          {
+            "x": 3.165,
+            "y": 11.165
+          },
+          {
+            "x": 3.165,
+            "y": 11.0
+          },
+          {
+            "x": 3.0,
+            "y": 11.0
+          },
+          {
+            "x": 3.0,
+            "y": 10.835
+          },
+          {
+            "x": 1.75,
+            "y": 10.5225
+          },
+          {
+            "x": 1.75,
+            "y": 9.4775
+          },
+          {
+            "x": 3.0,
+            "y": 9.165
+          },
+          {
+            "x": 3.0,
+            "y": 9.0
+          },
+          {
+            "x": 1.0,
+            "y": 9.0
+          },
+          {
+            "x": 1.0,
+            "y": 3.0
+          },
+          {
+            "x": 3.0,
+            "y": 3.0
+          },
+          {
+            "x": 3.0,
+            "y": 2.835
+          },
+          {
+            "x": 1.75,
+            "y": 2.5225
+          },
+          {
+            "x": 1.75,
+            "y": 1.4775
+          },
+          {
+            "x": 3.0,
+            "y": 1.165
+          },
+          {
+            "x": 3.0,
+            "y": 1.0
+          },
+          {
+            "x": 13.0,
+            "y": 1.0
+          },
+          {
+            "x": 13.0,
+            "y": 1.165
+          },
+          {
+            "x": 14.25,
+            "y": 1.4775
+          },
+          {
+            "x": 14.25,
+            "y": 2.5225
+          },
+          {
+            "x": 13.0,
+            "y": 2.835
+          },
+          {
+            "x": 13.0,
+            "y": 3.0
+          }
+        ],
+        "closed": true,
+        "kind": "polyline"
+      },
+      {
+        "id": "entity_ded1e275c6704ded87d4e7adab25c711",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.08,
+          "y": 3.0
+        },
+        "end": {
+          "x": 12.92,
+          "y": 3.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_63609edc394a40e3863af7fa86d7aed2",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Back fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.08,
+          "y": 9.0
+        },
+        "end": {
+          "x": 12.92,
+          "y": 9.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_fbca07c251594a31af4b9c899e854bea",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Left fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.0,
+          "y": 3.08
+        },
+        "end": {
+          "x": 3.0,
+          "y": 8.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_d85f9de92f49436da817df1869544d83",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Right fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 13.0,
+          "y": 3.08
+        },
+        "end": {
+          "x": 13.0,
+          "y": 8.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_787d0067c6c14e09b20f598119a8b1f0",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.0,
+          "y": 1.245
+        },
+        "end": {
+          "x": 3.0,
+          "y": 2.755
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_a0012181fbe64d8ebb807e3a1db3b384",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.0,
+          "y": 9.245000000000001
+        },
+        "end": {
+          "x": 3.0,
+          "y": 10.754999999999999
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_9cf10065043b4194a38dba67c5c13e67",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 13.0,
+          "y": 1.245
+        },
+        "end": {
+          "x": 13.0,
+          "y": 2.755
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_18e576eb076e4627a7a358955381ba67",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 13.0,
+          "y": 9.245000000000001
+        },
+        "end": {
+          "x": 13.0,
+          "y": 10.754999999999999
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_2a208476362440caa091a391e0946ebf",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Lid hinge",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.245,
+          "y": 11.0
+        },
+        "end": {
+          "x": 12.755,
+          "y": 11.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_1e73fad924d54f22b7196e6d6bdd95f2",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "left dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.165,
+          "y": 11.245
+        },
+        "end": {
+          "x": 3.165,
+          "y": 16.590000000000003
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_e6cf767d6b0c44a1b1b07b1f1ad87c5e",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "right dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 12.835,
+          "y": 11.245
+        },
+        "end": {
+          "x": 12.835,
+          "y": 16.590000000000003
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_b2e38f00b2bf41558f8243e026650118",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_9e671c4043854054aadc7a6bc6ca1bac",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front tuck",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 3.41,
+          "y": 16.835
+        },
+        "end": {
+          "x": 12.59,
+          "y": 16.835
+        },
+        "kind": "line"
+      }
+    ],
+    "cut_count": 1,
+    "score_count": 12
+  },
+  "rotated": {
+    "token": "da560d55b9704c53a6e2bf43ad1ef9e2",
+    "units": "in",
+    "options": {
+      "length": 10.0,
+      "width": 6.0,
+      "height": 2.0,
+      "thickness": 0.125,
+      "clearance": 0.04,
+      "glue_tab": 1.25,
+      "dust_flap": 1.25,
+      "tuck_flap": 1.25,
+      "score_inset": 0.08,
+      "x": 1.0,
+      "y": 1.0,
+      "rotate": true
+    },
+    "bounds": [
+      1.0,
+      1.0,
+      18.085,
+      15.0
+    ],
+    "labels": [
+      {
+        "text": "Base",
+        "x": 13.085,
+        "y": 8.0
+      },
+      {
+        "text": "Front",
+        "x": 17.085,
+        "y": 8.0
+      },
+      {
+        "text": "Back / hinge",
+        "x": 9.085,
+        "y": 8.0
+      },
+      {
+        "text": "Left wall",
+        "x": 13.085,
+        "y": 2.0
+      },
+      {
+        "text": "Right wall",
+        "x": 13.085,
+        "y": 14.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 17.085,
+        "y": 2.375
+      },
+      {
+        "text": "Glue / tape",
+        "x": 9.085,
+        "y": 2.375
+      },
+      {
+        "text": "Glue / tape",
+        "x": 17.085,
+        "y": 13.625
+      },
+      {
+        "text": "Glue / tape",
+        "x": 9.085,
+        "y": 13.625
+      },
+      {
+        "text": "Lid",
+        "x": 5.1675,
+        "y": 8.0
+      },
+      {
+        "text": "Dust flap",
+        "x": 5.1675,
+        "y": 2.54
+      },
+      {
+        "text": "Dust flap",
+        "x": 5.1675,
+        "y": 13.46
+      },
+      {
+        "text": "Tuck in",
+        "x": 1.625,
+        "y": 8.0
+      }
+    ],
+    "warnings": [],
+    "entities": [
+      {
+        "id": "entity_c8d780ab0e6d4ef696dc485e17fc9029",
+        "layer": "BOX_CUT",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Mailer through-cut outline",
+          "box_role": "cut",
+          "box_parameters": {
+            "length": 10.0,
+            "width": 6.0,
+            "height": 2.0,
+            "thickness": 0.125,
+            "clearance": 0.04,
+            "glue_tab": 1.25,
+            "dust_flap": 1.25,
+            "tuck_flap": 1.25,
+            "score_inset": 0.08,
+            "x": 1.0,
+            "y": 1.0,
+            "rotate": true
+          },
+          "box_units": "in"
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 16.085,
+            "y": 15.0
+          },
+          {
+            "x": 10.085,
+            "y": 15.0
+          },
+          {
+            "x": 10.085,
+            "y": 13.0
+          },
+          {
+            "x": 9.920000000000002,
+            "y": 13.0
+          },
+          {
+            "x": 9.607500000000002,
+            "y": 14.25
+          },
+          {
+            "x": 8.5625,
+            "y": 14.25
+          },
+          {
+            "x": 8.25,
+            "y": 13.0
+          },
+          {
+            "x": 8.085,
+            "y": 13.0
+          },
+          {
+            "x": 8.085,
+            "y": 12.835
+          },
+          {
+            "x": 7.920000000000002,
+            "y": 12.835
+          },
+          {
+            "x": 7.545000000000002,
+            "y": 14.085
+          },
+          {
+            "x": 2.790000000000001,
+            "y": 14.085
+          },
+          {
+            "x": 2.415000000000001,
+            "y": 12.835
+          },
+          {
+            "x": 2.25,
+            "y": 12.835
+          },
+          {
+            "x": 2.25,
+            "y": 12.67
+          },
+          {
+            "x": 1.0,
+            "y": 12.295
+          },
+          {
+            "x": 1.0,
+            "y": 3.705
+          },
+          {
+            "x": 2.25,
+            "y": 3.33
+          },
+          {
+            "x": 2.25,
+            "y": 3.165
+          },
+          {
+            "x": 2.415000000000001,
+            "y": 3.165
+          },
+          {
+            "x": 2.790000000000001,
+            "y": 1.915
+          },
+          {
+            "x": 7.545000000000002,
+            "y": 1.915
+          },
+          {
+            "x": 7.920000000000002,
+            "y": 3.165
+          },
+          {
+            "x": 8.085,
+            "y": 3.165
+          },
+          {
+            "x": 8.085,
+            "y": 3.0
+          },
+          {
+            "x": 8.25,
+            "y": 3.0
+          },
+          {
+            "x": 8.5625,
+            "y": 1.75
+          },
+          {
+            "x": 9.607500000000002,
+            "y": 1.75
+          },
+          {
+            "x": 9.920000000000002,
+            "y": 3.0
+          },
+          {
+            "x": 10.085,
+            "y": 3.0
+          },
+          {
+            "x": 10.085,
+            "y": 1.0
+          },
+          {
+            "x": 16.085,
+            "y": 1.0
+          },
+          {
+            "x": 16.085,
+            "y": 3.0
+          },
+          {
+            "x": 16.25,
+            "y": 3.0
+          },
+          {
+            "x": 16.5625,
+            "y": 1.75
+          },
+          {
+            "x": 17.6075,
+            "y": 1.75
+          },
+          {
+            "x": 17.92,
+            "y": 3.0
+          },
+          {
+            "x": 18.085,
+            "y": 3.0
+          },
+          {
+            "x": 18.085,
+            "y": 13.0
+          },
+          {
+            "x": 17.92,
+            "y": 13.0
+          },
+          {
+            "x": 17.6075,
+            "y": 14.25
+          },
+          {
+            "x": 16.5625,
+            "y": 14.25
+          },
+          {
+            "x": 16.25,
+            "y": 13.0
+          },
+          {
+            "x": 16.085,
+            "y": 13.0
+          }
+        ],
+        "closed": true,
+        "kind": "polyline"
+      },
+      {
+        "id": "entity_fd003589c9eb49828c502d5c8f443493",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 16.085,
+          "y": 3.08
+        },
+        "end": {
+          "x": 16.085,
+          "y": 12.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_6a7b972192a2437fa31bedb9e8cbe958",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Back fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 10.085,
+          "y": 3.08
+        },
+        "end": {
+          "x": 10.085,
+          "y": 12.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_167355b71aac4b12b963b3717ef5a36d",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Left fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 16.005000000000003,
+          "y": 3.0
+        },
+        "end": {
+          "x": 10.165000000000001,
+          "y": 3.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_07f0ea668e8245f784950306a47d18ab",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Right fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 16.005000000000003,
+          "y": 13.0
+        },
+        "end": {
+          "x": 10.165000000000001,
+          "y": 13.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_c24194c0c8054299b2eae97872819bcd",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 17.84,
+          "y": 3.0
+        },
+        "end": {
+          "x": 16.33,
+          "y": 3.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_adeafcc5752a46a8b77734a74a215139",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 9.84,
+          "y": 3.0
+        },
+        "end": {
+          "x": 8.330000000000002,
+          "y": 3.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_2e8cb681b1a9488e926fff33082a7521",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 17.84,
+          "y": 13.0
+        },
+        "end": {
+          "x": 16.33,
+          "y": 13.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_3e4d71c2e3bd4384bf07a98ac10a35c7",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 9.84,
+          "y": 13.0
+        },
+        "end": {
+          "x": 8.330000000000002,
+          "y": 13.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_f1c494cb737a44a7adfab343497b0ec9",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Lid hinge",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 8.085,
+          "y": 3.245
+        },
+        "end": {
+          "x": 8.085,
+          "y": 12.755
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_37e2f0fce3cf4399bcd4fdcffceaa103",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "left dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 7.840000000000002,
+          "y": 3.165
+        },
+        "end": {
+          "x": 2.494999999999999,
+          "y": 3.165
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_cb68b2a0f1884d3a98667465726a00e1",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "right dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 7.840000000000002,
+          "y": 12.835
+        },
+        "end": {
+          "x": 2.494999999999999,
+          "y": 12.835
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_887f173aa1e94c619a3ca96e546a1629",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_68445ac2577b4fc6ada7d5e7ba22b880",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front tuck",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 2.25,
+          "y": 3.41
+        },
+        "end": {
+          "x": 2.25,
+          "y": 12.59
+        },
+        "kind": "line"
+      }
+    ],
+    "cut_count": 1,
+    "score_count": 12
+  },
+  "warning": {
+    "token": "fbb15ef7992e4f25a00203e11312b76d",
+    "units": "in",
+    "options": {
+      "length": 10.0,
+      "width": 6.0,
+      "height": 2.0,
+      "thickness": 0.125,
+      "clearance": 0.04,
+      "glue_tab": 1.25,
+      "dust_flap": 1.25,
+      "tuck_flap": 1.25,
+      "score_inset": 0.08,
+      "x": -5,
+      "y": -4,
+      "rotate": false
+    },
+    "bounds": [
+      -5.0,
+      -4.0,
+      9.0,
+      13.085
+    ],
+    "labels": [
+      {
+        "text": "Base",
+        "x": 2.0,
+        "y": 1.0
+      },
+      {
+        "text": "Front",
+        "x": 2.0,
+        "y": -3.0
+      },
+      {
+        "text": "Back / hinge",
+        "x": 2.0,
+        "y": 5.0
+      },
+      {
+        "text": "Left wall",
+        "x": -4.0,
+        "y": 1.0
+      },
+      {
+        "text": "Right wall",
+        "x": 8.0,
+        "y": 1.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": -3.625,
+        "y": -3.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": -3.625,
+        "y": 5.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 7.625,
+        "y": -3.0
+      },
+      {
+        "text": "Glue / tape",
+        "x": 7.625,
+        "y": 5.0
+      },
+      {
+        "text": "Lid",
+        "x": 2.0,
+        "y": 8.9175
+      },
+      {
+        "text": "Dust flap",
+        "x": -3.46,
+        "y": 8.9175
+      },
+      {
+        "text": "Dust flap",
+        "x": 7.460000000000001,
+        "y": 8.9175
+      },
+      {
+        "text": "Tuck in",
+        "x": 2.0,
+        "y": 12.46
+      }
+    ],
+    "warnings": [
+      "The blank extends outside the selected sheet. Reposition, rotate or resize before cutting."
+    ],
+    "entities": [
+      {
+        "id": "entity_f7bc67dc25ea4f81b882b6d9be03dff0",
+        "layer": "BOX_CUT",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Mailer through-cut outline",
+          "box_role": "cut",
+          "box_parameters": {
+            "length": 10.0,
+            "width": 6.0,
+            "height": 2.0,
+            "thickness": 0.125,
+            "clearance": 0.04,
+            "glue_tab": 1.25,
+            "dust_flap": 1.25,
+            "tuck_flap": 1.25,
+            "score_inset": 0.08,
+            "x": -5,
+            "y": -4,
+            "rotate": false
+          },
+          "box_units": "in"
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 9.0,
+            "y": -2.0
+          },
+          {
+            "x": 9.0,
+            "y": 4.0
+          },
+          {
+            "x": 7.0,
+            "y": 4.0
+          },
+          {
+            "x": 7.0,
+            "y": 4.164999999999999
+          },
+          {
+            "x": 8.25,
+            "y": 4.477499999999999
+          },
+          {
+            "x": 8.25,
+            "y": 5.522500000000001
+          },
+          {
+            "x": 7.0,
+            "y": 5.835000000000001
+          },
+          {
+            "x": 7.0,
+            "y": 6.0
+          },
+          {
+            "x": 6.835000000000001,
+            "y": 6.0
+          },
+          {
+            "x": 6.835000000000001,
+            "y": 6.164999999999999
+          },
+          {
+            "x": 8.085,
+            "y": 6.539999999999999
+          },
+          {
+            "x": 8.085,
+            "y": 11.295
+          },
+          {
+            "x": 6.835000000000001,
+            "y": 11.67
+          },
+          {
+            "x": 6.835000000000001,
+            "y": 11.835
+          },
+          {
+            "x": 6.67,
+            "y": 11.835
+          },
+          {
+            "x": 6.295,
+            "y": 13.085
+          },
+          {
+            "x": -2.295,
+            "y": 13.085
+          },
+          {
+            "x": -2.67,
+            "y": 11.835
+          },
+          {
+            "x": -2.835,
+            "y": 11.835
+          },
+          {
+            "x": -2.835,
+            "y": 11.67
+          },
+          {
+            "x": -4.085,
+            "y": 11.295
+          },
+          {
+            "x": -4.085,
+            "y": 6.539999999999999
+          },
+          {
+            "x": -2.835,
+            "y": 6.164999999999999
+          },
+          {
+            "x": -2.835,
+            "y": 6.0
+          },
+          {
+            "x": -3.0,
+            "y": 6.0
+          },
+          {
+            "x": -3.0,
+            "y": 5.835000000000001
+          },
+          {
+            "x": -4.25,
+            "y": 5.522500000000001
+          },
+          {
+            "x": -4.25,
+            "y": 4.477499999999999
+          },
+          {
+            "x": -3.0,
+            "y": 4.164999999999999
+          },
+          {
+            "x": -3.0,
+            "y": 4.0
+          },
+          {
+            "x": -5.0,
+            "y": 4.0
+          },
+          {
+            "x": -5.0,
+            "y": -2.0
+          },
+          {
+            "x": -3.0,
+            "y": -2.0
+          },
+          {
+            "x": -3.0,
+            "y": -2.165
+          },
+          {
+            "x": -4.25,
+            "y": -2.4775
+          },
+          {
+            "x": -4.25,
+            "y": -3.5225
+          },
+          {
+            "x": -3.0,
+            "y": -3.835
+          },
+          {
+            "x": -3.0,
+            "y": -4.0
+          },
+          {
+            "x": 7.0,
+            "y": -4.0
+          },
+          {
+            "x": 7.0,
+            "y": -3.835
+          },
+          {
+            "x": 8.25,
+            "y": -3.5225
+          },
+          {
+            "x": 8.25,
+            "y": -2.4775
+          },
+          {
+            "x": 7.0,
+            "y": -2.165
+          },
+          {
+            "x": 7.0,
+            "y": -2.0
+          }
+        ],
+        "closed": true,
+        "kind": "polyline"
+      },
+      {
+        "id": "entity_697e00dbfefd4be984f84bd6b92aed71",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -2.92,
+          "y": -2.0
+        },
+        "end": {
+          "x": 6.92,
+          "y": -2.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_fae54f163b3b4eb4b58b997eac036ae7",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Back fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -2.92,
+          "y": 4.0
+        },
+        "end": {
+          "x": 6.92,
+          "y": 4.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_404a61df34664981aa391ca15263a356",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Left fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -3.0,
+          "y": -1.92
+        },
+        "end": {
+          "x": -3.0,
+          "y": 3.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_8366d688d1cb418e8fa47e95cab51d87",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Right fold",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 7.0,
+          "y": -1.92
+        },
+        "end": {
+          "x": 7.0,
+          "y": 3.92
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_e8fa4f71c127452caeefaf58464a459f",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -3.0,
+          "y": -3.755
+        },
+        "end": {
+          "x": -3.0,
+          "y": -2.245
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_c753d7731d9e4c929278d0a9d7baa677",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back left glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -3.0,
+          "y": 4.245000000000001
+        },
+        "end": {
+          "x": -3.0,
+          "y": 5.754999999999999
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_9b171e19569e4a1bad6fd3a6c29037ba",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "front right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 7.0,
+          "y": -3.755
+        },
+        "end": {
+          "x": 7.0,
+          "y": -2.245
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_d58b99cb4fd147e9a507002e4a490afd",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "back right glue tab",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 7.0,
+          "y": 4.245000000000001
+        },
+        "end": {
+          "x": 7.0,
+          "y": 5.754999999999999
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_2cfc624e152a4835b5fb1cf6467bdea7",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Lid hinge",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -2.755,
+          "y": 6.0
+        },
+        "end": {
+          "x": 6.755000000000001,
+          "y": 6.0
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_7a472de949f64e998695059c83aab3ca",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "left dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -2.835,
+          "y": 6.244999999999999
+        },
+        "end": {
+          "x": -2.835,
+          "y": 11.590000000000002
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_ac5f37383c084489bcfacb1c59d47f0f",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "right dust flap",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": 6.835000000000001,
+          "y": 6.244999999999999
+        },
+        "end": {
+          "x": 6.835000000000001,
+          "y": 11.590000000000002
+        },
+        "kind": "line"
+      },
+      {
+        "id": "entity_393a09f119e24284a525f1daef36ee40",
+        "layer": "BOX_SCORE",
+        "metadata": {
+          "box_owner": "mailer_433a15c3bc9843f0a6259b89b47577d5",
+          "box_schema": "glue-mailer-v1",
+          "qualification": "prototype",
+          "name": "Front tuck",
+          "box_role": "score"
+        },
+        "appearance": null,
+        "start": {
+          "x": -2.59,
+          "y": 11.835
+        },
+        "end": {
+          "x": 6.59,
+          "y": 11.835
+        },
+        "kind": "line"
+      }
+    ],
+    "cut_count": 1,
+    "score_count": 12
+  }
+}

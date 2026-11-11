@@ -1,0 +1,921 @@
+{
+  "context": {
+    "context_token": "d567644d8f2f4e27bc89689122ef9381",
+    "filename": "art.svg",
+    "units": "in",
+    "tolerance": 0.001,
+    "tolerance_range": [
+      1e-05,
+      0.01
+    ],
+    "plate": [
+      0.0,
+      0.0,
+      96.0,
+      48.0
+    ]
+  },
+  "original": {
+    "token": "dbff15e3cafe4460a7c1adfcb3e16d62",
+    "units": "in",
+    "filename": "art.svg",
+    "bounds": [
+      0.19999999999999996,
+      1.3228759765625002,
+      2.5999999999999996,
+      2.7
+    ],
+    "page_size": [
+      4.0,
+      3.0
+    ],
+    "tolerance": 0.001,
+    "closed": 2,
+    "open": 2,
+    "counts": {
+      "path": 4
+    },
+    "warnings": [
+      "Geometry import only: curves flattened to 0.001 in maximum chord tolerance; no machining operations created. Review dimensions and contours before cutting.",
+      "Strokes imported as their centerline paths, NOT expanded stroke-width outlines. Convert strokes to paths in the source editor if their outside edges are the desired cuts. Dashed strokes remain continuous paths.",
+      "Not imported: hidden subtree: 1, image: 1, text: 1. Text must be converted to paths; raster images are not traced.",
+      "Original artwork colors and stroke widths are not reproduced; imported geometry retains layer, compound and fill-rule intent."
+    ],
+    "renamed_layers": {},
+    "entities": [
+      {
+        "id": "entity_5404ce4d53f24ec4a159846cbdc48f3e",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 0,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_22a3a9793cc74377802b31db98bd8ed1",
+          "svg_append_batch": "9d1e9996ce314e82b5c8bb907e4600b8",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.19999999999999996,
+            "y": 2.7
+          },
+          {
+            "x": 2.1999999999999997,
+            "y": 2.7
+          },
+          {
+            "x": 2.1999999999999997,
+            "y": 1.7000000000000002
+          },
+          {
+            "x": 0.19999999999999996,
+            "y": 1.7000000000000002
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          0.19999999999999996,
+          1.7000000000000002,
+          2.1999999999999997,
+          2.7
+        ]
+      },
+      {
+        "id": "entity_397d2d35f0284874b5eb4abd3dafd423",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 1,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_22a3a9793cc74377802b31db98bd8ed1",
+          "svg_append_batch": "9d1e9996ce314e82b5c8bb907e4600b8",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.3999999999999999,
+            "y": 2.5
+          },
+          {
+            "x": 0.7,
+            "y": 2.5
+          },
+          {
+            "x": 0.7,
+            "y": 2.2
+          },
+          {
+            "x": 0.3999999999999999,
+            "y": 2.2
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          0.3999999999999999,
+          2.2,
+          0.7,
+          2.5
+        ]
+      },
+      {
+        "id": "entity_29dacb6281ad4e43a3521ca4b883c5cb",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "curve",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "curve",
+          "svg_append_batch": "9d1e9996ce314e82b5c8bb907e4600b8",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.19999999999999996,
+            "y": 1.4000000000000004
+          },
+          {
+            "x": 0.23807678222656245,
+            "y": 1.434341430664063
+          },
+          {
+            "x": 0.27727050781249996,
+            "y": 1.4626220703125004
+          },
+          {
+            "x": 0.31752624511718747,
+            "y": 1.4852264404296878
+          },
+          {
+            "x": 0.3587890625,
+            "y": 1.5025390625000004
+          },
+          {
+            "x": 0.40100402832031246,
+            "y": 1.5149444580078129
+          },
+          {
+            "x": 0.4441162109375,
+            "y": 1.5228271484375004
+          },
+          {
+            "x": 0.48807067871093746,
+            "y": 1.5265716552734379
+          },
+          {
+            "x": 0.5328124999999999,
+            "y": 1.5265625000000005
+          },
+          {
+            "x": 0.5782867431640624,
+            "y": 1.5231842041015629
+          },
+          {
+            "x": 0.6244384765625,
+            "y": 1.5168212890625004
+          },
+          {
+            "x": 0.6712127685546874,
+            "y": 1.507858276367188
+          },
+          {
+            "x": 0.7185546875,
+            "y": 1.4966796875000004
+          },
+          {
+            "x": 0.8147216796874999,
+            "y": 1.4692138671875004
+          },
+          {
+            "x": 0.9124999999999999,
+            "y": 1.4375000000000004
+          },
+          {
+            "x": 1.0114501953124997,
+            "y": 1.4046142578125005
+          },
+          {
+            "x": 1.1111328124999997,
+            "y": 1.3736328125000006
+          },
+          {
+            "x": 1.1611114501953121,
+            "y": 1.359817504882813
+          },
+          {
+            "x": 1.2111083984374997,
+            "y": 1.3476318359375006
+          },
+          {
+            "x": 1.2610687255859372,
+            "y": 1.337460327148438
+          },
+          {
+            "x": 1.3109374999999996,
+            "y": 1.3296875000000004
+          },
+          {
+            "x": 1.3606597900390622,
+            "y": 1.3246978759765629
+          },
+          {
+            "x": 1.4101806640624996,
+            "y": 1.3228759765625002
+          },
+          {
+            "x": 1.4594451904296872,
+            "y": 1.3246063232421879
+          },
+          {
+            "x": 1.5083984374999997,
+            "y": 1.3302734375000003
+          },
+          {
+            "x": 1.5569854736328121,
+            "y": 1.3402618408203129
+          },
+          {
+            "x": 1.6051513671874997,
+            "y": 1.3549560546875004
+          },
+          {
+            "x": 1.6528411865234371,
+            "y": 1.374740600585938
+          },
+          {
+            "x": 1.6999999999999997,
+            "y": 1.4000000000000004
+          }
+        ],
+        "closed": false,
+        "kind": "polyline",
+        "bounds": [
+          0.19999999999999996,
+          1.3228759765625002,
+          1.6999999999999997,
+          1.5265716552734379
+        ]
+      },
+      {
+        "id": "entity_4eaa6aed14d544a4a758efd83f410206",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "mark",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "mark",
+          "svg_append_batch": "9d1e9996ce314e82b5c8bb907e4600b8",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "start": {
+          "x": 2.3999999999999995,
+          "y": 1.7000000000000002
+        },
+        "end": {
+          "x": 2.5999999999999996,
+          "y": 1.7000000000000002
+        },
+        "kind": "line",
+        "bounds": [
+          2.3999999999999995,
+          1.7000000000000002,
+          2.5999999999999996,
+          1.7000000000000002
+        ]
+      }
+    ]
+  },
+  "custom": {
+    "token": "0ccabde4491b424f81f945f1b6662bb8",
+    "units": "in",
+    "filename": "art.svg",
+    "bounds": [
+      12.0,
+      8.0,
+      14.4,
+      9.3771240234375
+    ],
+    "page_size": [
+      4.0,
+      3.0
+    ],
+    "tolerance": 0.001,
+    "closed": 2,
+    "open": 2,
+    "counts": {
+      "path": 4
+    },
+    "warnings": [
+      "Geometry import only: curves flattened to 0.001 in maximum chord tolerance; no machining operations created. Review dimensions and contours before cutting.",
+      "Strokes imported as their centerline paths, NOT expanded stroke-width outlines. Convert strokes to paths in the source editor if their outside edges are the desired cuts. Dashed strokes remain continuous paths.",
+      "Not imported: hidden subtree: 1, image: 1, text: 1. Text must be converted to paths; raster images are not traced.",
+      "Original artwork colors and stroke widths are not reproduced; imported geometry retains layer, compound and fill-rule intent."
+    ],
+    "renamed_layers": {},
+    "entities": [
+      {
+        "id": "entity_709e1d73cfaa45e5b617577c7c002713",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 0,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_7345e3bbcfb0408f81159a47dc380221",
+          "svg_append_batch": "f831470208414ef1b8fb96cfce68ba85",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 12.0,
+            "y": 9.3771240234375
+          },
+          {
+            "x": 14.0,
+            "y": 9.3771240234375
+          },
+          {
+            "x": 14.0,
+            "y": 8.3771240234375
+          },
+          {
+            "x": 12.0,
+            "y": 8.3771240234375
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          12.0,
+          8.3771240234375,
+          14.0,
+          9.3771240234375
+        ]
+      },
+      {
+        "id": "entity_54a9e34977ee40d6bccddd5a58a07d9a",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 1,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_7345e3bbcfb0408f81159a47dc380221",
+          "svg_append_batch": "f831470208414ef1b8fb96cfce68ba85",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 12.200000000000001,
+            "y": 9.1771240234375
+          },
+          {
+            "x": 12.5,
+            "y": 9.1771240234375
+          },
+          {
+            "x": 12.5,
+            "y": 8.8771240234375
+          },
+          {
+            "x": 12.200000000000001,
+            "y": 8.8771240234375
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          12.200000000000001,
+          8.8771240234375,
+          12.5,
+          9.1771240234375
+        ]
+      },
+      {
+        "id": "entity_e03e415e8e5d4532a0da8274be398254",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "curve",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "curve",
+          "svg_append_batch": "f831470208414ef1b8fb96cfce68ba85",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 12.0,
+            "y": 8.0771240234375
+          },
+          {
+            "x": 12.038076782226563,
+            "y": 8.111465454101562
+          },
+          {
+            "x": 12.0772705078125,
+            "y": 8.13974609375
+          },
+          {
+            "x": 12.117526245117189,
+            "y": 8.162350463867188
+          },
+          {
+            "x": 12.1587890625,
+            "y": 8.1796630859375
+          },
+          {
+            "x": 12.201004028320312,
+            "y": 8.192068481445313
+          },
+          {
+            "x": 12.2441162109375,
+            "y": 8.199951171875
+          },
+          {
+            "x": 12.288070678710938,
+            "y": 8.203695678710938
+          },
+          {
+            "x": 12.332812500000001,
+            "y": 8.2036865234375
+          },
+          {
+            "x": 12.378286743164063,
+            "y": 8.200308227539063
+          },
+          {
+            "x": 12.4244384765625,
+            "y": 8.1939453125
+          },
+          {
+            "x": 12.471212768554688,
+            "y": 8.184982299804688
+          },
+          {
+            "x": 12.5185546875,
+            "y": 8.1738037109375
+          },
+          {
+            "x": 12.6147216796875,
+            "y": 8.146337890625
+          },
+          {
+            "x": 12.7125,
+            "y": 8.1146240234375
+          },
+          {
+            "x": 12.811450195312501,
+            "y": 8.08173828125
+          },
+          {
+            "x": 12.9111328125,
+            "y": 8.0507568359375
+          },
+          {
+            "x": 12.961111450195313,
+            "y": 8.036941528320312
+          },
+          {
+            "x": 13.0111083984375,
+            "y": 8.024755859375
+          },
+          {
+            "x": 13.061068725585939,
+            "y": 8.014584350585938
+          },
+          {
+            "x": 13.1109375,
+            "y": 8.0068115234375
+          },
+          {
+            "x": 13.160659790039062,
+            "y": 8.001821899414063
+          },
+          {
+            "x": 13.2101806640625,
+            "y": 8.0
+          },
+          {
+            "x": 13.259445190429688,
+            "y": 8.001730346679688
+          },
+          {
+            "x": 13.308398437500001,
+            "y": 8.0073974609375
+          },
+          {
+            "x": 13.356985473632813,
+            "y": 8.017385864257813
+          },
+          {
+            "x": 13.4051513671875,
+            "y": 8.032080078125
+          },
+          {
+            "x": 13.452841186523438,
+            "y": 8.051864624023438
+          },
+          {
+            "x": 13.5,
+            "y": 8.0771240234375
+          }
+        ],
+        "closed": false,
+        "kind": "polyline",
+        "bounds": [
+          12.0,
+          8.0,
+          13.5,
+          8.203695678710938
+        ]
+      },
+      {
+        "id": "entity_15fc0f351ebe4eeeba1b04e2b87e11ea",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "mark",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "mark",
+          "svg_append_batch": "f831470208414ef1b8fb96cfce68ba85",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "start": {
+          "x": 14.2,
+          "y": 8.3771240234375
+        },
+        "end": {
+          "x": 14.4,
+          "y": 8.3771240234375
+        },
+        "kind": "line",
+        "bounds": [
+          14.2,
+          8.3771240234375,
+          14.4,
+          8.3771240234375
+        ]
+      }
+    ]
+  },
+  "plate": {
+    "token": "399bb55eb2f045f680a811393e323e30",
+    "units": "in",
+    "filename": "art.svg",
+    "bounds": [
+      0.0,
+      0.0,
+      2.3999999999999995,
+      1.3771240234375
+    ],
+    "page_size": [
+      4.0,
+      3.0
+    ],
+    "tolerance": 0.001,
+    "closed": 2,
+    "open": 2,
+    "counts": {
+      "path": 4
+    },
+    "warnings": [
+      "Geometry import only: curves flattened to 0.001 in maximum chord tolerance; no machining operations created. Review dimensions and contours before cutting.",
+      "Strokes imported as their centerline paths, NOT expanded stroke-width outlines. Convert strokes to paths in the source editor if their outside edges are the desired cuts. Dashed strokes remain continuous paths.",
+      "Not imported: hidden subtree: 1, image: 1, text: 1. Text must be converted to paths; raster images are not traced.",
+      "Original artwork colors and stroke widths are not reproduced; imported geometry retains layer, compound and fill-rule intent."
+    ],
+    "renamed_layers": {},
+    "entities": [
+      {
+        "id": "entity_e3e265319dc74856ab8dd5847976f9e1",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 0,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_2640f577c2584428917918e5a4402436",
+          "svg_append_batch": "d72b16dec2414cb6a51297e8c0a1cf5a",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.0,
+            "y": 1.3771240234375
+          },
+          {
+            "x": 1.9999999999999998,
+            "y": 1.3771240234375
+          },
+          {
+            "x": 1.9999999999999998,
+            "y": 0.37712402343749996
+          },
+          {
+            "x": 0.0,
+            "y": 0.37712402343749996
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          0.0,
+          0.37712402343749996,
+          1.9999999999999998,
+          1.3771240234375
+        ]
+      },
+      {
+        "id": "entity_373a748a9bea45c4b4f9a9d846be1568",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "frame",
+          "svg_subpath": 1,
+          "svg_fill_rule": "evenodd",
+          "svg_source_kind": "path",
+          "name": "frame",
+          "compound_id": "svg_2640f577c2584428917918e5a4402436",
+          "svg_append_batch": "d72b16dec2414cb6a51297e8c0a1cf5a",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.19999999999999996,
+            "y": 1.1771240234374998
+          },
+          {
+            "x": 0.5,
+            "y": 1.1771240234374998
+          },
+          {
+            "x": 0.5,
+            "y": 0.8771240234375
+          },
+          {
+            "x": 0.19999999999999996,
+            "y": 0.8771240234375
+          }
+        ],
+        "closed": true,
+        "kind": "polyline",
+        "bounds": [
+          0.19999999999999996,
+          0.8771240234375,
+          0.5,
+          1.1771240234374998
+        ]
+      },
+      {
+        "id": "entity_e0da3ff254c64b7497f2b81f7257d64d",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "curve",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "curve",
+          "svg_append_batch": "d72b16dec2414cb6a51297e8c0a1cf5a",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "points": [
+          {
+            "x": 0.0,
+            "y": 0.07712402343750013
+          },
+          {
+            "x": 0.038076782226562494,
+            "y": 0.11146545410156272
+          },
+          {
+            "x": 0.0772705078125,
+            "y": 0.13974609375000013
+          },
+          {
+            "x": 0.11752624511718751,
+            "y": 0.16235046386718754
+          },
+          {
+            "x": 0.15878906250000002,
+            "y": 0.17966308593750013
+          },
+          {
+            "x": 0.2010040283203125,
+            "y": 0.19206848144531263
+          },
+          {
+            "x": 0.24411621093750002,
+            "y": 0.19995117187500022
+          },
+          {
+            "x": 0.2880706787109375,
+            "y": 0.20369567871093763
+          },
+          {
+            "x": 0.33281249999999996,
+            "y": 0.20368652343750027
+          },
+          {
+            "x": 0.3782867431640624,
+            "y": 0.20030822753906263
+          },
+          {
+            "x": 0.4244384765625,
+            "y": 0.19394531250000013
+          },
+          {
+            "x": 0.4712127685546874,
+            "y": 0.18498229980468772
+          },
+          {
+            "x": 0.5185546875,
+            "y": 0.17380371093750013
+          },
+          {
+            "x": 0.6147216796874999,
+            "y": 0.14633789062500013
+          },
+          {
+            "x": 0.7124999999999999,
+            "y": 0.11462402343750022
+          },
+          {
+            "x": 0.8114501953124997,
+            "y": 0.08173828125000027
+          },
+          {
+            "x": 0.9111328124999998,
+            "y": 0.050756835937500355
+          },
+          {
+            "x": 0.9611114501953122,
+            "y": 0.03694152832031272
+          },
+          {
+            "x": 1.0111083984374998,
+            "y": 0.024755859375000355
+          },
+          {
+            "x": 1.0610687255859372,
+            "y": 0.014584350585937766
+          },
+          {
+            "x": 1.1109374999999997,
+            "y": 0.006811523437500133
+          },
+          {
+            "x": 1.1606597900390623,
+            "y": 0.0018218994140626332
+          },
+          {
+            "x": 1.2101806640624997,
+            "y": 0.0
+          },
+          {
+            "x": 1.2594451904296873,
+            "y": 0.0017303466796876332
+          },
+          {
+            "x": 1.3083984374999997,
+            "y": 0.007397460937500044
+          },
+          {
+            "x": 1.3569854736328122,
+            "y": 0.017385864257812633
+          },
+          {
+            "x": 1.4051513671874998,
+            "y": 0.03208007812500013
+          },
+          {
+            "x": 1.4528411865234372,
+            "y": 0.05186462402343772
+          },
+          {
+            "x": 1.4999999999999998,
+            "y": 0.07712402343750013
+          }
+        ],
+        "closed": false,
+        "kind": "polyline",
+        "bounds": [
+          0.0,
+          0.0,
+          1.4999999999999998,
+          0.20369567871093763
+        ]
+      },
+      {
+        "id": "entity_e03479869fd24555b400829c73a27034",
+        "layer": "Cut",
+        "metadata": {
+          "source_provenance": "svg",
+          "svg_element": "mark",
+          "svg_subpath": 0,
+          "svg_fill_rule": "nonzero",
+          "svg_source_kind": "path",
+          "name": "mark",
+          "svg_append_batch": "d72b16dec2414cb6a51297e8c0a1cf5a",
+          "svg_append_source": {
+            "file": "C:\\Users\\auron\\AppData\\Local\\Temp\\tmppxslwp17\\art.svg",
+            "units": "in",
+            "layer": "Cut"
+          }
+        },
+        "appearance": null,
+        "start": {
+          "x": 2.1999999999999993,
+          "y": 0.37712402343749996
+        },
+        "end": {
+          "x": 2.3999999999999995,
+          "y": 0.37712402343749996
+        },
+        "kind": "line",
+        "bounds": [
+          2.1999999999999993,
+          0.37712402343749996,
+          2.3999999999999995,
+          0.37712402343749996
+        ]
+      }
+    ]
+  }
+}

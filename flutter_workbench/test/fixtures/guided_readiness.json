@@ -1,0 +1,4424 @@
+{
+  "ready": {
+    "token": "eccdf1a10c33bb62a21c2fff208b53507190e9b0d49590377190dd2df02b6c9b",
+    "revision": 1,
+    "units": "in",
+    "stock": {
+      "verified": true,
+      "required": false,
+      "token": "ff333ad12416914a2eebe772eb81b9084c535a372f2e68adfb2180e507961ac9",
+      "eligible": true,
+      "fingerprint": {
+        "machine_profile": "Shop Router / EnRoute",
+        "material": "plywood",
+        "thickness_in": 0.5,
+        "breakthrough_in": 0.015,
+        "plates_in": [
+          [
+            96.0,
+            48.0
+          ]
+        ]
+      },
+      "plates": [
+        {
+          "number": 1,
+          "name": "Plate 1",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 96.0,
+          "height": 48.0
+        }
+      ],
+      "units": "in"
+    },
+    "operations": [
+      {
+        "id": "operation_a8b5fe15209e418e8cc26c0dd37230d3",
+        "name": "Outside",
+        "kind": "router_offset",
+        "station": 1,
+        "enabled": true,
+        "role": "outside_profile",
+        "status": "ready",
+        "findings": [],
+        "checks": [
+          {
+            "key": "stock",
+            "passed": true,
+            "detail": "Physical stock is current.",
+            "action": "stock"
+          },
+          {
+            "key": "geometry",
+            "passed": true,
+            "detail": "Geometry references are complete.",
+            "action": "operation"
+          },
+          {
+            "key": "cutter",
+            "passed": true,
+            "detail": "T1: Quarter; effective operation overrides included.",
+            "action": "turret"
+          },
+          {
+            "key": "qualification",
+            "passed": true,
+            "detail": "Saved operation recipe matches the core qualification scope.",
+            "action": "library"
+          },
+          {
+            "key": "catalog",
+            "passed": true,
+            "detail": "Saved recipe matches a current compatible catalog record.",
+            "action": "library"
+          },
+          {
+            "key": "values",
+            "passed": true,
+            "detail": "Effective feed, plunge, RPM and stepdown match the saved recipe.",
+            "action": "operation"
+          },
+          {
+            "key": "intent",
+            "passed": true,
+            "detail": "Through-cut depth matches stock plus breakthrough.",
+            "action": "operation"
+          },
+          {
+            "key": "parameters",
+            "passed": true,
+            "detail": "Router parameter rules pass.",
+            "action": "operation"
+          }
+        ],
+        "candidates": [
+          {
+            "id": "custom-guided",
+            "recipe": 0,
+            "tool_name": "Quarter",
+            "name": "Plywood",
+            "qualification": "production_approved",
+            "evidence": "Synthetic fixture only",
+            "notes": "",
+            "scope": {
+              "material_family": "plywood",
+              "thickness_min_in": 0.5,
+              "thickness_max_in": 0.5,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 120,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": null
+            },
+            "eligible": true,
+            "reasons": [],
+            "warnings": [
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 4,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum profile \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "outside_profile",
+                "inside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp",
+                "edge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 6,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum shelf / recess \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "shelf_recess"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 160.2,
+              "plunge": 49.8,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 3,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": 0.1,
+              "thickness_max_in": 0.15,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 12 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 12 mm stock; speed/feed and direct-depth behavior are preserved from the EnRoute archive reference.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.452,
+              "thickness_max_in": 0.492,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.34,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 18 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 18 mm stock; speed/feed inherit the observed T10 acrylic drilling baseline.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.682,
+              "thickness_max_in": 0.732,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.57,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 0,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.125 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.0625,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 0,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.09,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 45,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 5,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum drilling \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "Starting-point 5630A aluminum straight-plunge drill cycle derived from the current shop profile plunge settings. Withdrawal is separated at 150 IPM while entry remains 75 IPM. It is intentionally marked Prototype until scrap-tested as a drill cycle.",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.04,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 75,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 0,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum profile \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 1,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum shelf / recess \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 160,
+              "plunge": 50,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 0,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "5052 Aluminum \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 1,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 180,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 1,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 240,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 5,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 2,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "Aluminum / ACM detail routing \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 90,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 6,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Acrylic \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 350,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 1,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Cast Acrylic \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 1,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 1,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 0,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 0,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 7,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 2,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 2,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 115,
+              "plunge": 20,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 2,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Polycarbonate \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 3,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate Full Chip Clear",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "T4 peck drilling is established shop practice; qualify this exact posted full-clear cycle before promotion. Dwell remains zero until separately qualified.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 12000,
+              "feed": 115,
+              "plunge": 45,
+              "stepdown": 0.025,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 2,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "any"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 4,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate EnRoute 5-Peck \u2014 ARCHIVE OBSERVED",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "Observed in Polycarb peck drill example.cnc: five equal pecks, 0.005 in controlled chip-break retract, 150 IPM surface approach, 300 IPM drilling/retract, 15900 RPM, no dwell, and feed-return to Z0 before Safe Z. Archive evidence only; qualify on noncritical stock before production approval.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 15900,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.0376,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded.",
+              "Operation overrides or recipe records remain unchanged and can override station settings."
+            ]
+          }
+        ],
+        "recipe": {
+          "id": "coupon-1",
+          "material": "Plywood",
+          "material_family": "plywood",
+          "qualification": "production_approved",
+          "qualification_evidence": "Synthetic fixture only",
+          "thickness_min_in": 0.5,
+          "thickness_max_in": 0.5,
+          "process_roles": [
+            "outside_profile"
+          ],
+          "entry_strategies": [
+            "plunge"
+          ],
+          "rpm": 18000,
+          "feed": 120,
+          "plunge": 30,
+          "stepdown": 0.125
+        },
+        "bounds": [
+          1.0,
+          1.0,
+          6.0,
+          5.0
+        ],
+        "effective": {
+          "rpm": 18000,
+          "feed": 120.0,
+          "plunge": 30.0,
+          "stepdown": 0.125
+        }
+      }
+    ],
+    "counts": {
+      "ready": 1,
+      "blocked": 0,
+      "unsupported": 0,
+      "disabled": 0
+    },
+    "editable": false,
+    "catalog_version": "cfaaef28b361ee4fdb47edf86af841c5d7122c906976d7bc929d8c3ef9e25b0c",
+    "note": "Readiness only. No operation, qualification, stock verification or output approval is created. Review generated motion, hold-down and output separately."
+  },
+  "blocked": {
+    "token": "dd137496ebdf8256f1f862c1abc6c8d07a0cfefad014041a86678bbfd352db1f",
+    "revision": 1,
+    "units": "in",
+    "stock": {
+      "verified": true,
+      "required": false,
+      "token": "ff333ad12416914a2eebe772eb81b9084c535a372f2e68adfb2180e507961ac9",
+      "eligible": true,
+      "fingerprint": {
+        "machine_profile": "Shop Router / EnRoute",
+        "material": "plywood",
+        "thickness_in": 0.5,
+        "breakthrough_in": 0.015,
+        "plates_in": [
+          [
+            96.0,
+            48.0
+          ]
+        ]
+      },
+      "plates": [
+        {
+          "number": 1,
+          "name": "Plate 1",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 96.0,
+          "height": 48.0
+        }
+      ],
+      "units": "in"
+    },
+    "operations": [
+      {
+        "id": "operation_a8b5fe15209e418e8cc26c0dd37230d3",
+        "name": "Outside",
+        "kind": "router_offset",
+        "station": 1,
+        "enabled": true,
+        "role": "outside_profile",
+        "status": "blocked",
+        "findings": [
+          "The operation needs an exact production-approved recipe for this stock and process role. Loading a station recipe alone does not attach it to the operation.",
+          "Saved recipe or cutter identity does not match a current compatible library record; compare recipe scope and values.",
+          "Effective settings differ from the saved recipe: rpm, feed, plunge, stepdown.",
+          "An exact production-approved recipe is required."
+        ],
+        "checks": [
+          {
+            "key": "stock",
+            "passed": true,
+            "detail": "Physical stock is current.",
+            "action": "stock"
+          },
+          {
+            "key": "geometry",
+            "passed": true,
+            "detail": "Geometry references are complete.",
+            "action": "operation"
+          },
+          {
+            "key": "cutter",
+            "passed": true,
+            "detail": "T1: Quarter; effective operation overrides included.",
+            "action": "turret"
+          },
+          {
+            "key": "qualification",
+            "passed": false,
+            "detail": "The operation needs an exact production-approved recipe for this stock and process role. Loading a station recipe alone does not attach it to the operation.",
+            "action": "library"
+          },
+          {
+            "key": "catalog",
+            "passed": false,
+            "detail": "Saved recipe or cutter identity does not match a current compatible library record; compare recipe scope and values.",
+            "action": "library"
+          },
+          {
+            "key": "values",
+            "passed": false,
+            "detail": "Effective settings differ from the saved recipe: rpm, feed, plunge, stepdown.",
+            "action": "operation"
+          },
+          {
+            "key": "intent",
+            "passed": true,
+            "detail": "Through-cut depth matches stock plus breakthrough.",
+            "action": "operation"
+          },
+          {
+            "key": "parameters",
+            "passed": true,
+            "detail": "Router parameter rules pass.",
+            "action": "operation"
+          },
+          {
+            "key": "guided",
+            "passed": false,
+            "detail": "An exact production-approved recipe is required.",
+            "action": "operation"
+          }
+        ],
+        "candidates": [
+          {
+            "id": "custom-guided",
+            "recipe": 0,
+            "tool_name": "Quarter",
+            "name": "Plywood",
+            "qualification": "production_approved",
+            "evidence": "Synthetic fixture only",
+            "notes": "",
+            "scope": {
+              "material_family": "plywood",
+              "thickness_min_in": 0.5,
+              "thickness_max_in": 0.5,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 120,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": null
+            },
+            "eligible": true,
+            "reasons": [],
+            "warnings": []
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 4,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum profile \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "outside_profile",
+                "inside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp",
+                "edge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 6,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum shelf / recess \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "shelf_recess"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 160.2,
+              "plunge": 49.8,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 3,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": 0.1,
+              "thickness_max_in": 0.15,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 12 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 12 mm stock; speed/feed and direct-depth behavior are preserved from the EnRoute archive reference.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.452,
+              "thickness_max_in": 0.492,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.34,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 18 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 18 mm stock; speed/feed inherit the observed T10 acrylic drilling baseline.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.682,
+              "thickness_max_in": 0.732,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.57,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 0,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.125 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.0625,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 0,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.09,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 45,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 5,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum drilling \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "Starting-point 5630A aluminum straight-plunge drill cycle derived from the current shop profile plunge settings. Withdrawal is separated at 150 IPM while entry remains 75 IPM. It is intentionally marked Prototype until scrap-tested as a drill cycle.",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.04,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 75,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 0,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum profile \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 1,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum shelf / recess \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 160,
+              "plunge": 50,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 0,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "5052 Aluminum \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 1,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 180,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 1,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 240,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 5,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 2,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "Aluminum / ACM detail routing \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 90,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 6,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Acrylic \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 350,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 1,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Cast Acrylic \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 1,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 1,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 0,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 0,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 7,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 2,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 2,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 115,
+              "plunge": 20,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 2,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Polycarbonate \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 3,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate Full Chip Clear",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "T4 peck drilling is established shop practice; qualify this exact posted full-clear cycle before promotion. Dwell remains zero until separately qualified.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 12000,
+              "feed": 115,
+              "plunge": 45,
+              "stepdown": 0.025,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 2,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "any"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 4,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate EnRoute 5-Peck \u2014 ARCHIVE OBSERVED",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "Observed in Polycarb peck drill example.cnc: five equal pecks, 0.005 in controlled chip-break retract, 150 IPM surface approach, 300 IPM drilling/retract, 15900 RPM, no dwell, and feed-return to Z0 before Safe Z. Archive evidence only; qualify on noncritical stock before production approval.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 15900,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.0376,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          }
+        ],
+        "recipe": {},
+        "bounds": [
+          1.0,
+          1.0,
+          6.0,
+          5.0
+        ],
+        "effective": {
+          "rpm": 18000,
+          "feed": 120.0,
+          "plunge": 30.0,
+          "stepdown": 0.125
+        }
+      }
+    ],
+    "counts": {
+      "ready": 0,
+      "blocked": 1,
+      "unsupported": 0,
+      "disabled": 0
+    },
+    "editable": true,
+    "catalog_version": "cfaaef28b361ee4fdb47edf86af841c5d7122c906976d7bc929d8c3ef9e25b0c",
+    "note": "Readiness only. No operation, qualification, stock verification or output approval is created. Review generated motion, hold-down and output separately."
+  },
+  "mixed": {
+    "token": "6661bcd0a8f6e9535def1ecd4a9176c5ce5f4bb7d4ac9818548c5a95f9dab4d2",
+    "revision": 1,
+    "units": "in",
+    "stock": {
+      "verified": true,
+      "required": false,
+      "token": "ff333ad12416914a2eebe772eb81b9084c535a372f2e68adfb2180e507961ac9",
+      "eligible": true,
+      "fingerprint": {
+        "machine_profile": "Shop Router / EnRoute",
+        "material": "plywood",
+        "thickness_in": 0.5,
+        "breakthrough_in": 0.015,
+        "plates_in": [
+          [
+            96.0,
+            48.0
+          ]
+        ]
+      },
+      "plates": [
+        {
+          "number": 1,
+          "name": "Plate 1",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 96.0,
+          "height": 48.0
+        }
+      ],
+      "units": "in"
+    },
+    "operations": [
+      {
+        "id": "operation_a8b5fe15209e418e8cc26c0dd37230d3",
+        "name": "Outside",
+        "kind": "router_offset",
+        "station": 1,
+        "enabled": true,
+        "role": "outside_profile",
+        "status": "blocked",
+        "findings": [
+          "The operation needs an exact production-approved recipe for this stock and process role. Loading a station recipe alone does not attach it to the operation.",
+          "Saved recipe or cutter identity does not match a current compatible library record; compare recipe scope and values.",
+          "Effective settings differ from the saved recipe: rpm, feed, plunge, stepdown.",
+          "An exact production-approved recipe is required."
+        ],
+        "checks": [
+          {
+            "key": "stock",
+            "passed": true,
+            "detail": "Physical stock is current.",
+            "action": "stock"
+          },
+          {
+            "key": "geometry",
+            "passed": true,
+            "detail": "Geometry references are complete.",
+            "action": "operation"
+          },
+          {
+            "key": "cutter",
+            "passed": true,
+            "detail": "T1: Quarter; effective operation overrides included.",
+            "action": "turret"
+          },
+          {
+            "key": "qualification",
+            "passed": false,
+            "detail": "The operation needs an exact production-approved recipe for this stock and process role. Loading a station recipe alone does not attach it to the operation.",
+            "action": "library"
+          },
+          {
+            "key": "catalog",
+            "passed": false,
+            "detail": "Saved recipe or cutter identity does not match a current compatible library record; compare recipe scope and values.",
+            "action": "library"
+          },
+          {
+            "key": "values",
+            "passed": false,
+            "detail": "Effective settings differ from the saved recipe: rpm, feed, plunge, stepdown.",
+            "action": "operation"
+          },
+          {
+            "key": "intent",
+            "passed": true,
+            "detail": "Through-cut depth matches stock plus breakthrough.",
+            "action": "operation"
+          },
+          {
+            "key": "parameters",
+            "passed": true,
+            "detail": "Router parameter rules pass.",
+            "action": "operation"
+          },
+          {
+            "key": "guided",
+            "passed": false,
+            "detail": "An exact production-approved recipe is required.",
+            "action": "operation"
+          }
+        ],
+        "candidates": [
+          {
+            "id": "custom-guided",
+            "recipe": 0,
+            "tool_name": "Quarter",
+            "name": "Plywood",
+            "qualification": "production_approved",
+            "evidence": "Synthetic fixture only",
+            "notes": "",
+            "scope": {
+              "material_family": "plywood",
+              "thickness_min_in": 0.5,
+              "thickness_max_in": 0.5,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 120,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": null
+            },
+            "eligible": false,
+            "reasons": [
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": []
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 4,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum profile \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "outside_profile",
+                "inside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp",
+                "edge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 6,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum shelf / recess \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.063,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "shelf_recess"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 160.2,
+              "plunge": 49.8,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 3,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": 0.1,
+              "thickness_max_in": 0.15,
+              "process_roles": [
+                "outside_profile"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 12 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 12 mm stock; speed/feed and direct-depth behavior are preserved from the EnRoute archive reference.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.452,
+              "thickness_max_in": 0.492,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.34,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "shop-vortex-5630a-resharp-230",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A (RESHARP) - 0.230 Acrylic Stud Drill",
+            "name": "Acrylic stud holes - 18 mm - CURRENT SHOP",
+            "qualification": "shop_tested",
+            "evidence": "",
+            "notes": "T10 acrylic stud-hole cycle. Final depth confirmed by operator for nominal 18 mm stock; speed/feed inherit the observed T10 acrylic drilling baseline.",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": 0.682,
+              "thickness_max_in": 0.732,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.57,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 0,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.125 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.0625,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 0,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.09,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 0,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum .063-.25 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 45,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 5,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "5052 Aluminum drilling \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "Starting-point 5630A aluminum straight-plunge drill cycle derived from the current shop profile plunge settings. Withdrawal is separated at 150 IPM while entry remains 75 IPM. It is intentionally marked Prototype until scrap-tested as a drill cycle.",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": 0.04,
+              "thickness_max_in": 0.25,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 75,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Stock thickness is outside the recorded range.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 0,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum profile \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.13,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xvo2232",
+            "recipe": 1,
+            "tool_name": "X-Edge XVO2232 \u2014 1/4 Viper Aluminum Upspiral",
+            "name": "5052 Aluminum shelf / recess \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 160,
+              "plunge": 50,
+              "stepdown": 0.072,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 0,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "5052 Aluminum \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Aluminum",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 1,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 180,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620a",
+            "recipe": 1,
+            "tool_name": "Vortex 5620A \u2014 3/16 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 240,
+              "plunge": 75,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 1,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 5,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "ACM 3 mm \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 300,
+              "plunge": 90,
+              "stepdown": 0.127,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5609a",
+            "recipe": 2,
+            "tool_name": "Vortex 5609A \u2014 1/8 Aluminum O-Flute",
+            "name": "Aluminum / ACM detail routing \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 90,
+              "plunge": 60,
+              "stepdown": 0.125,
+              "stepover": 0.05
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 6,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Acrylic \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 350,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 1,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Cast Acrylic \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Acrylic",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 1,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 1,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast Clear Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 0,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 90,
+              "plunge": 36,
+              "stepdown": 0.15,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 0,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Cast White Acrylic 3 mm-.75 in \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 18000,
+              "feed": 205,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.125
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 7,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 24000,
+              "feed": 300,
+              "plunge": 75,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5620",
+            "recipe": 2,
+            "tool_name": "Vortex 5620 \u2014 3/16 Hard-Plastic O-Flute",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 72,
+              "plunge": 30,
+              "stepdown": 0.125,
+              "stepover": 0.075
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter diameter differs.",
+              "Applied cutter cutting edge length differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 2,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "Clear Polycarbonate \u2014 PROTOTYPE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": null,
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": null,
+              "entry_strategies": null
+            },
+            "values": {
+              "rpm": 16000,
+              "feed": 115,
+              "plunge": 20,
+              "stepdown": 0.17,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "rdz-diamond-drag-90",
+            "recipe": 2,
+            "tool_name": "RDZ 90\u00b0 Diamond Drag Engraver",
+            "name": "Polycarbonate \u2014 RDZ ENROUTE BASELINE",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "mark_engrave"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": null,
+              "feed": 40,
+              "plunge": 12,
+              "stepdown": 0.188,
+              "stepover": 0.01
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Cutter type differs.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Spindle mode differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Contains operation-specific settings; use the operation editor.",
+              "Invalid or incomplete recipe: Recipe RPM must be positive and finite."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 3,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate Full Chip Clear",
+            "qualification": "prototype",
+            "evidence": "",
+            "notes": "T4 peck drilling is established shop practice; qualify this exact posted full-clear cycle before promotion. Dwell remains zero until separately qualified.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 12000,
+              "feed": 115,
+              "plunge": 45,
+              "stepdown": 0.025,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "vortex-5630a",
+            "recipe": 2,
+            "tool_name": "Vortex 5630A \u2014 1/4 Aluminum O-Flute",
+            "name": "ACM 3 mm \u2014 CNC ARCHIVE BASELINE",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "",
+            "scope": {
+              "material_family": "ACM",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "any"
+              ],
+              "entry_strategies": [
+                "plunge",
+                "ramp"
+              ]
+            },
+            "values": {
+              "rpm": 21000,
+              "feed": 315,
+              "plunge": 75,
+              "stepdown": 0.127,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          },
+          {
+            "id": "xedge-xr2062-cb",
+            "recipe": 4,
+            "tool_name": "X-Edge XR2062-CB \u2014 1/4 Razor Upspiral",
+            "name": "T4 Polycarbonate EnRoute 5-Peck \u2014 ARCHIVE OBSERVED",
+            "qualification": "archive_observed",
+            "evidence": "",
+            "notes": "Observed in Polycarb peck drill example.cnc: five equal pecks, 0.005 in controlled chip-break retract, 150 IPM surface approach, 300 IPM drilling/retract, 15900 RPM, no dwell, and feed-return to Z0 before Safe Z. Archive evidence only; qualify on noncritical stock before production approval.",
+            "scope": {
+              "material_family": "Polycarbonate",
+              "thickness_min_in": null,
+              "thickness_max_in": null,
+              "process_roles": [
+                "drill_thread"
+              ],
+              "entry_strategies": [
+                "plunge"
+              ]
+            },
+            "values": {
+              "rpm": 15900,
+              "feed": 300,
+              "plunge": 300,
+              "stepdown": 0.0376,
+              "stepover": 0.1
+            },
+            "eligible": false,
+            "reasons": [
+              "Catalog identity differs from the applied cutter.",
+              "Applied cutter shank diameter differs.",
+              "Applied cutter overall length differs.",
+              "Stock material does not match.",
+              "Process role does not match.",
+              "Also used by incompatible operation: Outside.",
+              "Also used by incompatible operation: Drill fixture."
+            ],
+            "warnings": [
+              "Not production approved; a recorded test does not qualify this job.",
+              "No separate physical-test evidence is recorded.",
+              "Thickness qualification range is not fully recorded."
+            ]
+          }
+        ],
+        "recipe": {},
+        "bounds": [
+          1.0,
+          1.0,
+          6.0,
+          5.0
+        ],
+        "effective": {
+          "rpm": 18000,
+          "feed": 120.0,
+          "plunge": 30.0,
+          "stepdown": 0.125
+        }
+      },
+      {
+        "id": "operation_6d79efcf80464b3daeec7208bc1d6291",
+        "name": "Drill fixture",
+        "kind": "drill_circles",
+        "station": 1,
+        "enabled": true,
+        "role": "drill_thread",
+        "status": "unsupported",
+        "findings": [
+          "This review covers ordinary router profiles and Cut Lines. Specialized and dependent operations require their own review."
+        ],
+        "checks": [],
+        "candidates": [],
+        "recipe": {},
+        "bounds": null
+      }
+    ],
+    "counts": {
+      "ready": 0,
+      "blocked": 1,
+      "unsupported": 1,
+      "disabled": 0
+    },
+    "editable": true,
+    "catalog_version": "cfaaef28b361ee4fdb47edf86af841c5d7122c906976d7bc929d8c3ef9e25b0c",
+    "note": "Readiness only. No operation, qualification, stock verification or output approval is created. Review generated motion, hold-down and output separately."
+  },
+  "state": {
+    "name": "Untitled",
+    "units": "in",
+    "revision": 1,
+    "entities": [
+      {
+        "id": "body",
+        "layer": "0",
+        "metadata": {},
+        "appearance": null,
+        "corner_a": {
+          "x": 1.0,
+          "y": 1.0
+        },
+        "corner_b": {
+          "x": 6.0,
+          "y": 5.0
+        },
+        "kind": "rectangle",
+        "bounds": [
+          1.0,
+          1.0,
+          6.0,
+          5.0
+        ]
+      }
+    ],
+    "dimensions": [],
+    "dimensionAuthoring": true,
+    "guides": [],
+    "guideAuthoring": true,
+    "guideCleave": true,
+    "layers": [
+      {
+        "name": "0",
+        "objects": 1,
+        "visible": true,
+        "locked": false,
+        "color": "#263238",
+        "order": 0,
+        "annotations": 0
+      }
+    ],
+    "plates": [
+      {
+        "number": 1,
+        "name": "Plate 1",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 96.0,
+        "height": 48.0
+      }
+    ],
+    "guidedReadiness": true,
+    "arrangementCorners": true,
+    "panAuthoring": true,
+    "mailerAuthoring": true,
+    "svgImport": true,
+    "cabinetFabricationJobs": true,
+    "cabinetFabricationInspection": true,
+    "cabinetAuthoring": false,
+    "assemblyReview": true,
+    "stepRepeat": true,
+    "sheetCutoffs": true,
+    "patchworkAreas": [],
+    "patchworkPacking": true,
+    "repairSuite": true,
+    "smallGeometryActions": true,
+    "smallGeometryReview": true,
+    "activePlate": 1,
+    "setup": {
+      "material": "Plywood",
+      "material_thickness": 0.5,
+      "safe_z": 0.25,
+      "stock_verification": {
+        "machine_profile": "Shop Router / EnRoute",
+        "material": "plywood",
+        "thickness_in": 0.5,
+        "breakthrough_in": 0.015,
+        "plates_in": [
+          [
+            96.0,
+            48.0
+          ]
+        ]
+      },
+      "flutter_stock_verification": "ff333ad12416914a2eebe772eb81b9084c535a372f2e68adfb2180e507961ac9"
+    },
+    "selected": [],
+    "selectionBounds": null,
+    "selectionMeasurement": null,
+    "selectionInspection": {
+      "items": [],
+      "totalLength": null,
+      "contourAreaSum": null,
+      "lengthCount": 0,
+      "areaCount": 0,
+      "textCount": 0
+    },
+    "recovery": {
+      "enabled": true,
+      "warning": null,
+      "updated": "2026-11-09T16:09:44.877233+00:00",
+      "candidates": []
+    },
+    "history": {
+      "index": 1,
+      "entries": [
+        "New drawing"
+      ]
+    },
+    "bounds": [
+      1.0,
+      1.0,
+      6.0,
+      5.0
+    ],
+    "canUndo": true,
+    "canRedo": false,
+    "dirty": true,
+    "path": "",
+    "savedPath": null,
+    "manufacturing": {
+      "stockVerification": {
+        "verified": true,
+        "required": false,
+        "token": "ff333ad12416914a2eebe772eb81b9084c535a372f2e68adfb2180e507961ac9",
+        "eligible": true,
+        "fingerprint": {
+          "machine_profile": "Shop Router / EnRoute",
+          "material": "plywood",
+          "thickness_in": 0.5,
+          "breakthrough_in": 0.015,
+          "plates_in": [
+            [
+              96.0,
+              48.0
+            ]
+          ]
+        },
+        "plates": [
+          {
+            "number": 1,
+            "name": "Plate 1",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 96.0,
+            "height": 48.0
+          }
+        ],
+        "units": "in"
+      },
+      "optimization": {
+        "enabled": false,
+        "depth_linking": true,
+        "profile_ordering": true,
+        "profile_travel_strategy": "generated",
+        "profile_start_optimization": true,
+        "drill_ordering": true,
+        "engraving_ordering": true,
+        "minimum_retract": true,
+        "minimum_retract_height": 0.05,
+        "minimum_retract_max_distance": 12.0,
+        "motion_compaction": true,
+        "line_merge_tolerance": 5e-05,
+        "arc_fitting": true,
+        "arc_fitting_tolerance": 0.001,
+        "rapid_xy_ipm": 600.0,
+        "rapid_z_ipm": 300.0,
+        "tool_change_seconds": 8.0,
+        "spindle_start_seconds": 2.0
+      },
+      "editable": true,
+      "operations": [
+        {
+          "name": "Outside",
+          "tool_station": 1,
+          "entity_ids": [
+            "body"
+          ],
+          "target_depth": 0.515,
+          "safe_z": 0.25,
+          "enabled": true,
+          "sequence_role": "automatic",
+          "sequence_priority": 0,
+          "sequence_locked": false,
+          "recipe_name": "",
+          "recipe_metadata": {},
+          "small_part_strategy": "automatic",
+          "feed_rate_override": null,
+          "plunge_rate_override": null,
+          "spindle_rpm_override": null,
+          "geometry_selector": {},
+          "depends_on_ids": [],
+          "profile_retention": {},
+          "id": "operation_a8b5fe15209e418e8cc26c0dd37230d3",
+          "side": "outside",
+          "entity_sides": {},
+          "contour_order": "inside_first",
+          "manual_contour_order": [],
+          "allowance": 0.0,
+          "stepdown": 0.125,
+          "pass_depths": [],
+          "cut_direction": "climb",
+          "entry_mode": "plunge",
+          "entry_side": "automatic_waste",
+          "helix_diameter": 0.0,
+          "helix_min_diameter": 0.0,
+          "helix_pitch": 0.0,
+          "helix_ramp_angle": 0.0,
+          "helix_clearance": 0.0,
+          "helix_finish_revolutions": 0,
+          "helix_feed_override": null,
+          "helix_fallback": "waste_plunge",
+          "start_index": 0,
+          "lead_in": 0.0,
+          "lead_out": 0.0,
+          "finishing_pass": false,
+          "finish_axial_stock": 0.0,
+          "finish_feed_override": null,
+          "finish_spindle_rpm_override": null,
+          "onion_skin": 0.0,
+          "tab_count": 0,
+          "tab_width": 0.0,
+          "tab_height": 0.0,
+          "tab_mode": "even",
+          "corner_tab_offset": 1.0,
+          "tab_spacing": 8.0,
+          "female_tab_min_perimeter": 4.0,
+          "tab_cleanup_min_perimeter": 0.0,
+          "remove_tabs_after": false,
+          "tab_cleanup_order": "after_each_part",
+          "tab_release_plan": {},
+          "cut_intent": "through",
+          "breakthrough": 0.015,
+          "manual_tab_positions": [],
+          "curve_feed_mode": "off",
+          "curve_feed_min_percent": 25.0,
+          "curve_feed_transition_distance": 0.5,
+          "common_line_mode": "off",
+          "common_line_tolerance": 0.001,
+          "open_chain_mode": "source",
+          "kind": "router_offset"
+        },
+        {
+          "name": "Drill fixture",
+          "tool_station": 1,
+          "entity_ids": [
+            "body"
+          ],
+          "target_depth": 0.1,
+          "safe_z": 0.25,
+          "enabled": true,
+          "sequence_role": "automatic",
+          "sequence_priority": 0,
+          "sequence_locked": false,
+          "recipe_name": "",
+          "recipe_metadata": {},
+          "small_part_strategy": "automatic",
+          "feed_rate_override": null,
+          "plunge_rate_override": null,
+          "spindle_rpm_override": null,
+          "geometry_selector": {},
+          "depends_on_ids": [],
+          "profile_retention": {},
+          "id": "operation_6d79efcf80464b3daeec7208bc1d6291",
+          "peck_depth": null,
+          "peck_definition": "max_depth",
+          "peck_count": null,
+          "peck_mode": "full_clear",
+          "retract_height": 0.1,
+          "reentry_clearance": 0.02,
+          "surface_feed_override": null,
+          "retract_feed_override": null,
+          "controlled_retract": false,
+          "return_to_surface": false,
+          "dwell_seconds": 0.0,
+          "top_dwell_seconds": 0.0,
+          "kind": "drill_circles"
+        }
+      ],
+      "openPathOwnership": true,
+      "knifeWorkflows": true,
+      "knifeClearance": true,
+      "smallCenters": true,
+      "tools": [
+        {
+          "station": 1,
+          "name": "Quarter",
+          "diameter": 0.25,
+          "kind": "end_mill",
+          "spindle_rpm": 18000,
+          "feed_rate": 2.0,
+          "plunge_rate": 0.5,
+          "max_stepdown": 0.125,
+          "metadata": {
+            "catalog_tool_id": "custom-guided"
+          },
+          "cutting_edge_length": 0.75,
+          "spindle_mode": "required",
+          "min_rpm": null,
+          "max_rpm": null,
+          "shank_diameter": null,
+          "overall_length": null,
+          "holder_diameter": null,
+          "stickout": null
+        }
+      ],
+      "linkedRevisions": true,
+      "graphicalPicking": true,
+      "keepoutsEditable": true,
+      "holeExclusions": true,
+      "closedOverruns": true,
+      "keepouts": [],
+      "holeLinkIssues": [],
+      "holeLinkChoices": [],
+      "scope": "Profiles with entry/finishing, reviewed second-tool groups, drilling and Concentric/Speed Cleanout. Stock verification and reviewed plate output."
+    },
+    "readOnly": true,
+    "operationCount": 2,
+    "readOnlyReason": null,
+    "annotationClipboard": true,
+    "clipboardCount": 0,
+    "backend": "c073b4f69eb51a1b",
+    "arrangementItems": [],
+    "lockedArrangementReferences": [],
+    "capabilities": [
+      "delete_layer",
+      "history_navigation",
+      "selection_measurements",
+      "shape_tools",
+      "arrange_repair",
+      "graphical_points",
+      "object_appearance",
+      "locked_arrangement_reference",
+      "color_palettes",
+      "opening_repair_review",
+      "push_through_fit",
+      "patchwork",
+      "shop_drawing_pdf"
+    ]
+  }
+}

@@ -1,4 +1,6 @@
 import unittest
+from pathlib import Path
+from unittest import mock
 
 import classify_dxf as dxf
 
@@ -56,6 +58,17 @@ def rectangle_segments(bounds, color, first_entity):
 
 
 class TopologicalClassificationTests(unittest.TestCase):
+    def test_closed_contours_that_touch_at_one_node_remain_closed(self):
+        segments = rectangle_segments((0.0, 0.0, 4.0, 4.0), "2", 0)
+        segments.extend(rectangle_segments((4.0, 4.0, 8.0, 8.0), "2", 4))
+
+        components = dxf.connected_components(segments)
+
+        self.assertEqual(len(components), 1)
+        self.assertTrue(components[0]["closed"])
+        self.assertEqual(components[0]["open_nodes"], 0)
+        self.assertEqual(components[0]["branch_nodes"], 1)
+
     def test_nested_offset_pairs_ignore_arbitrary_colors(self):
         segments = []
         for index, (bounds, color) in enumerate(
@@ -101,6 +114,31 @@ class TopologicalClassificationTests(unittest.TestCase):
         self.assertEqual(layers[(0.5, 0.5, 9.5, 9.5)], dxf.LAYER_INNER)
         self.assertEqual(layers[(0.5, 10.5, 9.5, 19.5)], dxf.LAYER_INNER)
 
+    def test_full_score_on_one_split_inset_does_not_hide_its_partner(self):
+        segments = []
+        for index, bounds in enumerate(
+            [
+                ((48.390, 331.175, 62.072, 354.458)),
+                ((48.890, 331.675, 61.572, 341.211)),
+                ((48.890, 342.258, 61.572, 353.739)),
+            ]
+        ):
+            segments.extend(rectangle_segments(bounds, "2", index * 4))
+        components = dxf.connected_components(segments)
+
+        with mock.patch.object(
+            dxf,
+            "offset_pair_score",
+            side_effect=lambda outer, inner, _segments=None: (
+                0.8 if inner["bbox"] == components[1]["bbox"] else None
+            ),
+        ):
+            dxf.classify_components_topologically(components, segments)
+
+        self.assertEqual(components[0]["paired_with"], (1, 2))
+        self.assertEqual(components[1]["layer"], dxf.LAYER_INNER)
+        self.assertEqual(components[2]["layer"], dxf.LAYER_INNER)
+
     def test_small_open_marking_ignores_color(self):
         segments = [{"entity": 0, "type": "LINE", "color": "5", "p1": (0.0, 0.0), "p2": (0.5, 0.5)}]
         components = dxf.connected_components(segments)
@@ -127,6 +165,28 @@ class TopologicalClassificationTests(unittest.TestCase):
 
         self.assertEqual(components[0]["bbox"], (4.875, 6.875, 5.125, 7.125))
         self.assertEqual(components[0]["layer"], dxf.LAYER_DRILL)
+
+
+class PlainAluminumExportTests(unittest.TestCase):
+    def test_profile_holes_are_written_to_outer_profile(self):
+        analysis = {
+            "pairs": [],
+            "entities": [
+                {"type": "CIRCLE", "groups": [(8, dxf.LAYER_PROFILE_HOLES)]},
+                {"type": "CIRCLE", "groups": [(8, dxf.LAYER_DRILL)]},
+            ],
+            "components": [
+                {"layer": dxf.LAYER_PROFILE_HOLES, "entity_indexes": {0}},
+                {"layer": dxf.LAYER_DRILL, "entity_indexes": {1}},
+            ],
+        }
+
+        with mock.patch.object(dxf, "write_dxf") as write_dxf:
+            dxf.export_plain_aluminum_dxf(analysis, Path("unused.dxf"))
+
+        exported = write_dxf.call_args.args[1]
+        self.assertEqual(dxf.group_value(exported[0], 8), dxf.LAYER_OUTER)
+        self.assertEqual(dxf.group_value(exported[1], 8), dxf.LAYER_DRILL)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "name": "Untitled",
+  "units": "in",
+  "source": {},
+  "metadata": {
+    "plates": [
+      {
+        "number": 1,
+        "name": "Plate 1",
+        "x": 0.0,
+        "y": 0.0,
+        "width": 96.0,
+        "height": 48.0
+      }
+    ],
+    "active_plate_number": 1,
+    "layer_settings": {
+      "0": {
+        "visible": true,
+        "locked": false,
+        "color": "#263238",
+        "order": 0
+      }
+    }
+  },
+  "keepouts": [],
+  "entities": [
+    {
+      "id": "entity_ec7e814b73134ef89d14238d36850121",
+      "layer": "0",
+      "metadata": {},
+      "appearance": null,
+      "corner_a": {
+        "x": 16.996960486322187,
+        "y": 19.696048632218844
+      },
+      "corner_b": {
+        "x": 46.17629179331307,
+        "y": 35.744680851063826
+      },
+      "kind": "rectangle"
+    },
+    {
+      "id": "entity_92834bc9c7eb4754afbaa56b72c0da4a",
+      "layer": "0",
+      "metadata": {},
+      "appearance": null,
+      "corner_a": {
+        "x": 19.96779333067702,
+        "y": 22.64840182648402
+      },
+      "corner_b": {
+        "x": 36.55226821652177,
+        "y": 29.80821917808219
+      },
+      "kind": "rectangle"
+    }
+  ],
+  "tool_library": {
+    "capacity": 12,
+    "tools": []
+  },
+  "operations": []
+}

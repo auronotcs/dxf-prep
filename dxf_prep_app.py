@@ -301,7 +301,10 @@ class DxfPrepApp(tk.Tk):
         self.generated_components: list[dict] = []
         self.generated_layer_visibility: dict[str, bool] = {}
         self.generated_selected_component: int | None = None
+        self.generated_selected_components: set[int] = set()
+        self.generated_undo_stack: list[list[tuple[int, str, str]]] = []
         self.generated_layer_var = tk.StringVar(value="All Layers")
+        self.generated_move_var = tk.StringVar(value="")
         self.generated_selected_var = tk.StringVar(value="Click a generated contour to inspect its layer.")
         self.generated_scale = 1.0
         self.generated_offset_x = 0.0
@@ -398,15 +401,16 @@ class DxfPrepApp(tk.Tk):
         ttk.Label(actions, text="Generate").grid(row=0, column=0, padx=(0, 8))
         ttk.Button(actions, text="Clean DXF", command=self.export_cleaned_file).grid(row=0, column=1, padx=(0, 8))
         ttk.Button(actions, text="Aluminum Shelfed", command=self.export_file).grid(row=0, column=2, padx=(0, 8))
-        ttk.Button(actions, text="Acrylic Clean and Cut", command=self.export_acrylic_file).grid(row=0, column=3, padx=(0, 8))
-        ttk.Button(actions, text="Poly Backs", command=self.export_poly_back_file).grid(row=0, column=4, padx=(0, 16))
+        ttk.Button(actions, text="Plain Aluminum", command=self.export_plain_aluminum_file).grid(row=0, column=3, padx=(0, 8))
+        ttk.Button(actions, text="Acrylic Clean and Cut", command=self.export_acrylic_file).grid(row=0, column=4, padx=(0, 8))
+        ttk.Button(actions, text="Poly Backs", command=self.export_poly_back_file).grid(row=0, column=5, padx=(0, 16))
         self.save_generated_button = ttk.Button(
             actions,
             text="Save Generated DXF",
             command=self.save_generated_file,
             state="disabled",
         )
-        self.save_generated_button.grid(row=0, column=5)
+        self.save_generated_button.grid(row=0, column=6)
 
         body = ttk.PanedWindow(root, orient=tk.HORIZONTAL)
         body.grid(row=2, column=0, sticky="nsew")
@@ -520,7 +524,26 @@ class DxfPrepApp(tk.Tk):
         ttk.Button(generated_controls, text="View All Layers", command=self.show_all_generated_layers).grid(
             row=0, column=5, padx=(0, 14)
         )
-        ttk.Label(generated_controls, textvariable=self.generated_selected_var).grid(row=0, column=7, sticky="e")
+        ttk.Button(generated_controls, text="Select Layer", command=self.select_generated_layer).grid(
+            row=0, column=6, padx=(0, 14)
+        )
+        ttk.Label(generated_controls, text="Move To Layer").grid(row=1, column=0, padx=(0, 6), pady=(6, 0))
+        self.generated_move_combo = ttk.Combobox(
+            generated_controls,
+            textvariable=self.generated_move_var,
+            values=(),
+            state="readonly",
+            width=24,
+        )
+        self.generated_move_combo.grid(row=1, column=1, columnspan=2, sticky="w", padx=(0, 6), pady=(6, 0))
+        ttk.Button(
+            generated_controls,
+            text="Move Selected To Layer",
+            command=self.move_generated_selected,
+        ).grid(row=1, column=3, columnspan=2, sticky="w", pady=(6, 0))
+        ttk.Label(generated_controls, textvariable=self.generated_selected_var).grid(
+            row=1, column=5, columnspan=3, sticky="e", pady=(6, 0)
+        )
         self.generated_canvas = tk.Canvas(
             generated_tab,
             background="#f8f9fa",
@@ -751,6 +774,9 @@ class DxfPrepApp(tk.Tk):
     def export_acrylic_file(self) -> None:
         self.generate_output("acrylic")
 
+    def export_plain_aluminum_file(self) -> None:
+        self.generate_output("plain_aluminum")
+
     def export_cleaned_file(self) -> None:
         self.generate_output("clean")
 
@@ -764,6 +790,11 @@ class DxfPrepApp(tk.Tk):
         definitions = {
             "clean": ("_cleaned.dxf", "Clean DXF", dxf.export_cleaned_dxf),
             "aluminum": ("_aluminum_shelfed.dxf", "Aluminum Shelfed", dxf.export_classified_dxf),
+            "plain_aluminum": (
+                "_plain_aluminum.dxf",
+                "Plain Aluminum",
+                dxf.export_plain_aluminum_dxf,
+            ),
             "acrylic": (
                 "_acrylic_clean_and_cut.dxf",
                 "Acrylic Clean and Cut",
@@ -812,12 +843,16 @@ class DxfPrepApp(tk.Tk):
         self.generated_components = []
         self.generated_layer_visibility = {}
         self.generated_selected_component = None
+        self.generated_selected_components.clear()
+        self.generated_undo_stack.clear()
         self.generated_layer_var.set("All Layers")
+        self.generated_move_var.set("")
         self.generated_selected_var.set("Click a generated contour to inspect its layer.")
         if hasattr(self, "preview_notebook") and hasattr(self, "generated_tab"):
             self.preview_notebook.tab(self.generated_tab, text="Generated Preview")
         if hasattr(self, "generated_layer_combo"):
             self.generated_layer_combo.configure(values=("All Layers",))
+            self.generated_move_combo.configure(values=())
             self.update_generated_layer_swatch()
         if hasattr(self, "save_generated_button"):
             self.save_generated_button.configure(state="disabled")
@@ -832,8 +867,12 @@ class DxfPrepApp(tk.Tk):
         self.generated_path = path
         layers = list(self.generated_layer_visibility)
         self.generated_layer_combo.configure(values=("All Layers", *layers))
+        self.generated_move_combo.configure(values=tuple(layers))
         self.generated_layer_var.set("All Layers")
+        self.generated_move_var.set(layers[0] if layers else "")
         self.generated_selected_component = None
+        self.generated_selected_components.clear()
+        self.generated_undo_stack.clear()
         self.generated_selected_var.set("Click a generated contour to inspect its layer.")
         self.preview_notebook.tab(self.generated_tab, text=f"Generated Preview - {output_label}")
         self.update_generated_layer_swatch()
@@ -880,6 +919,7 @@ class DxfPrepApp(tk.Tk):
             for layer in self.generated_layer_visibility:
                 self.generated_layer_visibility[layer] = layer == selected
         self.generated_selected_component = None
+        self.generated_selected_components.clear()
         self.generated_selected_var.set("Click a generated contour to inspect its layer.")
         self.update_generated_layer_swatch()
         self.redraw_generated()
@@ -901,6 +941,7 @@ class DxfPrepApp(tk.Tk):
         elif layer in self.generated_layer_visibility:
             self.generated_layer_visibility[layer] = False
         self.generated_selected_component = None
+        self.generated_selected_components.clear()
         self.generated_selected_var.set("Click a generated contour to inspect its layer.")
         self.redraw_generated()
 
@@ -909,6 +950,77 @@ class DxfPrepApp(tk.Tk):
             self.generated_layer_visibility[layer] = True
         self.generated_layer_var.set("All Layers")
         self.update_generated_layer_swatch()
+        self.redraw_generated()
+
+    def select_generated_layer(self) -> None:
+        layer = self.generated_layer_var.get()
+        if layer == "All Layers":
+            selected = {
+                index
+                for index, component in enumerate(self.generated_components)
+                if self.generated_layer_visibility.get(component["layer"], True)
+            }
+        else:
+            selected = {
+                index for index, component in enumerate(self.generated_components) if component["layer"] == layer
+            }
+        self.generated_selected_components = selected
+        self.generated_selected_component = min(selected) if selected else None
+        self.update_generated_selection_text()
+        self.redraw_generated()
+
+    def update_generated_selection_text(self) -> None:
+        if not self.generated_selected_components:
+            self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+            return
+        layers = Counter(
+            self.generated_components[index]["layer"] for index in self.generated_selected_components
+        )
+        layer_text = ", ".join(f"{layer}: {count}" for layer, count in layers.items())
+        self.generated_selected_var.set(f"Selected: {len(self.generated_selected_components)}  |  {layer_text}")
+
+    def move_generated_selected(self) -> None:
+        if not self.generated_path or not self.generated_selected_components:
+            return
+        target_layer = self.generated_move_var.get()
+        if not target_layer:
+            return
+        changes: list[tuple[int, str, str]] = []
+        layers_by_entity: dict[int, str] = {}
+        for component_index in sorted(self.generated_selected_components):
+            component = self.generated_components[component_index]
+            old_layer = component["layer"]
+            if old_layer == target_layer:
+                continue
+            for entity_index in component["entity_indexes"]:
+                layers_by_entity[entity_index] = target_layer
+                changes.append((entity_index, old_layer, target_layer))
+        if not changes:
+            return
+        moved_count = len(self.generated_selected_components)
+        self.generated_undo_stack.append(changes)
+        self.generated_undo_stack = self.generated_undo_stack[-100:]
+        dxf.write_entities_to_layers(self.generated_entities, layers_by_entity)
+        self.persist_generated_edits()
+        self.status_var.set(f"Moved {moved_count} generated contour(s) to {target_layer}.")
+
+    def persist_generated_edits(self) -> None:
+        if not self.generated_path:
+            return
+        pairs = dxf.read_pairs(self.generated_path)
+        dxf.write_dxf(pairs, self.generated_entities, self.generated_path, {})
+        self.generated_segments = dxf.build_segments(self.generated_entities)
+        self.build_generated_components()
+        layers = list(self.generated_layer_visibility)
+        self.generated_layer_combo.configure(values=("All Layers", *layers))
+        self.generated_move_combo.configure(values=tuple(layers))
+        if self.generated_move_var.get() not in layers:
+            self.generated_move_var.set(layers[0] if layers else "")
+        self.generated_layer_var.set("All Layers")
+        self.generated_selected_component = None
+        self.generated_selected_components.clear()
+        self.update_generated_layer_swatch()
+        self.update_generated_selection_text()
         self.redraw_generated()
 
     def sync_component_layers(self) -> None:
@@ -1126,8 +1238,8 @@ class DxfPrepApp(tk.Tk):
             )
             return
         selected_segments: set[int] = set()
-        if self.generated_selected_component is not None:
-            selected_segments = self.generated_components[self.generated_selected_component]["segment_indexes"]
+        for component_index in self.generated_selected_components:
+            selected_segments.update(self.generated_components[component_index]["segment_indexes"])
         for segment_index, segment in enumerate(self.generated_segments):
             layer = self.generated_segment_layer(segment)
             if not self.generated_layer_visibility.get(layer, True):
@@ -1140,8 +1252,8 @@ class DxfPrepApp(tk.Tk):
                 screen_points.extend(self.generated_world_to_screen(point))
             if len(screen_points) >= 4:
                 self.generated_canvas.create_line(*screen_points, fill=color, width=3 if selected else 1, smooth=False)
-        if self.generated_selected_component is not None:
-            min_x, min_y, max_x, max_y = self.generated_components[self.generated_selected_component]["bbox"]
+        for component_index in self.generated_selected_components:
+            min_x, min_y, max_x, max_y = self.generated_components[component_index]["bbox"]
             x1, y1 = self.generated_world_to_screen((min_x, max_y))
             x2, y2 = self.generated_world_to_screen((max_x, min_y))
             self.generated_canvas.create_rectangle(x1, y1, x2, y2, outline="#c92a2a", width=2, dash=(6, 4))
@@ -1181,20 +1293,28 @@ class DxfPrepApp(tk.Tk):
                 candidates.append((distance, area, index))
         if not candidates:
             return
-        self.generated_selected_component = min(candidates)[2]
-        component = self.generated_components[self.generated_selected_component]
-        min_x, min_y, max_x, max_y = component["bbox"]
-        self.generated_selected_var.set(
-            f"Layer: {component['layer']}  |  {max_x - min_x:.3f} x {max_y - min_y:.3f} in  |  "
-            f"{'Closed' if component['closed'] else 'Open'}"
+        selected = min(candidates)[2]
+        if event.state & 0x0001:
+            if selected in self.generated_selected_components:
+                self.generated_selected_components.remove(selected)
+            else:
+                self.generated_selected_components.add(selected)
+        else:
+            self.generated_selected_components = {selected}
+        self.generated_selected_component = (
+            selected if selected in self.generated_selected_components else
+            (min(self.generated_selected_components) if self.generated_selected_components else None)
         )
+        component = self.generated_components[selected]
         self.generated_layer_var.set(component["layer"])
         self.update_generated_layer_swatch()
+        self.update_generated_selection_text()
         self.redraw_generated()
 
     def deselect_generated(self, _event: tk.Event | None = None) -> None:
         self.generated_selected_component = None
-        self.generated_selected_var.set("Click a generated contour to inspect its layer.")
+        self.generated_selected_components.clear()
+        self.update_generated_selection_text()
         self.redraw_generated()
 
     def start_generated_pan(self, event: tk.Event) -> None:
@@ -1437,6 +1557,16 @@ class DxfPrepApp(tk.Tk):
         self.redraw()
 
     def undo_last_layer_change(self, _event: tk.Event | None = None) -> str:
+        if self.preview_notebook.select() == str(self.generated_tab):
+            if self.generated_undo_stack:
+                changes = self.generated_undo_stack.pop()
+                dxf.write_entities_to_layers(
+                    self.generated_entities,
+                    {entity_index: old_layer for entity_index, old_layer, _new_layer in changes},
+                )
+                self.persist_generated_edits()
+                self.status_var.set("Generated layer change undone.")
+            return "break"
         if not self.undo_stack:
             return "break"
         changes = self.undo_stack.pop()

@@ -19,3 +19,19 @@ dxf_prep_settings.json
 *.DXF
 __pycache__/
 Stable Snapshots/
+
+# Isolated Flutter UI evaluation (SDK and build outputs stay local).
+!flutter_workbench/
+!flutter_workbench/**/
+!flutter_workbench/**
+flutter_workbench/.dart_tool/
+flutter_workbench/.idea/
+flutter_workbench/build/
+flutter_workbench/*.iml
+flutter_workbench/windows/flutter/ephemeral/
+flutter_workbench/**/__pycache__/
+flutter_workbench/backend/user_state/
+flutter_workbench/backend/snapshots/
+!Run Flutter Prototype.bat
+!Run Flutter Prototype Windows.bat
+!Run Flutter Development.bat

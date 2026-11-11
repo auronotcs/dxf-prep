@@ -12,6 +12,7 @@ DXF Prep is a small Windows desktop utility for preparing CAD-exported DXF files
   - `ID_MARKING`
   - `REVIEW_UNKNOWN`
 - Generates an **Aluminum Shelfed** DXF for review before saving.
+- Generates a **Plain Aluminum** DXF that combines `PROFILE_HOLES` with `OUTER_PROFILE` while retaining drill and marking layers.
 - Generates an **Acrylic Clean and Cut** DXF with ordered layers:
   - `DRILL_250`
   - `CLEANOUT`
@@ -24,7 +25,7 @@ DXF Prep is a small Windows desktop utility for preparing CAD-exported DXF files
 - Exports a cleaned DXF that preserves drawing contents while removing duplicate/degenerate geometry and rebuilding 0.250 drill holes as true circles.
 - Preserves polyline, lightweight polyline, line, arc, and circle geometry from source DXF exports.
 - Shows a color-coded preview with detected sheet/group boxes.
-- Provides a separate generated-output preview with named layer filtering and contour inspection.
+- Provides a separate generated-output preview with named layer filtering, contour inspection, multi-selection, and layer reassignment before saving.
 - Provides per-sheet zoom buttons.
 - Supports undo, multi-selection, configurable hit targeting, and automatic alignment to `(0.5, 0.5)`.
 - Remembers the default and last-used DXF folder through local settings.

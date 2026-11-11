@@ -13,6 +13,13 @@
 !.gitignore
 !Build DXF Prep EXE.bat
 
+# Track the other shop tools (generators, letter mounting automation, helpers, tests).
+!/*.py
+!/*.bat
+!/*.spec
+!Letter Mounting Automation - README.txt
+!LETTER_MOUNTING_AUTOMATION_README.md
+
 # Keep local settings, generated DXFs, caches, and snapshots out of source control.
 dxf_prep_settings.json
 *.dxf

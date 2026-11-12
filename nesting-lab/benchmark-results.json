@@ -1,0 +1,107 @@
+[
+  {
+    "mode": "rectangular",
+    "count": 12,
+    "shape": "L",
+    "seconds": 0.0005956999993941281,
+    "sheets": 2,
+    "envelope_area": 468.75
+  },
+  {
+    "mode": "smart_pairs",
+    "count": 12,
+    "shape": "L",
+    "seconds": 1.7998680000018794,
+    "sheets": 1,
+    "envelope_area": 417.1875
+  },
+  {
+    "mode": "shape_aware",
+    "count": 12,
+    "shape": "L",
+    "seconds": 0.842472699998325,
+    "sheets": 1,
+    "envelope_area": 408.25
+  },
+  {
+    "mode": "contact",
+    "count": 12,
+    "shape": "L",
+    "seconds": 0.03241169999819249,
+    "sheets": 1,
+    "envelope_area": 355.9511801296,
+    "pair_builds": 9,
+    "cache_hits": 420,
+    "candidate_checks": 69
+  },
+  {
+    "mode": "rectangular",
+    "count": 12,
+    "shape": "E",
+    "seconds": 0.0006298999978753272,
+    "sheets": 2,
+    "envelope_area": 587.25
+  },
+  {
+    "mode": "smart_pairs",
+    "count": 12,
+    "shape": "E",
+    "seconds": 2.982281000000512,
+    "sheets": 2,
+    "envelope_area": 543.75
+  },
+  {
+    "mode": "shape_aware",
+    "count": 12,
+    "shape": "E",
+    "seconds": 1.393713999997999,
+    "sheets": 2,
+    "envelope_area": 533.5625
+  },
+  {
+    "mode": "contact",
+    "count": 12,
+    "shape": "E",
+    "seconds": 0.016957799998635892,
+    "sheets": 2,
+    "envelope_area": 543.7556100144,
+    "pair_builds": 3,
+    "cache_hits": 540,
+    "candidate_checks": 108
+  },
+  {
+    "mode": "rectangular",
+    "count": 36,
+    "shape": "E",
+    "seconds": 0.0024125000018102583,
+    "sheets": 4,
+    "envelope_area": 1805.25
+  },
+  {
+    "mode": "smart_pairs",
+    "count": 36,
+    "shape": "E",
+    "seconds": 5.425492800000939,
+    "sheets": 4,
+    "envelope_area": 1631.25
+  },
+  {
+    "mode": "shape_aware",
+    "count": 36,
+    "shape": "E",
+    "seconds": 9.221369899998535,
+    "sheets": 4,
+    "envelope_area": 1600.6875
+  },
+  {
+    "mode": "contact",
+    "count": 36,
+    "shape": "E",
+    "seconds": 0.12405579999904148,
+    "sheets": 4,
+    "envelope_area": 1631.2694400576,
+    "pair_builds": 3,
+    "cache_hits": 5727,
+    "candidate_checks": 876
+  }
+]

@@ -1,0 +1,218 @@
+[
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      0,
+      90,
+      180
+    ],
+    "seconds": 0.03284190013073385,
+    "sheets": 1,
+    "envelope": 355.9511801296
+  },
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      0,
+      180,
+      90
+    ],
+    "seconds": 0.03636519983410835,
+    "sheets": 1,
+    "envelope": 355.9511801296
+  },
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      90,
+      0,
+      180
+    ],
+    "seconds": 0.02998330001719296,
+    "sheets": 1,
+    "envelope": 368.01086007559996
+  },
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      90,
+      180,
+      0
+    ],
+    "seconds": 0.03083790000528097,
+    "sheets": 1,
+    "envelope": 368.01086007559996
+  },
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      180,
+      0,
+      90
+    ],
+    "seconds": 0.03019459987990558,
+    "sheets": 1,
+    "envelope": 408.2629751008
+  },
+  {
+    "shape": "L",
+    "count": 12,
+    "angles": [
+      180,
+      90,
+      0
+    ],
+    "seconds": 0.03470919979736209,
+    "sheets": 1,
+    "envelope": 408.2629751008
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      0,
+      90,
+      180
+    ],
+    "seconds": 0.01722509996034205,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      0,
+      180,
+      90
+    ],
+    "seconds": 0.01687259995378554,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      90,
+      0,
+      180
+    ],
+    "seconds": 0.01714659994468093,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      90,
+      180,
+      0
+    ],
+    "seconds": 0.017222899943590164,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      180,
+      0,
+      90
+    ],
+    "seconds": 0.017813000129535794,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 12,
+    "angles": [
+      180,
+      90,
+      0
+    ],
+    "seconds": 0.01731079979799688,
+    "sheets": 2,
+    "envelope": 543.7556100144
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      0,
+      90,
+      180
+    ],
+    "seconds": 0.1278234999626875,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      0,
+      180,
+      90
+    ],
+    "seconds": 0.1288594000507146,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      90,
+      0,
+      180
+    ],
+    "seconds": 0.12806489993818104,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      90,
+      180,
+      0
+    ],
+    "seconds": 0.12897009984590113,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      180,
+      0,
+      90
+    ],
+    "seconds": 0.12899330002255738,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  },
+  {
+    "shape": "E",
+    "count": 36,
+    "angles": [
+      180,
+      90,
+      0
+    ],
+    "seconds": 0.12927330005913973,
+    "sheets": 4,
+    "envelope": 1631.2694400576
+  }
+]

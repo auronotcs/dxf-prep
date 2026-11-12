@@ -4,7 +4,9 @@ set "PYTHON=C:\Users\auron\.cache\codex-runtimes\codex-primary-runtime\dependenc
 set "PYROOT=C:\Users\auron\.cache\codex-runtimes\codex-primary-runtime\dependencies\python"
 set "TCL_LIBRARY=%PYROOT%\tcl\tcl8.6"
 set "TK_LIBRARY=%PYROOT%\tcl\tk8.6"
-set "PYTHONPATH=%~dp0.build_tools"
+set "PYTHONPATH=%~dp0..\.build_tools"
+rem Relative paths below (assets, holegen_libs, the .py) are relative to this folder.
+cd /d "%~dp0"
 
 if not exist "%PYTHON%" (
   echo Bundled Python runtime not found.

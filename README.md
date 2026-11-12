@@ -1,4 +1,25 @@
-# DXF Prep
+# Shop tools (dxf-prep repository)
+
+| Folder | What it is | Start it with |
+|---|---|---|
+| `dxf_prep\` | DXF Prep app (described below) and its tests | `Run DXF Prep.bat` |
+| `letter_mounting\` | Letter Mounting Automation app, the hole, keyhole, backer-pin and mounting-pattern generators it uses, its tests and test fixture | `Run Letter Mounting Automation.bat` |
+| `cam_probes\` | One-off investigation and smoke scripts that load CAM Workbench | run individually |
+| `nesting-lab\` | Nesting experiments and their results | see `nesting-lab\README.md` |
+
+`! START CAM Workbench.bat` opens the CAM Workbench app in `..\CAM Workbench`.
+The Flutter app moved to `CAM Workbench\flutter\`; the `Run Flutter *.bat` files
+here still open the retired copy in `flutter_workbench\` until it is removed.
+
+Not in git: `letter_mounting\holegen_libs\` (vendored ezdxf, numpy, scipy,
+shapely; needed by Letter Mounting), `.build_tools\` (PyInstaller), and local
+folders listed in `.gitignore`. Shop jobs and drawings live in
+`Documents\Shop Jobs`; old folder copies are zipped in `Documents\Archive`.
+
+Tests: run `python -m unittest discover -p "test_*.py"` inside `dxf_prep\` or
+`letter_mounting\`, with the same Python the launchers use.
+
+## DXF Prep
 
 DXF Prep is a small Windows desktop utility for preparing CAD-exported DXF files for sign-fabrication and CNC workflows.
 
@@ -50,7 +71,7 @@ The application uses only the Python standard library and requires a Python inst
 
 ## Testing
 
-Run the DXF Prep regression tests from the repository directory:
+Run the DXF Prep regression tests from the `dxf_prep` folder:
 
 ```text
 py -m unittest -v test_classify_dxf
@@ -61,10 +82,11 @@ py -m unittest -v test_classify_dxf
 Install PyInstaller, then double-click:
 
 ```text
-Build DXF Prep EXE.bat
+dxf_prep\Build DXF Prep EXE.bat
 ```
 
-The executable is written to `dist\DXF Prep.exe`.
+The executable is written to `dxf_prep\dist\DXF Prep.exe`. (Builds made before
+the November 2026 reorganisation are in the top-level `dist\`.)
 
 ## Notes
 

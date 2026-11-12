@@ -1,44 +1,58 @@
-# Ignore everything by default; this folder contains unrelated shop/boat files too.
-*
+# Code lives in dxf_prep\, letter_mounting\, cam_probes\ and nesting-lab\.
+# Shop data lives in Documents\Shop Jobs and old copies in Documents\Archive,
+# so this is an ordinary ignore list. Folders below are local-only.
 
-# Track the DXF Prep app.
-!classify_dxf.py
-!dxf_prep_app.py
-!test_classify_dxf.py
-!Run DXF Prep.bat
-!dxf_prep_icon.ico
-!dxf_prep_icon.png
-!README.md
-!LICENSE
-!.gitignore
-!Build DXF Prep EXE.bat
+# Python and build output
+__pycache__/
+*.py[cod]
+build/
+dist/
+.build_tools/
+.cache/
 
-# Track the other shop tools (generators, letter mounting automation, helpers, tests).
-!/*.py
-!/*.bat
-!/*.spec
-!Letter Mounting Automation - README.txt
-!LETTER_MOUNTING_AUTOMATION_README.md
+# Vendored libraries (large; installed locally, not in git)
+letter_mounting/holegen_libs/
+.holegen-deps/
+holegen_deps/
 
-# Keep local settings, generated DXFs, caches, and snapshots out of source control.
-dxf_prep_settings.json
+# Generated icon sets and scratch output
+letter_mounting/mounting-workflow-icons/
+icon-concepts/
+test_artifacts/
+tmp/
+*-smoke-recovery.json
+
+# Local settings
+dxf_prep/dxf_prep_settings.json
+
+# Personal and shop folders that stay out of git
+Boat Designs/
+Organization Records/
+Letter Mounting Test Files/
+.codex-remote-attachments/
+.flutter-sdk/
+
+# Separate project; not part of this repository yet
+cnc-explorer-preview/
+
+# Shop data that might be dropped here by mistake. Small, named test inputs
+# are listed as exceptions.
 *.dxf
 *.DXF
-__pycache__/
-Stable Snapshots/
+!letter_mounting/Keyhole example.dxf
+!letter_mounting/test_fixtures/*.dxf
+*.camjob.json
+*.cnc
+*.nc
+*.plt
+*.eps
+*.pdf
 
-# Isolated Flutter UI evaluation (SDK and build outputs stay local).
-!flutter_workbench/
-!flutter_workbench/**/
-!flutter_workbench/**
+# Retired Flutter copy (now in the CAM Workbench repository under flutter\)
 flutter_workbench/.dart_tool/
 flutter_workbench/.idea/
 flutter_workbench/build/
 flutter_workbench/*.iml
 flutter_workbench/windows/flutter/ephemeral/
-flutter_workbench/**/__pycache__/
 flutter_workbench/backend/user_state/
 flutter_workbench/backend/snapshots/
-!Run Flutter Prototype.bat
-!Run Flutter Prototype Windows.bat
-!Run Flutter Development.bat

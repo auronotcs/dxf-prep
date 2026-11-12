@@ -1,0 +1,327 @@
+{
+  "source_sha256": {
+    "C:\\Users\\auron\\Documents\\Boat stuff\\nesting-lab\\contact_nesting.py": "d460499f8cf3a29c77ca67e8993935515dbce885b7370f39ade132473711df71",
+    "C:\\Users\\auron\\Documents\\Boat stuff\\nesting-lab\\verify_nesting.py": "9488adf9b1982fcec552cdf19f7fbca8513b2e2f175996ccba489d35315e638f",
+    "C:\\Users\\auron\\Documents\\CAM Workbench\\cam_core\\nesting.py": "161edf0b63e84d90e0299414ec01906efacd009e60082492996094bf56115458"
+  },
+  "notes": "Fresh processes; solver wall excludes startup/validation; CPU includes validation. Peak working set includes interpreter/imports. Synthetic shapes, not production integration proof. Existing engine search policies differ.",
+  "samples": [
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.8321038999129087,
+      "sheets": 1,
+      "envelope_area": 408.25,
+      "process_cpu_seconds_including_validation": 0.84375,
+      "whole_process_peak_working_set_bytes": 61104128,
+      "repeat": 0
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.8283738999161869,
+      "sheets": 1,
+      "envelope_area": 408.25,
+      "process_cpu_seconds_including_validation": 0.828125,
+      "whole_process_peak_working_set_bytes": 61968384,
+      "repeat": 1
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.8326044999994338,
+      "sheets": 1,
+      "envelope_area": 408.25,
+      "process_cpu_seconds_including_validation": 0.828125,
+      "whole_process_peak_working_set_bytes": 61403136,
+      "repeat": 2
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.03312519984319806,
+      "sheets": 1,
+      "envelope_area": 355.9511801296,
+      "pair_builds": 9,
+      "cache_hits": 420,
+      "candidate_checks": 69,
+      "process_cpu_seconds_including_validation": 0.03125,
+      "whole_process_peak_working_set_bytes": 60973056,
+      "repeat": 0
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.03347250004298985,
+      "sheets": 1,
+      "envelope_area": 355.9511801296,
+      "pair_builds": 9,
+      "cache_hits": 420,
+      "candidate_checks": 69,
+      "process_cpu_seconds_including_validation": 0.03125,
+      "whole_process_peak_working_set_bytes": 61136896,
+      "repeat": 1
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "L",
+      "seconds": 0.033055200008675456,
+      "sheets": 1,
+      "envelope_area": 355.9511801296,
+      "pair_builds": 9,
+      "cache_hits": 420,
+      "candidate_checks": 69,
+      "process_cpu_seconds_including_validation": 0.03125,
+      "whole_process_peak_working_set_bytes": 60690432,
+      "repeat": 2
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "E",
+      "seconds": 1.3767133001238108,
+      "sheets": 2,
+      "envelope_area": 533.5625,
+      "process_cpu_seconds_including_validation": 1.375,
+      "whole_process_peak_working_set_bytes": 60538880,
+      "repeat": 0
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "E",
+      "seconds": 1.387561800191179,
+      "sheets": 2,
+      "envelope_area": 533.5625,
+      "process_cpu_seconds_including_validation": 1.375,
+      "whole_process_peak_working_set_bytes": 61644800,
+      "repeat": 1
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "E",
+      "seconds": 1.3880604000296444,
+      "sheets": 2,
+      "envelope_area": 533.5625,
+      "process_cpu_seconds_including_validation": 1.390625,
+      "whole_process_peak_working_set_bytes": 61452288,
+      "repeat": 2
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "E",
+      "seconds": 0.017016000114381313,
+      "sheets": 2,
+      "envelope_area": 543.7556100144,
+      "pair_builds": 3,
+      "cache_hits": 540,
+      "candidate_checks": 108,
+      "process_cpu_seconds_including_validation": 0.015625,
+      "whole_process_peak_working_set_bytes": 60698624,
+      "repeat": 0
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "E",
+      "seconds": 0.018049800070002675,
+      "sheets": 2,
+      "envelope_area": 543.7556100144,
+      "pair_builds": 3,
+      "cache_hits": 540,
+      "candidate_checks": 108,
+      "process_cpu_seconds_including_validation": 0.015625,
+      "whole_process_peak_working_set_bytes": 61120512,
+      "repeat": 1
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "E",
+      "seconds": 0.01730090007185936,
+      "sheets": 2,
+      "envelope_area": 543.7556100144,
+      "pair_builds": 3,
+      "cache_hits": 540,
+      "candidate_checks": 108,
+      "process_cpu_seconds_including_validation": 0.015625,
+      "whole_process_peak_working_set_bytes": 60944384,
+      "repeat": 2
+    },
+    {
+      "mode": "shape_aware",
+      "count": 36,
+      "shape": "E",
+      "seconds": 8.669501499971375,
+      "sheets": 4,
+      "envelope_area": 1600.6875,
+      "process_cpu_seconds_including_validation": 8.640625,
+      "whole_process_peak_working_set_bytes": 60870656,
+      "repeat": 0
+    },
+    {
+      "mode": "shape_aware",
+      "count": 36,
+      "shape": "E",
+      "seconds": 8.861581400036812,
+      "sheets": 4,
+      "envelope_area": 1600.6875,
+      "process_cpu_seconds_including_validation": 8.875,
+      "whole_process_peak_working_set_bytes": 61386752,
+      "repeat": 1
+    },
+    {
+      "mode": "shape_aware",
+      "count": 36,
+      "shape": "E",
+      "seconds": 8.70828939997591,
+      "sheets": 4,
+      "envelope_area": 1600.6875,
+      "process_cpu_seconds_including_validation": 8.71875,
+      "whole_process_peak_working_set_bytes": 60313600,
+      "repeat": 2
+    },
+    {
+      "mode": "contact",
+      "count": 36,
+      "shape": "E",
+      "seconds": 0.12882950017228723,
+      "sheets": 4,
+      "envelope_area": 1631.2694400576,
+      "pair_builds": 3,
+      "cache_hits": 5727,
+      "candidate_checks": 876,
+      "process_cpu_seconds_including_validation": 0.125,
+      "whole_process_peak_working_set_bytes": 60747776,
+      "repeat": 0
+    },
+    {
+      "mode": "contact",
+      "count": 36,
+      "shape": "E",
+      "seconds": 0.12707070005126297,
+      "sheets": 4,
+      "envelope_area": 1631.2694400576,
+      "pair_builds": 3,
+      "cache_hits": 5727,
+      "candidate_checks": 876,
+      "process_cpu_seconds_including_validation": 0.140625,
+      "whole_process_peak_working_set_bytes": 60747776,
+      "repeat": 1
+    },
+    {
+      "mode": "contact",
+      "count": 36,
+      "shape": "E",
+      "seconds": 0.12889540009200573,
+      "sheets": 4,
+      "envelope_area": 1631.2694400576,
+      "pair_builds": 3,
+      "cache_hits": 5727,
+      "candidate_checks": 876,
+      "process_cpu_seconds_including_validation": 0.125,
+      "whole_process_peak_working_set_bytes": 61796352,
+      "repeat": 2
+    }
+  ],
+  "summary": [
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "L",
+      "successful_samples": 3,
+      "median_seconds": 0.8321038999129087,
+      "median_cpu_seconds": 0.828125,
+      "max_process_peak_bytes": 61968384,
+      "sheets": [
+        1
+      ],
+      "envelopes": [
+        408.25
+      ]
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "L",
+      "successful_samples": 3,
+      "median_seconds": 0.03312519984319806,
+      "median_cpu_seconds": 0.03125,
+      "max_process_peak_bytes": 61136896,
+      "sheets": [
+        1
+      ],
+      "envelopes": [
+        355.9511801296
+      ]
+    },
+    {
+      "mode": "shape_aware",
+      "count": 12,
+      "shape": "E",
+      "successful_samples": 3,
+      "median_seconds": 1.387561800191179,
+      "median_cpu_seconds": 1.375,
+      "max_process_peak_bytes": 61644800,
+      "sheets": [
+        2
+      ],
+      "envelopes": [
+        533.5625
+      ]
+    },
+    {
+      "mode": "contact",
+      "count": 12,
+      "shape": "E",
+      "successful_samples": 3,
+      "median_seconds": 0.01730090007185936,
+      "median_cpu_seconds": 0.015625,
+      "max_process_peak_bytes": 61120512,
+      "sheets": [
+        2
+      ],
+      "envelopes": [
+        543.7556100144
+      ]
+    },
+    {
+      "mode": "shape_aware",
+      "count": 36,
+      "shape": "E",
+      "successful_samples": 3,
+      "median_seconds": 8.70828939997591,
+      "median_cpu_seconds": 8.71875,
+      "max_process_peak_bytes": 61386752,
+      "sheets": [
+        4
+      ],
+      "envelopes": [
+        1600.6875
+      ]
+    },
+    {
+      "mode": "contact",
+      "count": 36,
+      "shape": "E",
+      "successful_samples": 3,
+      "median_seconds": 0.12882950017228723,
+      "median_cpu_seconds": 0.125,
+      "max_process_peak_bytes": 61796352,
+      "sheets": [
+        4
+      ],
+      "envelopes": [
+        1631.2694400576
+      ]
+    }
+  ]
+}

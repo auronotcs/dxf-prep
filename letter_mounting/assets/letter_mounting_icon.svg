@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+  <title>Letter Mounting Automation</title>
+  <circle cx="512" cy="512" r="454" fill="#fafcfe" stroke="#0068ae" stroke-width="58"/>
+  <g fill="#0068ae">
+    <rect x="477" y="54" width="70" height="150" rx="18"/>
+    <rect x="477" y="820" width="70" height="150" rx="18"/>
+    <rect x="54" y="477" width="150" height="70" rx="18"/>
+    <rect x="820" y="477" width="150" height="70" rx="18"/>
+  </g>
+  <circle cx="512" cy="512" r="185" fill="none" stroke="#68b8e2" stroke-width="34"/>
+  <path d="M510 180 L610 180 L885 875 L692 875 Z" fill="#e0212d"/>
+  <path d="M294 568 L733 568 L774 684 L254 684 Z" fill="#e0212d"/>
+  <path d="M211 882 L360 902 L592 193 L477 166 Z" fill="#181f26"/>
+  <path d="M243 727 L359 773 L435 585 L319 541 Z" fill="#181f26"/>
+  <path d="M260 736 L192 838 L285 860 L344 770 Z" fill="#181f26"/>
+  <path d="M477 166 L591 193 L611 137 L497 112 Z" fill="#181f26"/>
+  <g fill="#fff" stroke="#0068ae" stroke-width="20">
+    <circle cx="589" cy="377" r="34"/>
+    <circle cx="660" cy="562" r="34"/>
+    <circle cx="733" cy="751" r="34"/>
+  </g>
+</svg>

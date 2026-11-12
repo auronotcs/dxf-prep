@@ -242,9 +242,7 @@ class SissyKeyholeRegressionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         root = Path(__file__).resolve().parent
-        source = ezdxf.readfile(
-            root / "Letter Mounting Test Files" / "Sissys" / "Sissys hole file test.dxf"
-        )
+        source = ezdxf.readfile(root / "test_fixtures" / "sissys_hole_file_test.dxf")
         cls.backs, cls.labels = procedural_back_labels(
             robust_back_polygons(source.modelspace()),
             "Sissy's Log Cabin",

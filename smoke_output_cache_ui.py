@@ -5,7 +5,7 @@ import cam_editor_app as desktop
 from cam_core import CamProject
 
 
-snapshot = Path(r"C:\Users\auron\Documents\Boat stuff\WHHS-boundary-inspection-snapshot.camjob.json")
+snapshot = Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\WHHS-boundary-inspection-snapshot.camjob.json")
 desktop.CamWorkbench._offer_recovery = lambda self: None
 app = desktop.CamWorkbench()
 app.withdraw()

@@ -6,7 +6,7 @@ sys.path.insert(0, str(REPO))
 
 from cam_core import import_dxf, entity_bounds, is_closed_entity, discover_mounting_parts
 
-path = Path(r"C:\Users\auron\Documents\Boat stuff\AECI half inch rail mounted letters.reference.dxf")
+path = Path(r"C:\Users\auron\Documents\Shop Jobs\Drawings\AECI half inch rail mounted letters.reference.dxf")
 result = import_dxf(path)
 project = result.project
 closed = [entity for entity in project.entities if is_closed_entity(entity)]

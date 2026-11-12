@@ -50,7 +50,7 @@ def main() -> None:
     app.tk.call("tk", "scaling", args.scale)
     app.geometry("1280x760+10+10")
     app.update_idletasks()
-    source = Path(r"C:\Users\auron\Documents\Boat stuff\AECI half inch rail mounted letters.reference.dxf")
+    source = Path(r"C:\Users\auron\Documents\Shop Jobs\Drawings\AECI half inch rail mounted letters.reference.dxf")
     project = import_dxf(source).project
     project.name = "AECI bottom-edge UI proof"
     candidates = [

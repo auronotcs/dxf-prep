@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, r"C:\Users\auron\Documents\CAM Workbench")
 from cam_core import CamProject, Line, Polyline, entity_bounds
 
-p = CamProject.load(Path(r"C:\Users\auron\Documents\Boat stuff\cut-line-chain-error.reference.camjob.json"))
+p = CamProject.load(Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\cut-line-chain-error.reference.camjob.json"))
 items = []
 for index, entity in enumerate(p.entities, 1):
     bounds = entity_bounds(entity)

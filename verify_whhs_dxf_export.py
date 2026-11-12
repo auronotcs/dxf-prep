@@ -13,7 +13,7 @@ from cam_core import (
 )
 
 
-snapshot = Path(r"C:\Users\auron\Documents\Boat stuff\WHHS-boundary-inspection-snapshot.camjob.json")
+snapshot = Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\WHHS-boundary-inspection-snapshot.camjob.json")
 project = CamProject.load(snapshot)
 plates = [Plate.from_dict(payload) for payload in project.metadata.get("plates", [])]
 eligible_ids = {entity.id for entity in dxf_export_entities(project)}

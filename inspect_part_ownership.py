@@ -5,7 +5,7 @@ import sys
 sys.path.insert(0, r"C:\Users\auron\Documents\CAM Workbench")
 from cam_core import CamProject, entity_bounds, profile_containers
 
-p = CamProject.load(Path(r"C:\Users\auron\Documents\Boat stuff\entry-visibility-current.reference.camjob.json"))
+p = CamProject.load(Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\entry-visibility-current.reference.camjob.json"))
 op = next(item for item in p.operations if item.id == "operation_c06fb45cf9ca40f2a6deaddc28addc29")
 by_id = {item.id: item for item in p.entities}
 members = [by_id[item] for item in op.entity_ids]

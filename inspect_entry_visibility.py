@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 
-path = Path(r"C:\Users\auron\Documents\Boat stuff\entry-visibility-current.reference.camjob.json")
+path = Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\entry-visibility-current.reference.camjob.json")
 data = json.loads(path.read_text(encoding="utf-8"))
 print(tuple(data))
 print(

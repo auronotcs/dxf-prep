@@ -7,7 +7,7 @@ from cam_core import CamProject, Plate
 from cam_editor_app import CamWorkbench, PlateOutputDialog
 
 
-snapshot = Path(r"C:\Users\auron\Documents\Boat stuff\WHHS-boundary-inspection-snapshot.camjob.json")
+snapshot = Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\WHHS-boundary-inspection-snapshot.camjob.json")
 project = CamProject.load(snapshot)
 plates = [Plate.from_dict(payload) for payload in project.metadata.get("plates", [])]
 setup = dict(project.metadata.get("job_setup", {}))

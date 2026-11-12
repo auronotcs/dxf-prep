@@ -29,7 +29,7 @@ out['edge_mounting_units'] = dict(project_units=mm.units,plan_units=loaded.units
 center=current_bottom_edge_hole_center(mm,loaded,loaded.holes[0])
 out['edge_mounting_units']['current_center_reported']=[center.x,center.y]
 out['edge_mounting_units']['expected_project_center']=[12*25.4,4*25.4]
-snapshot = Path('entry-visibility-current.reference.camjob.json')
+snapshot = Path(r'C:\Users\auron\Documents\Shop Jobs\Jobs\entry-visibility-current.reference.camjob.json')
 from cam_core import generate_operation_toolpath
 p = CamProject.from_dict(json.loads(snapshot.read_text()))
 times=[]

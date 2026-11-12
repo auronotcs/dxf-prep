@@ -5,8 +5,8 @@ import shutil
 import sys
 
 REPO = Path(r"C:\Users\auron\Documents\CAM Workbench")
-SOURCE = Path(r"C:\Users\auron\Documents\Boat stuff\AECI half inch rail mounted letters.reference.dxf")
-DESTINATION = Path(r"C:\Users\auron\Documents\Boat stuff\AECI bottom-edge jig PREVIEW - NOT PRODUCTION")
+SOURCE = Path(r"C:\Users\auron\Documents\Shop Jobs\Drawings\AECI half inch rail mounted letters.reference.dxf")
+DESTINATION = Path(r"C:\Users\auron\Documents\Shop Jobs\AECI bottom-edge jig PREVIEW - NOT PRODUCTION")
 sys.path.insert(0, str(REPO))
 
 from cam_core import (  # noqa: E402

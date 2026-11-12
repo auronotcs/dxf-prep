@@ -8,7 +8,7 @@ from cam_core import CamProject, Line, Plate, Polyline, generate_open_router_off
 from cam_core.layout import entity_bounds
 
 
-snapshot = Path(r"C:\Users\auron\Documents\Boat stuff\cut-line-chain-error.reference.camjob.json")
+snapshot = Path(r"C:\Users\auron\Documents\Shop Jobs\Jobs\cut-line-chain-error.reference.camjob.json")
 project = CamProject.load(snapshot)
 selected = []
 for entity in project.entities:

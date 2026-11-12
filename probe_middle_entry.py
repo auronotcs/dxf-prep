@@ -4,7 +4,7 @@ sys.path.insert(0, r"C:\Users\auron\Documents\CAM Workbench")
 from cam_core import CamProject, MotionKind, generate_closed_router_offset
 from cam_core.toolpath import _profile_entry_interference
 
-p = CamProject.load(r"C:\Users\auron\Documents\Boat stuff\entry-visibility-current.reference.camjob.json")
+p = CamProject.load(r"C:\Users\auron\Documents\Shop Jobs\Jobs\entry-visibility-current.reference.camjob.json")
 source = "entity_dc92ea7dd3e8461d9c2092b8fa7a6961"
 op = p.operations[4]
 for start_index in range(8):

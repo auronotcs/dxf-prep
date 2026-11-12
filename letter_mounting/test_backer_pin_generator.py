@@ -1,7 +1,11 @@
 import math
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+
+# The generators load ezdxf, shapely and numpy from the vendored holegen_libs folder.
+sys.path.insert(0, str(Path(__file__).resolve().parent / "holegen_libs"))
 
 import ezdxf
 from shapely.affinity import translate
